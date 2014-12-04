@@ -1,0 +1,78 @@
+﻿
+
+<div class="umb-panel" ng-controller="MemberManager.Dialogs.Member.FilterController">
+    <div class="umb-panel-header">
+        <h1>
+            Filter
+        </h1>
+    </div>
+
+    <div class="umb-panel-body with-footer">
+        <div class="umb-pane filter-options">
+            <div class="umb-el-wrap">
+                <label class="control-label">Search</label>
+                <div class="controls controls-row">
+                    <input type="text" ng-model="filter.filter" />
+                </div>
+            </div>
+            <div class="umb-el-wrap">
+                <label class="control-label">Member Type</label>
+                <div class="controls controls-row">
+                    <select ng-model="filter.memberType">
+                        <option value="">- All -</option>
+                        <option ng-repeat="memberType in memberTypes" ng-value="{{memberType.alias}}">{{memberType.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="umb-el-wrap">
+                <label class="control-label">Approved</label>
+                <div class="controls controls-row">
+                    <select ng-model="filter.f_umbracoMemberApproved">
+                        <option value="">- All -</option>
+                        <option value="true,1">Approved Only</option>
+                        <option value="false,0">Suspended Only</option>
+                    </select>
+                </div>
+            </div>
+            <div class="umb-el-wrap">
+                <label class="control-label">Locked Out</label>
+                <div class="controls controls-row">
+                    <select ng-model="filter.f_umbracoMemberLockedOut">
+                        <option value="">- All -</option>
+                        <option value="true,1">Locked Out Only</option>
+                        <option value="false,0">Active Only</option>
+                    </select>
+                </div>
+            </div>
+            <!--
+            <div class="filter-checkbox-list">
+                <h5>Location</h5>
+                <div class="filter-content">
+                    <div ng-repeat="location in filter.f_location">
+                        <input type="checkbox" ng-model="location.selected" id="location-{{location.id}}" />
+                        <label class="control-label" for="location-{{location.id}}">{{location.name}}</label>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <div class="umb-panel-footer">
+        <div class="umb-el-wrap umb-panel-buttons">
+            <div class="btn-toolbar umb-btn-toolbar pull-right">
+                <a href ng-click="close()" class="btn btn-link">
+                    <localize key="general_close">Close</localize>
+                </a>
+                <div class="btn-group dropup">
+                    <a class="btn btn-success" href="#" ng-click="filterSearch()" prevent-default>
+                        Apply Filter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

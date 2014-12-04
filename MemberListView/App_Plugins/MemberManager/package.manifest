@@ -1,0 +1,11 @@
+{
+	javascript: [
+		'~/App_Plugins/MemberManager/resources/member.resource.js?v=3',
+		'~/App_Plugins/MemberManager/backoffice/dashboard/memberListView.controller.js?v=4',
+		'~/App_Plugins/MemberManager/backoffice/dialogs/member/member.edit.controller.js?v=2',
+		'~/App_Plugins/MemberManager/backoffice/dialogs/member/member.filter.controller.js?v=2'
+	],
+	css : [
+		'~/App_Plugins/MemberManager/css/memberListView.css?v=2'
+	]
+}
