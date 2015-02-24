@@ -55,7 +55,7 @@
   <info>
     <package>
       <name>MemberListView for Umbraco 7</name>
-      <version>0.9.11</version>
+      <version>0.9.12</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>http://digitalsmith.com.au/code/memberlistview-for-umbraco-7</url>
       <requirements>
@@ -80,6 +80,10 @@ The MemberListView has been designed to be similar to the ContentListView proper
 Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+
+New in Version 0.9.12
+=====================
+* Fixed "Error: Argument 'MemberManager.Dashboard.MemberListViewController' is not a function" issue due to update in ClientDependency module
 
 New in Version 0.9.11
 =====================
