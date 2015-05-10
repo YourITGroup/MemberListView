@@ -26,7 +26,7 @@ namespace MemberListView.EventHandlers
         {
             if (e.IndexType == IndexTypes.Member)
             {
-                EnsureMembeshipFlags(e, ApplicationContext.Current.Services.MemberService.GetById(e.NodeId));
+                EnsureMembershipFlags(e, ApplicationContext.Current.Services.MemberService.GetById(e.NodeId));
             }
         }
         /// <summary>
@@ -37,7 +37,7 @@ namespace MemberListView.EventHandlers
         /// <remarks>
         ///  these fields are not consistently updated in the XML fragment when a member is saved (as they may never get set) so we have to do this.
         ///  </remarks>
-        private void EnsureMembeshipFlags(IndexingNodeDataEventArgs e, IContentBase node)
+        private void EnsureMembershipFlags(IndexingNodeDataEventArgs e, IContentBase node)
         {
             Func<string, bool> valueExists = fieldName => {
                 return e.Node.Nodes().Any(n => n is XElement ? (n as XElement).Name == fieldName : false);
