@@ -61,7 +61,7 @@ namespace MemberListView.Helpers
         }
 
         /// <summary>
-        /// Turns an object into dictionary of it's properties
+        /// Turns an object into a dictionary of it's properties
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>

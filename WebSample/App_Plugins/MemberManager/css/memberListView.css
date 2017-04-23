@@ -1,0 +1,12 @@
+﻿.umb-listview a { text-decoration: none; }
+.filter-options .filter-checkbox-list .filter-content > div { overflow: auto; }
+.filter-options .filter-checkbox-list .filter-content > div input[type="checkbox"] { float: left; margin-top: 10px; margin-right: 10px; }
+.filter-options .filter-checkbox-list .filter-content > div label { float: left; margin: 0; padding: 0; width: auto; width: 90%; }
+.umb-listview table { border-collapse: separate; margin-top: 20px; }
+
+.filter-display { padding: 20px; background-color: #f8f8f8; border: 1px solid #dbdbdb;  }
+.filter-display > div { overflow: auto; margin-bottom: 5px; }
+.filter-display > div:last-child { margin-bottom: 0; }
+.filter-display > div strong { float: left; width: 180px; display: block; }
+.filter-display > div span { float: left; width: auto; }
+.no-results { padding: 20px; background-color: #f8f8f8; border: 1px solid #dbdbdb; text-align: center; color: #999; margin-top: 20px; }

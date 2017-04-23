@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MemberListView")]
-[assembly: AssemblyDescription("Add the MemberListView to Umbraco 7.1.x")]
+[assembly: AssemblyDescription("Add the MemberListView to Umbraco 7.1 +")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Digitalsmith Pty Ltd")]
+[assembly: AssemblyCompany("KØBEN digital")]
 [assembly: AssemblyProduct("MemberListView")]
-[assembly: AssemblyCopyright("Copyright © 2014 Digitalsmith Pty Ltd")]
+[assembly: AssemblyCopyright("Copyright © 2017 KØBEN digital")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.1.1")]
-[assembly: AssemblyFileVersion("1.0.1.1")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]

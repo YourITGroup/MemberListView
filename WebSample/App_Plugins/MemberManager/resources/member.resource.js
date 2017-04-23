@@ -86,7 +86,6 @@ function memberExtResource($q, $http, $window, umbDataFormatter, umbRequestHelpe
             }
             //overwrite the defaults if there are any specified
             angular.extend(defaults, options);
-
             //now copy back to the options we will use
             options = defaults;
 
@@ -104,7 +103,7 @@ function memberExtResource($q, $http, $window, umbDataFormatter, umbRequestHelpe
             querystring.push({ orderDirection: options.orderDirection });
 
             // using windows.location.href instead of windows.open doesn't open new a window, even temporarily.
-            $window.location.href = "Backoffice/MemberManager/MemberApi/GetMembersExport?" +
+            $window.location.href ="Backoffice/MemberManager/MemberApi/GetMembersExport?" +
                     umbRequestHelper.dictionaryToQueryString(querystring);
         },
     };

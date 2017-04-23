@@ -27,7 +27,7 @@
 
             <div class="btn-group dropdown ng-scope">
                 <!-- primary button -->
-                <a class="btn btn-success" ng-click="filterMembers()" prevent-default>
+                <a class="btn btn-success icon icon-filter" ng-click="filterMembers()" prevent-default>
                     Filter
                 </a>
                 <a class="btn btn-success dropdown-toggle ng-scope" data-toggle="dropdown">
@@ -37,7 +37,7 @@
                 <!-- sub buttons -->
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li>
-                        <a href="" class="" ng-click="clearFilter()" prevent-default>
+                        <a href="" class="icon icon-filter icon-cancel" ng-click="clearFilter()" prevent-default>
                             Clear Filter
                         </a>
                     </li>
@@ -104,6 +104,12 @@
                             </a>
                         </td>
                         <td>
+                            First Name
+                        </td>
+                        <td>
+                            Last Name
+                        </td>
+                        <td>
                             Status
                         </td>
                     </tr>
@@ -123,6 +129,12 @@
                         </td>
                         <td>
                             {{result.email}}
+                        </td>
+                        <td>
+                            {{result.properties.firstName}}
+                        </td>
+                        <td>
+                            {{result.properties.lastName}}
                         </td>
                         <td>
                             <span title="{{getLockedDescription(result)}}" ng-class="getLockedIcon(result)"></span>

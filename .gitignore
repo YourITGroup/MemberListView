@@ -16,3 +16,15 @@
 /MemberListView/obj/Release
 *.user
 *.suo
+/WebSample/obj
+/WebSample/Umbraco
+/WebSample/Umbraco_Client
+/WebSample/Views
+/WebSample/Media
+/WebSample/Global.asax
+/WebSample/default.aspx
+/WebSample/bin
+/WebSample/App_Browsers
+/WebSample/App_Data/Logs
+/WebSample/App_Data/NuGetBackup
+/WebSample/App_Data/TEMP

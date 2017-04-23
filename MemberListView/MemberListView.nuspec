@@ -5,17 +5,17 @@
     <version>$version$</version>
     <title>MemberListView</title>
     <authors>Robert Foster</authors>
-    <owners>Digitalsmith Pty Ltd</owners>
+    <owners>KØBEN digital</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1.x to allow easier management of members including approval and unlocking capabilities.
+      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
           ]]>
     </description>
-    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.1.x</summary>
-    <copyright>Copyright 2014 Digitalsmith Pty Ltd</copyright>
+    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.1 +</summary>
+    <copyright>Copyright 2017 KØBEN digital</copyright>
     <language />
     <releaseNotes>
-      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1.x to allow easier management of members including approval and unlocking capabilities.
+      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
       ]]>
     </releaseNotes>
     <iconUrl>https://digitalsmithcdn.blob.core.windows.net/media/Digitalsmith-mark-32.png</iconUrl>

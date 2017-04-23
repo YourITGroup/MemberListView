@@ -25,6 +25,8 @@ namespace MemberListView.Models
 
         public string MemberType { get; set; }
 
+        public string Groups { get; set; }
+
         private Dictionary<string, string> properties;
         public IDictionary<string, string> Properties
         {

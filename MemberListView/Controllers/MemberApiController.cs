@@ -19,6 +19,8 @@ using System.Web.Mvc;
 using System.Net.Http.Headers;
 using System.Net;
 using MemberListView.Helpers;
+using System.Text;
+using Umbraco.Core.Logging;
 
 namespace MemberListView.Controllers
 {
@@ -99,12 +101,18 @@ namespace MemberListView.Controllers
             // see http://stackoverflow.com/questions/9541351/returning-binary-file-from-controller-in-asp-net-web-api
             // & http://stackoverflow.com/questions/12975886/how-to-download-a-file-using-web-api-in-asp-net-mvc-4-and-jquery
             // We really should use an async version - the above reference includes an example.
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            result.Content = new StringContent(content);
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(content,
+                        new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, // this is the default; we don't really need to specify it.
+                                        throwOnInvalidBytes: true // Recommended for security reasons.
+                                        ))
+            };
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            result.Content.Headers.ContentDisposition.FileName = string.Format("Members_{0:yyyyMMdd}.csv", DateTime.Now);
-
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = string.Format("Members_{0:yyyyMMdd}.csv", DateTime.Now)
+            };
             return result;
         }
 

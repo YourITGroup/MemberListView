@@ -1,0 +1,45 @@
+﻿<form novalidate name="contentForm"
+      ng-controller="MemberManager.Dialogs.Member.EditController"
+      ng-show="loaded"
+      ng-submit="save()"
+      val-form-manager>
+
+    <div class="umb-panel">
+        <div class="umb-panel-header">
+                <umb-content-name placeholder="@placeholders_entername"
+                                  ng-model="model.entity.name" />
+        </div>
+
+        <div class="umb-panel-body with-footer">
+            <div id="tab{{tab.id}}" ng-repeat="tab in model.entity.tabs">
+                <div class="umb-pane" ng-if="!tab.hide">
+                    <h5>{{tab.label}}</h5>
+                    <umb-property property="property"
+                                  ng-repeat="property in tab.properties">
+                        <umb-editor model="property"></umb-editor>
+                    </umb-property>
+                </div>
+            </div>
+        </div>
+
+        <div class="umb-panel-footer">
+            <div class="umb-el-wrap umb-panel-buttons">
+                <div class="btn-toolbar umb-btn-toolbar pull-right">
+                    <a href ng-click="close()" class="btn btn-link">
+                        <localize key="general_close">Close</localize>
+                    </a>
+
+
+                    <div class="btn-group dropup">
+                        <!-- primary button -->
+                        <a class="btn btn-success" href="#" ng-click="save()" prevent-default>
+                            Save
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

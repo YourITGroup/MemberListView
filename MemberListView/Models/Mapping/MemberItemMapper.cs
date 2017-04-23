@@ -113,6 +113,14 @@ namespace MemberListView.Models.Mapping
                         {
                             member.Properties.Add(p.Key, p.Value);
                         }
+
+                        // Resolve groups into a comma-delimited string.
+                        var roles = ApplicationContext.Current.Services.MemberService.GetAllRoles(member.Id);
+                        if (roles != null)
+                        {
+                            member.Groups = roles.Aggregate("", (a, b) => (a == "" ? a : a + ",") + b);
+                        }
+
                     });
 
             config.CreateMap<IEnumerable<MemberListItem>, IEnumerable<MemberExportModel>>()
