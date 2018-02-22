@@ -55,9 +55,9 @@
   <info>
     <package>
       <name>MemberListView for Umbraco 7</name>
-      <version>0.9.12</version>
+      <version>1.2.0</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
-      <url>http://digitalsmith.com.au/code/memberlistview-for-umbraco-7</url>
+      <url>https://github.com/KOBENDigital/umbMemberListView</url>
       <requirements>
         <major>3</major>
         <minor>0</minor>
@@ -66,7 +66,7 @@
     </package>
     <author>
       <name>Robert Foster</name>
-      <website>http://digitalsmith.com.au</website>
+      <website>http://refoster.com.au</website>
     </author>
     <readme>
   <![CDATA[The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
@@ -80,6 +80,11 @@ The MemberListView has been designed to be similar to the ContentListView proper
 Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+
+New in Version 1.2.0
+====================
+* Compiled against Umbraco 7.7
+* Fixed issue with suspending/activating/deleting members
 
 New in Version 0.9.12
 =====================

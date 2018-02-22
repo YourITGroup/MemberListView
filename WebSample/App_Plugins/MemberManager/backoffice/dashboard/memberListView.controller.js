@@ -361,11 +361,11 @@
         }
     };
 
-    $scope.editMember = function (id) {
+    $scope.editMember = function (key) {
         dialogService.closeAll();
         dialogService.open({
             template: '/app_plugins/MemberManager/backoffice/dialogs/member/edit.html',
-            id: id,
+            key: key,
             closeOnSave: true,
             //tabFilter: ["Generic properties"],
             callback: function (data) {

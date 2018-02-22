@@ -5,20 +5,49 @@
     <version>$version$</version>
     <title>MemberListView</title>
     <authors>Robert Foster</authors>
-    <owners>KØBEN digital</owners>
+    <owners>Robert Foster</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
           ]]>
     </description>
     <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.1 +</summary>
-    <copyright>Copyright 2017 KØBEN digital</copyright>
+    <copyright>Copyright 2018 Robert Foster</copyright>
     <language />
     <releaseNotes>
-      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
+      <![CDATA[
+Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
+The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, 
+Suspension or Activation of members.
+
+Installing the package enables a new Manage Dashboard on the Members section.
+
+**Version 1.2.0**
+
+* **Compiled against Umbraco 7.7**
+* Fixed issue with suspending/activating/deleting members
+
+**Version 0.9.12**
+
+* Fixed "Error: Argument 'MemberManager.Dashboard.MemberListViewController' is not a function" issue due to update in ClientDependency module
+
+**Version 0.9.11**
+
+* UI cleanup - paging now consistent with 7.2.0 ListView
+* Issue with UnApproved members showing up in the list as approved.
+
+**Version 0.9.10**
+
+* Export - Export now supports additional user indexed fields. If you add a property to a member type and want it to be exported, add it to the IndexUserFields collection in the ExamineIndex.config file.
+
+**Version 0.9.9**
+
+* Search is now lightning fast, although some modification to the Examine Index configuration is required. 
+* Filtering - filtering has now been moved to a dialog, includes Membership Flags and MemberType as default fields and is extendable.
+* Export - Filtered members can now be exported to a CSV file containing basic fields. 
       ]]>
     </releaseNotes>
-    <iconUrl>https://digitalsmithcdn.blob.core.windows.net/media/Digitalsmith-mark-32.png</iconUrl>
-    <tags>Umbraco7 Umbraco Members Management</tags>
+    <iconUrl>https://koben.blob.core.windows.net/assets/Koben_32.png</iconUrl>
+    <tags>Umbraco Membership Member Management</tags>
   </metadata>
 </package>

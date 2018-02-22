@@ -2,18 +2,14 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/MemberListView/bin
-/MemberListView/obj/Debug
+bin
+obj
 /packages
 /MemberList/App_Data
 /MemberList/App_Plugins/MemberManager/backoffice
 /MemberList/App_Plugins/MemberManager
-/MemberList/bin
-/MemberList/obj/Debug
 /MemberList/umbraco
 /MemberList/umbraco_client
-/MemberList/obj/Release
-/MemberListView/obj/Release
 *.user
 *.suo
 /WebSample/obj
@@ -28,3 +24,5 @@
 /WebSample/App_Data/Logs
 /WebSample/App_Data/NuGetBackup
 /WebSample/App_Data/TEMP
+/.vs
+/MemberListView/App_Data/NuGetBackup

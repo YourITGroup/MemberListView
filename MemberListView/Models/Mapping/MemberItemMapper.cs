@@ -51,6 +51,15 @@ namespace MemberListView.Models.Mapping
                         }
                     }
 
+                    if (searchResult.Fields.ContainsKey("__Key") && searchResult.Fields["__Key"] != null)
+                    {
+                        Guid key;
+                        if (Guid.TryParse(searchResult.Fields["__Key"], out key))
+                        {
+                            member.Key = key;
+                        }
+                    }
+
                     bool val = true;
                     // We assume not approved for this property.
                     member.IsApproved = false;

@@ -347,7 +347,7 @@
 
             memberExtResource.suspendById(selected[i].key)
                 .then(function (content) {
-                    $scope.bulkStatus = "Suspension " + current + " out of " + total + " members";
+                    $scope.bulkStatus = "Suspending " + current + " out of " + total + " members";
 
                     if (current == total) {
                         notificationsService.success("Bulk action", "Suspended " + total + " members");
@@ -361,11 +361,11 @@
         }
     };
 
-    $scope.editMember = function (id) {
+    $scope.editMember = function (key) {
         dialogService.closeAll();
         dialogService.open({
             template: '/app_plugins/MemberManager/backoffice/dialogs/member/edit.html',
-            id: id,
+            key: key,
             closeOnSave: true,
             //tabFilter: ["Generic properties"],
             callback: function (data) {
