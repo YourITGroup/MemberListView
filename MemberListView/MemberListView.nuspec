@@ -8,19 +8,15 @@
     <owners>Robert Foster</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
+      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.7+ to allow easier management of members including approval and unlocking capabilities.
           ]]>
     </description>
-    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.1 +</summary>
+    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.7 +</summary>
     <copyright>Copyright 2018 Robert Foster</copyright>
     <projectUrl>https://github.com/KOBENDigital/umbMemberListView</projectUrl>
     <language />
     <releaseNotes>
       <![CDATA[
-Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
-The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, 
-Suspension or Activation of members.
-
 Installing the package enables a new Manage Dashboard on the Members section.
 
 **Version 1.2.0**
@@ -51,5 +47,8 @@ Installing the package enables a new Manage Dashboard on the Members section.
     <iconUrl>https://koben.blob.core.windows.net/assets/Koben_32.png</iconUrl>
     
     <tags>Umbraco Membership Member Management</tags>
+    <dependencies>
+      <dependency id="UmbracoCMS" version="[7.7.0, )"></dependency>
+    </dependencies>
   </metadata>
 </package>
