@@ -13,6 +13,7 @@
     </description>
     <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.1 +</summary>
     <copyright>Copyright 2018 Robert Foster</copyright>
+    <projectUrl>https://github.com/KOBENDigital/umbMemberListView</projectUrl>
     <language />
     <releaseNotes>
       <![CDATA[
@@ -48,6 +49,7 @@ Installing the package enables a new Manage Dashboard on the Members section.
       ]]>
     </releaseNotes>
     <iconUrl>https://koben.blob.core.windows.net/assets/Koben_32.png</iconUrl>
+    
     <tags>Umbraco Membership Member Management</tags>
   </metadata>
 </package>

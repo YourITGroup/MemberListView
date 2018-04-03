@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MemberListView")]
 [assembly: AssemblyDescription("Add the MemberListView to Umbraco 7.1 +")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KØBEN digital")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MemberListView")]
 [assembly: AssemblyCopyright("Copyright © 2017-2018 Robert Foster")]
 [assembly: AssemblyTrademark("")]

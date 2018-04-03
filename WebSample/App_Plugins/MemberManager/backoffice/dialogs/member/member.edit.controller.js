@@ -32,8 +32,8 @@ function MemberEditDialogController($scope, $routeParams, $q, $timeout, $window,
                     });
             }
             else {
-                if (dialogOptions.id && dialogOptions.id.toString().length < 9) {
-                    entityResource.getById(dialogOptions.id, "Member").then(function (entity) {
+                if (dialogOptions.key && dialogOptions.key.toString().length < 9) {
+                    entityResource.getById(dialogOptions.key, "Member").then(function (entity) {
                         memberResource.getByKey(entity.key).then(function (data) {
 
                             //in one particular special case, after we've created a new item we redirect back to the edit
@@ -49,7 +49,7 @@ function MemberEditDialogController($scope, $routeParams, $q, $timeout, $window,
                 }
                 else {
                     //we are editing so get the content item from the server
-                    memberResource.getByKey(dialogOptions.id)
+                    memberResource.getByKey(dialogOptions.key)
                         .then(function (data) {
 
                             $scope.loaded = true;

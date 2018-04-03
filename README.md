@@ -1,5 +1,12 @@
 # umbMemberListView
 
+Nuget Package: 
+[![NuGet release](https://img.shields.io/nuget/v/MemberListView.svg)](https://www.nuget.org/packages/MemberListView/)
+[![NuGet release](https://img.shields.io/nuget/dt/MemberListView.svg)](https://www.nuget.org/packages/MemberListView/)
+
+Umbraco Package:
+[![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.org/projects/backoffice-extensions/memberlistview-for-umbraco-7) 
+
 Adds a MemberListView dashboard to the Members area in Umbraco 7.1 + to allow easier management of members including approval and unlocking capabilities.
 The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
