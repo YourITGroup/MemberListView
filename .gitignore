@@ -26,3 +26,4 @@ obj
 /WebSample/App_Data/TEMP
 /.vs
 /MemberListView/App_Data/NuGetBackup
+*.nupkg
