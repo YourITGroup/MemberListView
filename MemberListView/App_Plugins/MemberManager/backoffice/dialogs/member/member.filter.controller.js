@@ -1,7 +1,14 @@
-﻿function MemberFilterDialogController($scope, $routeParams, $q, $timeout, $window, appState, memberExtResource, entityResource, navigationService, notificationsService, angularHelper, serverValidationManager, contentEditingHelper, fileManager, formHelper, umbRequestHelper, umbModelMapper, $http) {
-    //setup scope vars
-
-
+﻿/**
+ * @ngdoc controller
+ * @name MemberManager.Dialogs.Member.FilterController
+ * @function
+ * 
+ * @description
+ * The controller for the member list view filter
+ * 
+ * @param {any} $scope Scope
+ */
+function MemberFilterDialogController($scope) {
     var dialogOptions = $scope.$parent.dialogOptions;
 
     $scope.filter = dialogOptions.filter;
@@ -15,20 +22,20 @@
 
     $scope.filterSearch = function () {
         $scope.submit(getFilterModel());
-    }
+    };
 
     // Loop through a list of select options and set selected for values that appear in a filter list
     setSelected = function (list, filter) {
         if (filter) {
             for (var i = 0; i < filter.length; i++) {
                 for (var j = 0; j < list.length; j++) {
-                    if (list[j].id == filter[i]) {
+                    if (list[j].id === filter[i]) {
                         list[j].selected = true;
                     }
                 }
             }
         }
-    }
+    };
 
     // Generate model for representing the search
     getFilterModel = function () {
@@ -41,10 +48,10 @@
             displaySearch.push({ title: "Member Type", value: _getMemberTypeName() });
         }
         if ($scope.filter.f_umbracoMemberApproved) {
-            displaySearch.push({ title: "Approved", value: $scope.filter.f_umbracoMemberApproved == "true,1" ? "Approved" : "Suspended" });
+            displaySearch.push({ title: "Approved", value: $scope.filter.f_umbracoMemberApproved === "true,1" ? "Approved" : "Suspended" });
         }
         if ($scope.filter.f_umbracoMemberLockedOut) {
-            displaySearch.push({ title: "Locked Out", value: $scope.filter.f_umbracoMemberLockedOut == "true,1" ? "Locked Out" : "Active" });
+            displaySearch.push({ title: "Locked Out", value: $scope.filter.f_umbracoMemberLockedOut === "true,1" ? "Locked Out" : "Active" });
         }
 
         return {
@@ -52,15 +59,15 @@
             memberType: $scope.filter.memberType,
             display: displaySearch,
             f_umbracoMemberApproved: !$scope.filter.f_umbracoMemberApproved ? "" : $scope.filter.f_umbracoMemberApproved,
-            f_umbracoMemberLockedOut: !$scope.filter.f_umbracoMemberLockedOut ? "" : $scope.filter.f_umbracoMemberLockedOut,
+            f_umbracoMemberLockedOut: !$scope.filter.f_umbracoMemberLockedOut ? "" : $scope.filter.f_umbracoMemberLockedOut
             //f_location: _processFilterList(displaySearch, "Locations", $scope.filter.f_location)
         };
-    }
+    };
 
     function _getMemberTypeName() {
 
         var type = _.filter($scope.memberTypes, function (item) {
-            return (item.alias == $scope.filter.memberType);
+            return item.alias === $scope.filter.memberType;
         });
 
         return _.map(type, function (item) {

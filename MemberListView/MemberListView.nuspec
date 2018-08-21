@@ -19,6 +19,10 @@
       <![CDATA[
 Installing the package enables a new Manage Dashboard on the Members section.
 
+**Version 1.3.0**
+* Support for Localization with plugin-based lang files
+* Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
+
 **Version 1.2.0**
 
 * **Compiled against Umbraco 7.7**

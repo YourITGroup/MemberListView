@@ -1,9 +1,16 @@
 ﻿/**
-    * @ngdoc service
-    * @name umbraco.resources.memberExtResource
-    * @description Member Management
-    **/
-function memberExtResource($q, $http, $window, umbDataFormatter, umbRequestHelper) {
+ * @ngdoc service
+ * @name umbraco.resources.memberExtResource
+ * 
+ * @description Member Management
+ * 
+ * @returns {umbraco.resources.memberExtResource} memberExtResource
+ *
+ * @param {any} $http Http Service
+ * @param {any} $window Window
+ * @param {any} umbRequestHelper Umbraco Request Helper
+ **/
+function memberExtResource($http, $window, umbRequestHelper) {
     var memberExtResource = {
         approveById: function (id) {
             if (!id) {
@@ -106,7 +113,7 @@ function memberExtResource($q, $http, $window, umbDataFormatter, umbRequestHelpe
             // using windows.location.href instead of windows.open doesn't open new a window, even temporarily.
             $window.location.href = "Backoffice/MemberManager/MemberApi/GetMembersExport?" +
                     umbRequestHelper.dictionaryToQueryString(querystring);
-        },
+        }
     };
 
     function _filterToDictionary(filter) {
@@ -117,7 +124,7 @@ function memberExtResource($q, $http, $window, umbDataFormatter, umbRequestHelpe
         for (prop in filter) {
             if (filter.hasOwnProperty(prop) &&
                 filter[prop] &&
-                (prop.startsWith('f_') || prop == 'filter' || prop == 'memberType') &&
+                (prop.startsWith('f_') || prop === 'filter' || prop === 'memberType') &&
                 filter[prop].length > 0) {
 
                 // Add a new dictionary entry.

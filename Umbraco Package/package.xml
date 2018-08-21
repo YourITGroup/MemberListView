@@ -51,16 +51,116 @@
       <orgPath>/bin</orgPath>
       <orgName>MemberListView.dll</orgName>
     </file>
+    <file>
+      <guid>cs.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>cs.xml</orgName>
+    </file>
+    <file>
+      <guid>da.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>da.xml</orgName>
+    </file>
+    <file>
+      <guid>de.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>de.xml</orgName>
+    </file>
+    <file>
+      <guid>en-gb.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>en-gb.xml</orgName>
+    </file>
+    <file>
+      <guid>en-us.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>en-us.xml</orgName>
+    </file>
+    <file>
+      <guid>es.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>es.xml</orgName>
+    </file>
+    <file>
+      <guid>fr.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>fr.xml</orgName>
+    </file>
+    <file>
+      <guid>he.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>he.xml</orgName>
+    </file>
+    <file>
+      <guid>it.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>it.xml</orgName>
+    </file>
+    <file>
+      <guid>ja.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>ja.xml</orgName>
+    </file>
+    <file>
+      <guid>ko.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>ko.xml</orgName>
+    </file>
+    <file>
+      <guid>nb.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>nb.xml</orgName>
+    </file>
+    <file>
+      <guid>nl.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>nl.xml</orgName>
+    </file>
+    <file>
+      <guid>pl.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>pl.xml</orgName>
+    </file>
+    <file>
+      <guid>pt.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>pt.xml</orgName>
+    </file>
+    <file>
+      <guid>ru.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>ru.xml</orgName>
+    </file>
+    <file>
+      <guid>sv.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>sv.xml</orgName>
+    </file>
+    <file>
+      <guid>tr.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>tr.xml</orgName>
+    </file>
+    <file>
+      <guid>zh-tw.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>zh-tw.xml</orgName>
+    </file>
+    <file>
+      <guid>zh.xml</guid>
+      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgName>zh.xml</orgName>
+    </file>
   </files>
   <info>
     <package>
       <name>MemberListView for Umbraco 7</name>
-      <version>1.2.0</version>
+      <version>1.3.0</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>https://github.com/KOBENDigital/umbMemberListView</url>
       <requirements>
-        <major>3</major>
-        <minor>0</minor>
+        <major>7</major>
+        <minor>7</minor>
         <patch>0</patch>
       </requirements>
     </package>
@@ -80,6 +180,11 @@ The MemberListView has been designed to be similar to the ContentListView proper
 Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+
+New in Version 1.3.0
+====================
+* Support for Localization with plugin-based lang files
+* Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
 
 New in Version 1.2.0
 ====================

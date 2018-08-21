@@ -5,8 +5,18 @@
  * 
  * @description
  * The controller for the member editor
+ * 
+ * @param {any} $scope Scope
+ * @param {any} $routeParams Route Parameters
+ * @param {any} $q Queue
+ * @param {any} memberResource Member Resource
+ * @param {any} entityResource Entity Resource
+ * @param {any} serverValidationManager Server Validation Manager
+ * @param {any} contentEditingHelper Content Editing Helper
+ * @param {any} fileManager File Manager
+ * @param {any} formHelper Form Helper
  */
-function MemberEditDialogController($scope, $routeParams, $q, $timeout, $window, appState, memberResource, entityResource, navigationService, notificationsService, angularHelper, serverValidationManager, contentEditingHelper, fileManager, formHelper, umbRequestHelper, umbModelMapper, $http) {
+function MemberEditDialogController($scope, $routeParams, $q, memberResource, entityResource, serverValidationManager, contentEditingHelper, fileManager, formHelper) {
     //setup scope vars
     $scope.model = {};
     $scope.model.defaultButton = null;
@@ -67,7 +77,7 @@ function MemberEditDialogController($scope, $routeParams, $q, $timeout, $window,
         }
 
         return deferred.promise;
-    };
+    }
 
     function performSave(args) {
         var deferred = $q.defer();
@@ -109,7 +119,7 @@ function MemberEditDialogController($scope, $routeParams, $q, $timeout, $window,
         }
 
         return deferred.promise;
-    };
+    }
 
     performGet().then(function (content) {
         $scope.model.entity = $scope.filterTabs(content, dialogOptions.tabFilter);

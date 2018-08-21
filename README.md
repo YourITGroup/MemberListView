@@ -22,6 +22,10 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 1.3.0**
+* Support for Localization with plugin-based lang files
+* Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
+
 **Version 1.2.0**
 
 * **Compiled against Umbraco 7.7**
@@ -54,6 +58,7 @@ Currently Bulk Deletion will throw a lot of errors due to Database commit blocki
 ## Sample Web project:
 
   * Uses SqlCe database - username is "admin@admin"; password is "password"
+  * Upgraded to Umbraco 7.12.0
   
 The Sample project has two member properties: `First Name` and `Last Name`.
 The version of MemberListView in this project has been modified to include these two properties in the list and examine index

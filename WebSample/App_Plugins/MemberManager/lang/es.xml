@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="es" intName="Spanish" localName="español" lcid="10" culture="es-ES">
+  <creator>
+    <name>Robert Foster</name>
+    <link></link>
+  </creator>
+  <area alias="actions">
+    <key alias="approve">Approve</key>
+    <key alias="suspend">Suspend</key>
+  </area>
+  <area alias="memberManager">
+    <key alias="filter">Filter</key>
+    <key alias="clearFilter">Clear Filter</key>
+    <key alias="exportMembers">Export Members</key>
+  </area>
+</language>
