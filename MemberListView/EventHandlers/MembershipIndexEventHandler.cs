@@ -43,7 +43,7 @@ namespace MemberListView.EventHandlers
                 return e.Node.Nodes().Any(n => n is XElement ? (n as XElement).Name == fieldName : false);
             };
 
-            if (!valueExists(Constants.Conventions.Member.IsLockedOut) || !valueExists(Constants.Conventions.Member.IsLockedOut))
+            if (!valueExists(Constants.Conventions.Member.IsLockedOut) || !valueExists(Constants.Conventions.Member.IsApproved))
             {
                 // We need to augment from the database.
                 var member = ApplicationContext.Current.Services.MemberService.GetById(e.NodeId);
