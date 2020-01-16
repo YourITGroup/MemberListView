@@ -19,6 +19,9 @@
       <![CDATA[
 Installing the package enables a new Manage Dashboard on the Members section.
 
+**Version 1.4.1**
+* Fix for downloading Member export CSV when security headers are set resulting in 417 error.
+
 **Version 1.4.0**
 * Support for Umbraco 7.15
 
@@ -56,7 +59,7 @@ Installing the package enables a new Manage Dashboard on the Members section.
     
     <tags>Umbraco Membership Member Management</tags>
     <dependencies>
-      <dependency id="UmbracoCMS" version="[7.7.0, )"></dependency>
+      <dependency id="UmbracoCMS" version="[7.15.1, )"></dependency>
     </dependencies>
   </metadata>
   <files>

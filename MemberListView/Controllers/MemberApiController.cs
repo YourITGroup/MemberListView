@@ -17,6 +17,7 @@ using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Web;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
+using Umbraco.Web.WebApi;
 using Umbraco.Web.WebApi.Filters;
 
 namespace MemberListView.Controllers
@@ -31,7 +32,6 @@ namespace MemberListView.Controllers
         public MemberApiController()
             : this(UmbracoContext.Current)
         {
-            _provider = global::Umbraco.Core.Security.MembershipProviderExtensions.GetMembersMembershipProvider();
         }
 
         /// <summary>

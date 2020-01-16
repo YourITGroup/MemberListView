@@ -30,35 +30,6 @@
                               sub-buttons="vm.filterButtonGroup.subButtons">
             </umb-button-group>
 
-
-            <!--<div class="btn-group ng-scope">
-                <!-- primary button - ->
-                <a class="btn btn-success" ng-click="filterMembers()" prevent-default>
-                    <i class="icon icon-filter"></i>
-                    Filter
-                </a>
-                <a class="btn btn-success dropdown-toggle ng-scope" data-toggle="dropdown">
-                    <span class="caret"></span>
-                </a>
-
-                <!-- sub buttons - ->
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li>
-                        <a href="#" ng-click="clearFilter()" prevent-default>
-                            <i class="icon icon-block"></i>
-                            Clear Filter
-                        </a>
-                    </li>
-                    <li ng-show="listViewResultSet.totalItems > 0">
-                        <a href="#" ng-click="exportFiltered()" target="_self" prevent-default>
-                            <i class="icon icon-download-alt"></i>
-                            Export Members
-                        </a>
-                    </li>
-                </ul>
-
-            </div>-->
-
             <div class="btn-group" ng-show="vm.canUnlock()">
                 <a class="btn btn-success" ng-disabled="vm.actionInProgress" ng-click="vm.unlock()" prevent-default>
                     <localize key="actions_unlock">Unlock</localize>
@@ -98,7 +69,7 @@
                 <thead>
                     <tr>
                         <td style="width: 35px">
-                            <input type="checkbox" ng-click="vm.selectAll($event)" ng-checked="vm.isSelectedAll()" no-dirty-check />
+                            <input type="checkbox" ng-click="vm.selectAll($event)" ng-model="isSelectedAll" no-dirty-check />
                         </td>
                         <td>
                             <a href="#" ng-click="vm.sort('Name')" prevent-default>

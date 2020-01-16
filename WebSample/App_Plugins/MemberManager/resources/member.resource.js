@@ -110,9 +110,43 @@ function memberExtResource($http, $window, umbRequestHelper) {
             querystring.push({ orderBy: options.orderBy });
             querystring.push({ orderDirection: options.orderDirection });
 
-            // using windows.location.href instead of windows.open doesn't open new a window, even temporarily.
-            $window.location.href = "Backoffice/MemberManager/MemberApi/GetMembersExport?" +
-                    umbRequestHelper.dictionaryToQueryString(querystring);
+            var config = { responseType: 'blob' };
+
+            // Solution taken from http://jaliyaudagedara.blogspot.com/2016/05/angularjs-download-files-by-sending.html
+            $http.get("Backoffice/MemberManager/MemberApi/GetMembersExport?" + umbRequestHelper.dictionaryToQueryString(querystring),
+                config).success(function (data, status, headers) {
+                    headers = headers();
+                    try {
+                        var filename = headers['x-filename'];
+
+                        if (!filename) {
+                            var result = headers['content-disposition'].split(';')[1].trim().split('=')[1];
+                            filename = result.replace(/"/g, '');
+                        }
+
+                        var contentType = headers['content-type'];
+
+                        var linkElement = document.createElement('a');
+
+                        var blob = new Blob([data], { type: contentType });
+                        var url = window.URL.createObjectURL(blob);
+
+                        linkElement.setAttribute('href', url);
+                        linkElement.setAttribute("download", filename);
+
+                        var clickEvent = new MouseEvent("click", {
+                            "view": window,
+                            "bubbles": true,
+                            "cancelable": false
+                        });
+                        linkElement.dispatchEvent(clickEvent);
+                    } catch (ex) {
+                        console.log(ex);
+                    }
+
+                }).error(function (data) {
+                    console.log(data);
+                });
         }
     };
 
