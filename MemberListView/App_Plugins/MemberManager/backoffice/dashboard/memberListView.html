@@ -99,7 +99,7 @@
                         </td>
                         <td>
                             <!-- ng-class="{inactive: entityType === 'content' && !result.published}"  - use this as a template to color based on locked/approved state -->
-                            <a href="#" ng-click="editMember(result.key)" prevent-default>{{result.name}}</a>
+                            <a href="#" ng-click="vm.editMember(result.key)" prevent-default>{{result.name}}</a>
                         </td>
                         <td>
                             {{result.email}}

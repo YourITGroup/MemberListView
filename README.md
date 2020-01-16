@@ -22,6 +22,13 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+
+**Version 1.4.2**
+* Fix for editing members not working
+
+**Version 1.4.1**
+* Fix for downloading Member export CSV when security headers are set resulting in 417 error.
+
 **Version 1.4.0**
 * Support for Umbraco 7.15
 
