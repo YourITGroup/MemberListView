@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Examine;
+﻿using Examine;
 using Examine.LuceneEngine.SearchCriteria;
 using Examine.SearchCriteria;
 using System;
@@ -7,19 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Text;
-using System.Web;
 using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.Mapping;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Web;
-using Umbraco.Web.Models.ContentEditing;
 
 namespace MemberListView.Helpers
 {
     public class MemberSearch
     {
-        public static IEnumerable<SearchResult> PerformMemberSearch(string filter, FormDataCollection queryStrings, out int totalRecordCount,
+        public static IEnumerable<SearchResult> PerformMemberSearch(string filter, IDictionary<string,string> filters, out int totalRecordCount,
             string memberType = "",
             int pageNumber = 0,
             int pageSize = 0,
@@ -32,9 +27,10 @@ namespace MemberListView.Helpers
 
             var basicFields = new List<string>() { "id", "_searchEmail", "email", "loginName" };
 
+            var filterParameters = filters.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value));
+
             //build a lucene query
-            if (string.IsNullOrWhiteSpace(filter) &&
-                !queryStrings.Any(qs => qs.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(qs.Value)))
+            if (string.IsNullOrWhiteSpace(filter) && !filterParameters.Any())
             {
                 // Generic get everything...
                 criteria.RawQuery("a* b* c* d* e* f* g* h* i* j* k* l* m* n* o* p* q* r* s* t* u* v* w* x* y* z*");
@@ -64,12 +60,12 @@ namespace MemberListView.Helpers
                 }
 
                 // Now specific field searching. - these should be ANDed and grouped.
-                foreach (var qs in queryStrings.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
+                foreach (var qs in filterParameters)
                 {
                     // Got a filter.
                     string alias = qs.Key.Substring(2);
 
-                    var values = queryStrings.GetValue<string>(qs.Key).Split(',');
+                    var values = filters[qs.Key].Split(',');
 
                     if (values.Length > 0)
                     {

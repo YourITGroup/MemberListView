@@ -39,9 +39,10 @@ namespace MemberListView.EventHandlers
         ///  </remarks>
         private void EnsureMembershipFlags(IndexingNodeDataEventArgs e, IContentBase node)
         {
-            Func<string, bool> valueExists = fieldName => {
+            bool valueExists(string fieldName)
+            {
                 return e.Node.Nodes().Any(n => n is XElement ? (n as XElement).Name == fieldName : false);
-            };
+            }
 
             if (!valueExists(Constants.Conventions.Member.IsLockedOut) || !valueExists(Constants.Conventions.Member.IsApproved))
             {

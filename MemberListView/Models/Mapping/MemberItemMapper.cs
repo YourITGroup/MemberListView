@@ -44,8 +44,7 @@ namespace MemberListView.Models.Mapping
                 {
                     if (searchResult.Fields.ContainsKey("__key") && searchResult.Fields["__key"] != null)
                     {
-                        Guid key;
-                        if (Guid.TryParse(searchResult.Fields["__key"], out key))
+                        if (Guid.TryParse(searchResult.Fields["__key"], out Guid key))
                         {
                             member.Key = key;
                         }
@@ -53,8 +52,7 @@ namespace MemberListView.Models.Mapping
 
                     if (searchResult.Fields.ContainsKey("__Key") && searchResult.Fields["__Key"] != null)
                     {
-                        Guid key;
-                        if (Guid.TryParse(searchResult.Fields["__Key"], out key))
+                        if (Guid.TryParse(searchResult.Fields["__Key"], out Guid key))
                         {
                             member.Key = key;
                         }

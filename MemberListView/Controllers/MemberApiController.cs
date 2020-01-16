@@ -1,99 +1,110 @@
 ﻿using AutoMapper;
+using MemberListView.Helpers;
 using MemberListView.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Web.Mvc;
 using System.Web.Security;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
-using Umbraco.Core.Security;
-using Umbraco.Web.Editors;
-using Umbraco.Web.Models.ContentEditing;
-using Umbraco.Web.WebApi;
-using Umbraco.Web.WebApi.Filters;
 using Umbraco.Web;
-using System.Net.Http.Formatting;
-using System.Net.Http;
-using System.Web.Mvc;
-using System.Net.Http.Headers;
-using System.Net;
-using MemberListView.Helpers;
-using System.Text;
-using Umbraco.Core.Logging;
+using Umbraco.Web.Editors;
+using Umbraco.Web.Mvc;
+using Umbraco.Web.WebApi.Filters;
 
 namespace MemberListView.Controllers
 {
-    [Umbraco.Web.Mvc.PluginController("MemberManager")]
-    public class MemberApiController : UmbracoAuthorizedApiController
+    [PluginController("MemberManager")]
+    //[OutgoingDateTimeFormat]
+    public class MemberApiController : BackOfficeNotificationsController
     {
-        private MembershipProvider provider;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MemberApiController()
+            : this(UmbracoContext.Current)
+        {
+            _provider = global::Umbraco.Core.Security.MembershipProviderExtensions.GetMembersMembershipProvider();
+        }
 
         /// <summary>
-        /// Returns the currently used Membership Provider.
+        /// Constructor
         /// </summary>
-        private MembershipProvider MembershipProvider
+        /// <param name="umbracoContext"></param>
+        public MemberApiController(UmbracoContext umbracoContext)
+            : base(umbracoContext)
         {
-            get
-            {
-                if (provider == null)
-                {
-                    if (Membership.Providers[Constants.Conventions.Member.UmbracoMemberProviderName] == null)
-                    {
-                        throw new InvalidOperationException("No membership provider found with name " + Constants.Conventions.Member.UmbracoMemberProviderName);
-                    }
-
-                    provider = Membership.Providers[Constants.Conventions.Member.UmbracoMemberProviderName];
-                }
-                return provider;
-            }
+            _provider = global::Umbraco.Core.Security.MembershipProviderExtensions.GetMembersMembershipProvider();
         }
-        [HttpGet]
-        [HttpQueryStringFilter("queryStrings")]
-        public PagedResult<MemberListItem> GetMembers(FormDataCollection queryStrings)
+
+        private readonly MembershipProvider _provider;
+
+        public PagedResult<MemberListItem> GetMembers(
+            int pageNumber = 1,
+            int pageSize = 100,
+            string orderBy = "email",
+            Direction orderDirection = Direction.Ascending,
+            string filter = "")
         {
+            var queryString = Request.GetQueryNameValuePairs();
+            string memberTypeAlias = queryString.Where(q => q.Key == "memberType").Select(q => q.Value).FirstOrDefault();
+
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                throw new NotSupportedException("Both pageNumber and pageSize must be greater than zero");
+            }
+
             // Base Query data
-            int pageNumber = queryStrings.HasKey("pageNumber") ? queryStrings.GetValue<int>("pageNumber") : 1;
-            int pageSize = queryStrings.HasKey("pageSize") ? queryStrings.GetValue<int>("pageSize") : 10;
-            string orderBy = queryStrings.HasKey("orderBy") ? queryStrings.GetValue<string>("orderBy") : "email";
-            Direction orderDirection = queryStrings.HasKey("orderDirection") ? queryStrings.GetValue<Direction>("orderDirection") : Direction.Ascending;
-            string memberType = queryStrings.HasKey("memberType") ? queryStrings.GetValue<string>("memberType") : "";
 
-            string filter = queryStrings.HasKey("filter") ? queryStrings.GetValue<string>("filter") : "";
+            Dictionary<string, string> filters = new Dictionary<string, string>();
 
-            int totalMembers = 0;
-            var members = Mapper.Map<IEnumerable<MemberListItem>>(MemberSearch.PerformMemberSearch(filter, queryStrings, out totalMembers,
-                                                                                                    memberType, pageNumber, pageSize,
+            foreach (var kvp in queryString.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
+            {
+                filters.Add(kvp.Key, kvp.Value);
+            }
+
+            var members = Mapper.Map<IEnumerable<MemberListItem>>(MemberSearch.PerformMemberSearch(filter, filters, out int totalMembers,
+                                                                                                    memberTypeAlias, pageNumber, pageSize,
                                                                                                     orderBy, orderDirection));
             if (totalMembers == 0)
                 return new PagedResult<MemberListItem>(0, 0, 0);
 
-            var pagedResult = new PagedResult<MemberListItem>(
-               totalMembers,
-               pageNumber,
-               pageSize);
-
-            pagedResult.Items = members;
+            var pagedResult = new PagedResult<MemberListItem>(totalMembers, pageNumber, pageSize)
+            {
+                Items = members
+            };
 
             return pagedResult;
         }
 
         [HttpGet]
-        [HttpQueryStringFilter("queryStrings")]
-        public HttpResponseMessage GetMembersExport(FormDataCollection queryStrings)
+        public HttpResponseMessage GetMembersExport(
+            string orderBy = "email",
+            Direction orderDirection = Direction.Ascending,
+            string filter = "")
         {
             // Base Query data
-            string memberType = queryStrings.HasKey("memberType") ? queryStrings.GetValue<string>("memberType") : "";
-            string orderBy = queryStrings.HasKey("orderBy") ? queryStrings.GetValue<string>("orderBy") : "email";
-            Direction orderDirection = queryStrings.HasKey("orderDirection") ? queryStrings.GetValue<Direction>("orderDirection") : Direction.Ascending;
+            var queryString = Request.GetQueryNameValuePairs();
+            string memberType = queryString.Where(q => q.Key == "memberType").Select(q => q.Value).FirstOrDefault();
 
-            string filter = queryStrings.HasKey("filter") ? queryStrings.GetValue<string>("filter") : "";
+            Dictionary<string, string> filters = new Dictionary<string, string>();
 
-            int totalMembers = 0;
+            foreach (var kvp in queryString.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
+            {
+                filters.Add(kvp.Key, kvp.Value);
+            }
 
-            var members = Mapper.Map<IEnumerable<MemberExportModel>>(MemberSearch.PerformMemberSearch(filter, queryStrings, out totalMembers,
+
+            var members = Mapper.Map<IEnumerable<MemberExportModel>>(MemberSearch.PerformMemberSearch(filter, filters, out _,
                                                                                                         memberType,
-                                                                                                        orderBy: orderBy, 
+                                                                                                        orderBy: orderBy,
                                                                                                         orderDirection: orderDirection));
 
             var content = members.CreateCSV();
@@ -125,7 +136,7 @@ namespace MemberListView.Controllers
             {
                 try
                 {
-                    var result = MembershipProvider.UnlockUser(member.UserName);
+                    var result = _provider.UnlockUser(member.UserName);
                     if (result == false)
                     {
                         //it wasn't successful - but it won't really tell us why.
@@ -145,7 +156,7 @@ namespace MemberListView.Controllers
             if (member != null)
             {
                 member.IsApproved = false;
-                MembershipProvider.UpdateUser(member);
+                _provider.UpdateUser(member);
             }
         }
 
@@ -155,16 +166,14 @@ namespace MemberListView.Controllers
             if (member != null)
             {
                 member.IsApproved = true;
-                MembershipProvider.UpdateUser(member);
+                _provider.UpdateUser(member);
             }
         }
 
         private MembershipUser GetMember(string id)
         {
-            Guid key = Guid.Empty;
-
-            int iid;
-            if (int.TryParse(id, out iid))
+            Guid key;
+            if (int.TryParse(id, out int iid))
             {
                 var member = Services.MemberService.GetById(iid);
                 key = member.Key;
@@ -173,7 +182,7 @@ namespace MemberListView.Controllers
             {
                 return null;
             }
-            return MembershipProvider.GetUser(key, false);
+            return _provider.GetUser(key, false);
         }
     }
 }

@@ -22,6 +22,9 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 1.4.0**
+* Support for Umbraco 7.15
+
 **Version 1.3.0**
 * Support for Localization with plugin-based lang files
 * Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
