@@ -23,7 +23,6 @@ using Umbraco.Web.WebApi.Filters;
 namespace MemberListView.Controllers
 {
     [PluginController("MemberManager")]
-    //[OutgoingDateTimeFormat]
     public class MemberApiController : BackOfficeNotificationsController
     {
         /// <summary>
@@ -46,6 +45,14 @@ namespace MemberListView.Controllers
 
         private readonly MembershipProvider _provider;
 
+        public IEnumerable<string> GetMemberGroups()
+        {
+            return Services.MemberGroupService
+                            .GetAll()
+                            .Select(g => g.Name)
+                            .OrderBy(g => g);
+        }
+
         public PagedResult<MemberListItem> GetMembers(
             int pageNumber = 1,
             int pageSize = 100,
@@ -65,7 +72,7 @@ namespace MemberListView.Controllers
 
             Dictionary<string, string> filters = new Dictionary<string, string>();
 
-            foreach (var kvp in queryString.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
+            foreach (var kvp in queryString.Where(q => (q.Key.StartsWith("f_") || q.Key == Constants.Members.Groups) && !string.IsNullOrWhiteSpace(q.Value)))
             {
                 filters.Add(kvp.Key, kvp.Value);
             }

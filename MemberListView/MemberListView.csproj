@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MemberListView</RootNamespace>
     <AssemblyName>MemberListView</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -173,9 +173,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -237,10 +237,9 @@
       <HintPath>..\packages\UmbracoCms.Core.7.15.1\lib\net452\UmbracoExamine.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\MemberApiController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -262,6 +261,9 @@
     <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\member.edit.controller.js" />
     <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\member.filter.controller.js" />
     <Content Include="App_Plugins\MemberManager\css\memberListView.css" />
+    <Content Include="App_Plugins\MemberManager\css\memberListView.min.css">
+      <DependentUpon>memberListView.css</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\MemberManager\lang\cs.xml" />
     <Content Include="App_Plugins\MemberManager\lang\da.xml" />
     <Content Include="App_Plugins\MemberManager\lang\de.xml" />
@@ -283,6 +285,7 @@
     <Content Include="App_Plugins\MemberManager\lang\zh-tw.xml" />
     <Content Include="App_Plugins\MemberManager\lang\zh.xml" />
     <Content Include="App_Plugins\MemberManager\resources\member.resource.js" />
+    <None Include="App_Plugins\MemberManager\scss\memberListView.scss" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -292,13 +295,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config\ExamineIndex.config.transform">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="config\Dashboard.config.transform" />
     <Content Include="MemberListView.nuspec">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -18,10 +18,10 @@ function memberExtResource($http, $window, umbRequestHelper) {
             }
 
             return umbRequestHelper.resourcePromise(
-                           $http.post("Backoffice/MemberManager/MemberApi/PostApprove?" +
-                                umbRequestHelper.dictionaryToQueryString(
-                                   [{ id: id }])),
-                           'Failed to approve member with id ' + id);
+                $http.post("Backoffice/MemberManager/MemberApi/PostApprove?" +
+                    umbRequestHelper.dictionaryToQueryString(
+                        [{ id: id }])),
+                'Failed to approve member with id ' + id);
         },
         suspendById: function (id) {
             if (!id) {
@@ -29,10 +29,10 @@ function memberExtResource($http, $window, umbRequestHelper) {
             }
 
             return umbRequestHelper.resourcePromise(
-                           $http.post("Backoffice/MemberManager/MemberApi/PostSuspend?" +
-                                umbRequestHelper.dictionaryToQueryString(
-                                   [{ id: id }])),
-                           'Failed to approve member with id ' + id);
+                $http.post("Backoffice/MemberManager/MemberApi/PostSuspend?" +
+                    umbRequestHelper.dictionaryToQueryString(
+                        [{ id: id }])),
+                'Failed to approve member with id ' + id);
         },
         unlockById: function (id) {
             if (!id) {
@@ -40,17 +40,17 @@ function memberExtResource($http, $window, umbRequestHelper) {
             }
 
             return umbRequestHelper.resourcePromise(
-                           $http.post("Backoffice/MemberManager/MemberApi/PostUnlock?" +
-                                umbRequestHelper.dictionaryToQueryString(
-                                   [{ id: id }])),
-                           'Failed to approve member with id ' + id);
+                $http.post("Backoffice/MemberManager/MemberApi/PostUnlock?" +
+                    umbRequestHelper.dictionaryToQueryString(
+                        [{ id: id }])),
+                'Failed to approve member with id ' + id);
         },
         getMembers: function (options) {
 
             var defaults = {
                 pageSize: 0,
                 pageNumber: 0,
-                filter: '',
+                filterData: { filter: null },
                 orderDirection: "Ascending",
                 orderBy: "SortOrder"
             };
@@ -70,21 +70,21 @@ function memberExtResource($http, $window, umbRequestHelper) {
             }
 
             // Create the querystring dictionary
-            var querystring = _filterToDictionary(options.filter);
+            var querystring = _filterToDictionary(options.filterData);
             querystring.push({ pageNumber: options.pageNumber });
             querystring.push({ pageSize: options.pageSize });
             querystring.push({ orderBy: options.orderBy });
             querystring.push({ orderDirection: options.orderDirection });
 
             return umbRequestHelper.resourcePromise(
-               $http.get("Backoffice/MemberManager/MemberApi/GetMembers?" +
+                $http.get("Backoffice/MemberManager/MemberApi/GetMembers?" +
                     umbRequestHelper.dictionaryToQueryString(querystring)),
-               'Failed to retrieve members');
+                'Failed to retrieve members');
         },
         getMemberExport: function (options) {
 
             var defaults = {
-                filter: '',
+                filterData: { filter: null },
                 orderDirection: "Ascending",
                 orderBy: "SortOrder"
             };
@@ -106,7 +106,7 @@ function memberExtResource($http, $window, umbRequestHelper) {
             }
 
             // Create the querystring dictionary
-            var querystring = _filterToDictionary(options.filter);
+            var querystring = _filterToDictionary(options.filterData);
             querystring.push({ orderBy: options.orderBy });
             querystring.push({ orderDirection: options.orderDirection });
 
@@ -147,6 +147,11 @@ function memberExtResource($http, $window, umbRequestHelper) {
                 }).error(function (data) {
                     console.log(data);
                 });
+        },
+        getMemberGroups: function () {
+            return umbRequestHelper.resourcePromise(
+                $http.get("Backoffice/MemberManager/MemberApi/GetMemberGroups"),
+                'Failed to retrieve groups');
         }
     };
 
@@ -158,7 +163,7 @@ function memberExtResource($http, $window, umbRequestHelper) {
         for (prop in filter) {
             if (filter.hasOwnProperty(prop) &&
                 filter[prop] &&
-                (prop.startsWith('f_') || prop === 'filter' || prop === 'memberType') &&
+                (prop.startsWith('f_') || prop === 'filter' || prop === 'memberType' || prop === 'memberGroups') &&
                 filter[prop].length > 0) {
 
                 // Add a new dictionary entry.

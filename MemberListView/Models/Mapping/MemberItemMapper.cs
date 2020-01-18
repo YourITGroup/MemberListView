@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using Examine;
-using MemberListView.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Umbraco.Core;
-using Umbraco.Core.Models;
 using Umbraco.Core.Models.Mapping;
+using Umbraco.Web.Models.ContentEditing;
+using CoreConstants = Umbraco.Core.Constants;
 
 namespace MemberListView.Models.Mapping
 {
@@ -17,10 +16,30 @@ namespace MemberListView.Models.Mapping
         {
             //FROM SearchResult TO MemberListItem - used when searching for members.
             config.CreateMap<SearchResult, MemberListItem>()
-                //.ForMember(member => member.Id, expression => expression.MapFrom(result => result.Id))
+                .ForMember(member => member.Id, expression => expression.MapFrom(user => int.MaxValue))
+                .ForMember(display => display.Udi, expression => expression.Ignore())
+                .ForMember(member => member.CreateDate, expression => expression.Ignore())//.MapFrom(user => user.CreationDate))
+                .ForMember(member => member.UpdateDate, expression => expression.MapFrom(result => result["updateDate"]))
+                .ForMember(member => member.Owner, expression => expression.UseValue(new UserProfile { Name = "Admin", UserId = 0 }))
+                .ForMember(member => member.Icon, expression => expression.UseValue("icon-user"))
+                .ForMember(member => member.Properties, expression => expression.Ignore())
+                .ForMember(member => member.ParentId, expression => expression.Ignore())
+                .ForMember(member => member.Path, expression => expression.Ignore())
+                .ForMember(member => member.SortOrder, expression => expression.Ignore())
+                .ForMember(member => member.AdditionalData, expression => expression.Ignore())
+                .ForMember(member => member.Published, expression => expression.Ignore())
+                .ForMember(member => member.Updater, expression => expression.Ignore())
+                .ForMember(member => member.Trashed, expression => expression.Ignore())
+                .ForMember(member => member.Alias, expression => expression.Ignore())
+                .ForMember(member => member.ContentTypeAlias, expression => expression.Ignore())
+                .ForMember(member => member.HasPublishedVersion, expression => expression.Ignore())
+                .ForMember(member => member.MemberGroups, expression => expression.MapFrom(result => result[Constants.Members.Groups]
+                                                                                                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                                                        .Select(g => g.Trim())))
+
                 .ForMember(member => member.Key, expression => expression.Ignore())
 
-                .ForMember(member => member.LoginName,
+                .ForMember(member => member.Username,
                     expression => expression.MapFrom(result => result.Fields["loginName"]))
 
                 .ForMember(member => member.Name,
@@ -64,8 +83,8 @@ namespace MemberListView.Models.Mapping
                     // We assume not locked out for this property.
                     member.IsLockedOut = false;
 
-                    if (!searchResult.Fields.ContainsKey(Constants.Conventions.Member.IsApproved) ||
-                        !searchResult.Fields.ContainsKey(Constants.Conventions.Member.IsLockedOut))
+                    if (!searchResult.Fields.ContainsKey(CoreConstants.Conventions.Member.IsApproved) ||
+                        !searchResult.Fields.ContainsKey(CoreConstants.Conventions.Member.IsLockedOut))
                     {
                         // We need to get a member back from the database as these values aren't indexed reliably for some reason.
                         var m = ApplicationContext.Current.Services.MemberService.GetByKey((Guid)member.Key);
@@ -77,32 +96,26 @@ namespace MemberListView.Models.Mapping
                     }
                     else
                     {
-                        if (searchResult.Fields[Constants.Conventions.Member.IsApproved] == "1")
+                        if (searchResult.Fields[CoreConstants.Conventions.Member.IsApproved] == "1")
                             member.IsApproved = true;
-                        else if (bool.TryParse(searchResult.Fields[Constants.Conventions.Member.IsApproved], out val))
+                        else if (bool.TryParse(searchResult.Fields[CoreConstants.Conventions.Member.IsApproved], out val))
                             member.IsApproved = val;
 
-                        if (searchResult.Fields[Constants.Conventions.Member.IsLockedOut] == "1")
+                        if (searchResult.Fields[CoreConstants.Conventions.Member.IsLockedOut] == "1")
                             member.IsLockedOut = true;
-                        else if (bool.TryParse(searchResult.Fields[Constants.Conventions.Member.IsLockedOut], out val))
+                        else if (bool.TryParse(searchResult.Fields[CoreConstants.Conventions.Member.IsLockedOut], out val))
                             member.IsLockedOut = val;
                     }
 
                     // Get any other properties available from the fields.
-                    foreach (var field in searchResult.Fields)
-                    {
-                        if (!field.Key.StartsWith("_") && !field.Key.StartsWith("umbraco") && !field.Key.EndsWith("_searchable") &&
-                            field.Key != "id" && field.Key != "key" && 
-                            field.Key != "updateDate" && field.Key != "writerName" &&
-                            field.Key != "loginName" && field.Key != "email" &&
-                            field.Key != Constants.Conventions.Member.IsApproved && 
-                            field.Key != Constants.Conventions.Member.IsLockedOut &&
-                            field.Key != "nodeName" && field.Key != "nodeTypeAlias")
-                        {
-                            member.Properties.Add(field.Key, field.Value);
-                        }
-
-                    }
+                    member.Properties = searchResult.Fields.Where(field => !field.Key.StartsWith("_") && !field.Key.StartsWith("umbraco") && !field.Key.EndsWith("_searchable") &&
+                                                                            field.Key != "id" && field.Key != "key" &&
+                                                                            field.Key != "updateDate" && field.Key != "writerName" &&
+                                                                            field.Key != "loginName" && field.Key != "email" &&
+                                                                            field.Key != CoreConstants.Conventions.Member.IsApproved &&
+                                                                            field.Key != CoreConstants.Conventions.Member.IsLockedOut &&
+                                                                            field.Key != "nodeName" && field.Key != "nodeTypeAlias")
+                                                            .Select(field => new ContentPropertyBasic { Alias = field.Key, Value = field.Value });
                 });
 
             config.CreateMap<ISearchResults, IEnumerable<MemberListItem>>()
@@ -118,7 +131,7 @@ namespace MemberListView.Models.Mapping
                         // Get any other properties available from the fields.
                         foreach (var p in listItem.Properties)
                         {
-                            member.Properties.Add(p.Key, p.Value);
+                            member.Properties.Add(p.Alias, p.Value.ToString());
                         }
 
                         // Resolve groups into a comma-delimited string.

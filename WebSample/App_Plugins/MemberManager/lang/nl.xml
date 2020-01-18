@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<language alias="nl" intName="Dutch" localName="Nederlands" lcid="19" culture="nl-NL">
+<language alias="en_us" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
   <creator>
     <name>Robert Foster</name>
     <link></link>
   </creator>
+  <area alias="general">
+    <key alias="isApproved">Approved</key>
+    <key alias="isLockedOut">Locked</key>
+    <key alias="memberGroups">Groups</key>
+  </area>
   <area alias="actions">
     <key alias="approve">Approve</key>
     <key alias="suspend">Suspend</key>
+    <key alias="applyFilter">Apply Filter</key>
+    <key alias="clearFilter">Clear Filter</key>
+  </area>
+  <area alias="bulk">
+    <key alias="unlockItemOfItem">Unlocking %0% Member</key>
+    <key alias="unlockItemOfItems">Unlocking %0% of %1% Members</key>
+    <key alias="unlockedItem">Unlocked %0% Member</key>
+    <key alias="unlockedItems">Unlocked %0% Members</key>
+    <key alias="suspendItemOfItem">Suspending %0% Member</key>
+    <key alias="suspendItemOfItems">Suspending %0% of %1% Members</key>
+    <key alias="suspendedItem">Suspended %0% Member</key>
+    <key alias="suspendedItems">Suspended %0% Members</key>
+    <key alias="approveItemOfItem">Approving %0% Member</key>
+    <key alias="approveItemOfItems">Approving %0% of %1% Members</key>
+    <key alias="approvedItem">Approved %0% Member</key>
+    <key alias="approvedItems">Approved %0% Members</key>
   </area>
   <area alias="memberManager">
     <key alias="filter">Filter</key>
     <key alias="clearFilter">Clear Filter</key>
     <key alias="exportMembers">Export Members</key>
+    <key alias="applyFilter">Apply Filter</key>
+    <key alias="confirmExport">Exporting large numbers of members may take some time.  Are you sure you want to continue?</key>
+    <key alias="confirmUnlock">Are you sure you want to unlock the selected members?</key>
+    <key alias="confirmSuspend">Are you sure you want to suspend the selected members?</key>
+    <key alias="confirmApprove">Are you sure you want to approve the selected members?</key>
   </area>
 </language>

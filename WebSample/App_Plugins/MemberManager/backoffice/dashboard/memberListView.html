@@ -1,4 +1,4 @@
-﻿<div ng-controller="MemberManager.Dashboard.MemberListViewController as vm" class="umb-editor umb-listview clearfix" >
+﻿<div ng-controller="MemberManager.Dashboard.MemberListViewController" class="umb-editor umb-listview membermanager clearfix">
     <style>
         canvas {
             width: 100% !important;
@@ -8,148 +8,180 @@
     </style>
 
     <div class="row-fluid">
-        <div class="umb-sub-header">
-
-            <div class="btn-group" ng-show="vm.listViewAllowedTypes && vm.listViewAllowedTypes.length > 0">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <localize key="actions_create">Create</localize>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="">
-                    <li ng-repeat="memberType in vm.listViewAllowedTypes">
-                        <a href="#/{{entityType}}/{{entityType}}/edit/-1?doctype={{memberType.alias}}&create=true">
-                            <i class="icon {{memberType.icon}}" ng-class="getIcon(memberType)"></i>
-                            {{memberType.name}}
+        <umb-editor-sub-header>
+            <umb-editor-sub-header-content-left>
+                <umb-editor-sub-header-section ng-if="(listViewAllowedTypes && listViewAllowedTypes.length > 0 && !isAnythingSelected()) && (currentNodePermissions == null || currentNodePermissions.canCreate)">
+                    <div class="btn-group" ng-show="createAllowedButtonSingle">
+                        <a class="btn" ng-click="createBlank(entityType,listViewAllowedTypes[0].alias)">
+                            <localize key="actions_create">Create</localize> {{listViewAllowedTypes[0].name}}
                         </a>
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                    <div class="btn-group" ng-show="createAllowedButtonMulti">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <localize key="actions_create">Create</localize>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="contentType in listViewAllowedTypes | orderBy:'name':false">
+                                <a href="" ng-click="createBlank(entityType,contentType.alias)" prevent-default>
+                                    <i class="{{contentType.icon}}"></i> {{contentType.name}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </umb-editor-sub-header-section>
 
-            <umb-button-group ng-if="vm.filterButtonGroup"
-                              default-button="vm.filterButtonGroup.defaultButton"
-                              sub-buttons="vm.filterButtonGroup.subButtons">
-            </umb-button-group>
+                <umb-editor-sub-header-section ng-if="isAnythingSelected()">
+                    <umb-button type="button"
+                                label="Clear selection"
+                                label-key="buttons_clearSelection"
+                                action="clearSelection()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
 
-            <div class="btn-group" ng-show="vm.canUnlock()">
-                <a class="btn btn-success" ng-disabled="vm.actionInProgress" ng-click="vm.unlock()" prevent-default>
-                    <localize key="actions_unlock">Unlock</localize>
-                </a>
-            </div>
-            <div class="btn-group" ng-show="vm.canApprove()">
-                <a class="btn btn-success" ng-disabled="vm.actionInProgress" ng-click="vm.approve()" prevent-default>
-                    <localize key="actions_approve">Approve</localize>
-                </a>
-            </div>
-            <div class="btn-group" ng-show="vm.canSuspend()">
-                <a class="btn btn-warning" ng-disabled="vm.actionInProgress" ng-click="vm.suspend()" prevent-default>
-                    <localize key="actions_suspend">Suspend</localize>
-                </a>
-            </div>
-            <div class="btn-group" ng-show="vm.isAnythingSelected()">
-                <a class="btn btn-danger" ng-disabled="vm.actionInProgress" ng-click="vm.delete()" prevent-default>
-                    <localize key="actions_delete">Delete</localize>
-                </a>
-            </div>
+                <umb-editor-sub-header-section ng-if="isAnythingSelected()">
+                    <strong ng-show="!actionInProgress">{{ selectedItemsCount() }} <localize key="general_of">of</localize> {{ listViewResultSet.items.length }} <localize key="general_selected">selected</localize></strong>
+                    <strong ng-show="actionInProgress" ng-bind="bulkStatus"></strong>
 
-            <span class="umb-status-label" ng-bind="vm.bulkStatus" ng-show="vm.isAnythingSelected()"></span>
-        </div>
+                    <div class="umb-loader-wrapper -bottom" ng-show="actionInProgress">
+                        <div class="umb-loader"></div>
+                    </div>
+                </umb-editor-sub-header-section>
+            </umb-editor-sub-header-content-left>
+            <umb-editor-sub-header-content-right>
+
+                <umb-editor-sub-header-section ng-if="!isAnythingSelected()">
+                    <form class="form-search -no-margin-bottom pull-right" novalidate>
+                        <div class="inner-addon left-addon">
+                            <i class="icon icon-search" ng-click="enterSearch($event)"></i>
+                            <input class="form-control search-input"
+                                   type="text"
+                                   localize="placeholder"
+                                   placeholder="@general_typeToSearch"
+                                   ng-model="options.filterData.filter"
+                                   ng-change="enterSearch()"
+                                   ng-keydown="forceSearch($event)"
+                                   prevent-enter-submit
+                                   no-dirty-check>
+                        </div>
+                    </form>
+
+                    <umb-button type="button"
+                                button-style="link"
+                                label="Filter"
+                                label-key="memberManager_filter"
+                                icon="icon-filter"
+                                action="filter()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="options.filterData.display"
+                                type="link"
+                                button-style="link"
+                                label="Clear Filter"
+                                label-key="memberManager_clearFilter"
+                                icon="icon-block"
+                                action="clearFilter()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section>
+                    <umb-button type="button"
+                                button-style="link"
+                                label="Export"
+                                label-key="memberManager_exportMembers"
+                                icon="icon-download"
+                                action="export()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section ng-if="isAnythingSelected()">
+                    <span class="umb-status-label" ng-bind="vm.bulkStatus" ng-show="vm.isAnythingSelected()"></span>
+
+                    <umb-button ng-if="canUnlock()"
+                                type="button"
+                                button-style="link"
+                                label="Unlock"
+                                label-key="actions_unlock"
+                                icon="icon-unlocked color-green"
+                                action="unlock()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="canApprove()"
+                                type="button"
+                                button-style="link"
+                                label="Approve"
+                                label-key="actions_approve"
+                                icon="icon-check color-green"
+                                action="approve()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="canSuspend()"
+                                type="button"
+                                button-style="link"
+                                label="Suspend"
+                                label-key="actions_suspend"
+                                icon="icon-block color-red"
+                                action="suspend()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="options.allowBulkDelete"
+                                type="button"
+                                button-style="link"
+                                label="Delete"
+                                label-key="actions_delete"
+                                icon="icon-trash color-red"
+                                action="delete()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                </umb-editor-sub-header-section>
+
+            </umb-editor-sub-header-content-right>
+        </umb-editor-sub-header>
     </div>
     <div class="row-fluid">
 
-        <div class="filter-display" ng-if="vm.searchDisplay">
-            <div ng-repeat="displayFilter in vm.searchDisplay">
+        <div class="filter-display" ng-if="options.filterData.display">
+            <div ng-repeat="displayFilter in options.filterData.display">
                 <strong>{{displayFilter.title}}</strong>
                 <span>{{displayFilter.value}}</span>
             </div>
         </div>
     </div>
-    <div class="row-fluid">
-        <div ng-if="vm.listViewResultSet.totalItems > 0">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <td style="width: 35px">
-                            <input type="checkbox" ng-click="vm.selectAll($event)" ng-model="isSelectedAll" no-dirty-check />
-                        </td>
-                        <td>
-                            <a href="#" ng-click="vm.sort('Name')" prevent-default>
-                                <localize key="general_name">Name</localize>
-                                <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('Name', 'asc'), 'icon-navigation-up': isSortDirection('Name', 'desc')}"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="#" ng-click="vm.sort('Email')" prevent-default>
-                                Email
-                                <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('Email', 'asc'), 'icon-navigation-up': isSortDirection('Email', 'desc')}"></i>
-                            </a>
-                        </td>
-                        <td>
-                            Status
-                        </td>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    <tr ng-repeat="result in vm.listViewResultSet.items"
-                        ng-class="{selected:result.selected}">
+    <umb-list-view-layout ng-if="viewLoaded"
+                          content-id=""
+                          folders="folders"
+                          items="listViewResultSet.items"
+                          selection="selection"
+                          options="options"
+                          entity-type="{{entityType}}"
+                          on-get-content="getContent">
+    </umb-list-view-layout>
 
-                        <td>
-                            <i class="icon {{result.icon}}" ng-class="getIcon(result)"></i>
-                            <input type="checkbox" ng-model="result.selected" no-dirty-check />
-                        </td>
-                        <td>
-                            <!-- ng-class="{inactive: entityType === 'content' && !result.published}"  - use this as a template to color based on locked/approved state -->
-                            <a href="#" ng-click="editMember(result.key)" prevent-default>{{result.name}}</a>
-                        </td>
-                        <td>
-                            {{result.email}}
-                        </td>
-                        <td>
-                            <span title="{{vm.getLockedDescription(result)}}" ng-class="vm.getLockedIcon(result)"></span>
-                            <span title="{{vm.getSuspendedDescription(result)}}" ng-class="vm.getSuspendedIcon(result)"></span>
-                        </td>
-                    </tr>
-                </tbody>
+    <umb-load-indicator ng-show="!viewLoaded"></umb-load-indicator>
 
-                <tfoot ng-show="vm.pagination.length > 1">
-                    <tr>
-                        <th colspan="4">
-                            <div class="pull-left">
-                            </div>
-                            <div class="pagination pagination-right">
-                                <ul>
-                                    <li ng-class="{disabled:vm.options.pageNumber <= 1}">
-                                        <a href="#" ng-click="vm.prev()" prevent-default>
-                                            <localize key="general_previous">Previous</localize>
-                                        </a>
-                                    </li>
-
-                                    <li ng-repeat="pgn in vm.pagination"
-                                        ng-class="{active:pgn.isActive}">
-
-                                        <a href="#" ng-click="vm.goToPage(pgn.val - 1)" prevent-default
-                                           ng-bind="pgn.name ? pgn.name : pgn.val"
-                                           ng-if="pgn.val != '...'"></a>
-                                        <span ng-bind="pgn.val" ng-if="pgn.val == '...'"></span>
-                                    </li>
-
-                                    <li ng-class="{disabled:vm.options.pageNumber >= vm.listViewResultSet.totalPages}">
-                                        <a href="#" ng-click="vm.next()" prevent-default>
-                                            <localize key="general_next">Next</localize>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </th>
-                    </tr>
-                </tfoot>
-
-            </table>
-        </div>
-        <div class="no-results" ng-if="vm.listViewResultSet.totalItems == 0">
-            No matching results
-        </div>
+    <div class="flex justify-center">
+        <umb-pagination ng-if="listViewResultSet.totalPages"
+                        page-number="options.pageNumber"
+                        total-pages="listViewResultSet.totalPages"
+                        on-next="next"
+                        on-prev="prev"
+                        on-go-to-page="goToPage">
+        </umb-pagination>
     </div>
+
+    <umb-overlay ng-if="ysodOverlay.show"
+                 model="ysodOverlay"
+                 position="right"
+                 view="ysodOverlay.view">
+    </umb-overlay>
 </div>
 

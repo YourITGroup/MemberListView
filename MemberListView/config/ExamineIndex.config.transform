@@ -11,12 +11,16 @@
     </IndexAttributeFields>
     <IndexUserFields>
       <add Name="umbracoMemberApproved" />
+      <add Name="memberGroups" />
+      <add Name="_memberGroups" />
       <add Name="umbracoMemberLockedOut" />
       <add Name="umbracoMemberLastLockoutDate" Type="DATETIME" />
       <add Name="umbracoMemberLastLogin" Type="DATETIME" />
       <add Name="umbracoMemberPasswordRetrievalAnswer" />
       <add Name="umbracoMemberPasswordRetrievalQuestion" />
       <add Name="comments" />
+      <add Name="firstName" />
+      <add Name="lastName" />
     </IndexUserFields>
   </IndexSet>
 </ExamineLuceneIndexSets>
