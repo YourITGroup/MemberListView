@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web;
-using Umbraco.Core.Models;
+﻿using System.Collections.Generic;
 
 namespace MemberListView.Models
 {
@@ -15,7 +10,7 @@ namespace MemberListView.Models
 
         public string Name { get; set; }
 
-        public string LoginName { get; set; }
+        public string Username { get; set; }
 
         public string Email { get; set; }
 
@@ -25,15 +20,15 @@ namespace MemberListView.Models
 
         public string MemberType { get; set; }
 
-        public string Groups { get; set; }
+        public string MemberGroups { get; set; }
 
-        private Dictionary<string, string> properties;
-        public IDictionary<string, string> Properties
+        private Dictionary<string, object> properties;
+        public IDictionary<string, object> Properties
         {
             get
             {
                 if (properties == null)
-                    properties = new Dictionary<string, string>();
+                    properties = new Dictionary<string, object>();
                 return properties;
             }
         }

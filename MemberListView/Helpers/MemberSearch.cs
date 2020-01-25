@@ -4,17 +4,16 @@ using Examine.SearchCriteria;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Formatting;
 using System.Text;
-using Umbraco.Core;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Web;
+using CoreConstants = Umbraco.Core.Constants;
 
 namespace MemberListView.Helpers
 {
-    public class MemberSearch
+    public static class MemberSearch
     {
-        public static IEnumerable<SearchResult> PerformMemberSearch(string filter, IDictionary<string,string> filters, out int totalRecordCount,
+        public static IEnumerable<SearchResult> PerformMemberSearch(string filter, IDictionary<string, string> filters, out int totalRecordCount,
             string memberType = "",
             int pageNumber = 0,
             int pageSize = 0,
@@ -22,12 +21,12 @@ namespace MemberListView.Helpers
             Direction orderDirection = Direction.Ascending)
         {
 
-            var internalSearcher = ExamineManager.Instance.SearchProviderCollection[Constants.Examine.InternalMemberSearcher];
+            var internalSearcher = ExamineManager.Instance.SearchProviderCollection[CoreConstants.Examine.InternalMemberSearcher];
             ISearchCriteria criteria = internalSearcher.CreateSearchCriteria().RawQuery(" +__IndexType:member");
 
             var basicFields = new List<string>() { "id", "_searchEmail", "email", "loginName" };
 
-            var filterParameters = filters.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value));
+            var filterParameters = filters.Where(q => !string.IsNullOrWhiteSpace(q.Value));
 
             //build a lucene query
             if (string.IsNullOrWhiteSpace(filter) && !filterParameters.Any())
@@ -62,11 +61,18 @@ namespace MemberListView.Helpers
                 // Now specific field searching. - these should be ANDed and grouped.
                 foreach (var qs in filterParameters)
                 {
-                    // Got a filter.
-                    string alias = qs.Key.Substring(2);
+                    string alias = qs.Key;
+                    if (alias == Constants.Members.Groups)
+                    {
+                        // search on list with no commas.
+                        alias = $"_{alias}";
+                    }
+                    else if (alias.StartsWith("f_"))
+                    {
+                        alias = qs.Key.Substring(2);
+                    }
 
                     var values = filters[qs.Key].Split(',');
-
                     if (values.Length > 0)
                     {
                         criteria.GroupedOr(new[] { alias }, values);
@@ -91,10 +97,26 @@ namespace MemberListView.Helpers
             var result = internalSearcher.Search(criteria);
             totalRecordCount = result.TotalItemCount;
 
+            string orderFieldName;
+            switch (orderBy.ToLower())
+            {
+                case "isapproved":
+                    orderFieldName = CoreConstants.Conventions.Member.IsApproved;
+                    break;
+                case "islockedout":
+                    orderFieldName = CoreConstants.Conventions.Member.IsLockedOut;
+                    break;
+                case "name":
+                    orderFieldName = "nodeName";
+                    break;
+                default:
+                    orderFieldName = orderBy;
+                    break;
+            }
             // Order the results 
             var orderedResults = orderDirection == Direction.Ascending
-                ? result.OrderBy(o => orderBy.ToLower() == "name" ? o.Fields["nodeName"] : o.Fields["email"])
-                : result.OrderByDescending(o => orderBy.ToLower() == "name" ? o.Fields["nodeName"] : o.Fields["email"]);
+                ? result.OrderBy(o => o.Fields[orderFieldName])
+                : result.OrderByDescending(o => o.Fields[orderFieldName]);
 
             if (pageSize > 0)
             {

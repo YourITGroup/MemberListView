@@ -1,0 +1,90 @@
+﻿<form novalidate name="contentForm"
+      ng-controller="MemberManager.Dialogs.Member.ExportController"
+      ng-submit="export()"
+      val-form-manager
+      class="umb-mini-editor">
+
+    <div class="umb-panel">
+        <div class="umb-panel-header">
+            <h1>
+                <localize key="memberManager_export">Export</localize>
+            </h1>
+        </div>
+        <div class="umb-panel-body with-footer">
+            <div class="umb-pane filter-options">
+                <div class="umb-el-wrap">
+                    <label class="control-label">Exportable records:</label> <span>{{totalItems}} members</span>
+                    <div class="alert alert-warning" ng-if="totalItems > 100">Exporting a large number of members may take some time.</div>
+                </div>
+                <div class="umb-el-wrap" ng-if="filterData.display">
+                    <label class="control-label">Applied Filters: </label>
+
+                    <div class="filter-display">
+                        <div ng-repeat="displayFilter in filterData.display">
+                            <strong>{{displayFilter.title}}</strong>
+                            <span>{{displayFilter.value}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="umb-el-wrap filter-checkbox-list" ng-show="columnList && columnList.length > 1">
+                    <h5>Columns</h5>
+                    <p>Select the columns to include in the exported data</p>
+                    <div class="filter-header">
+                        <div>
+                            <input type="checkbox" ng-model="allColumnsSelected" ng-click="selectAll(columnList)" id="column-all" />
+                            <label class="control-label" for="column-all">Select / deselect all columns</label>
+                        </div>
+                    </div>
+                    <div class="filter-content">
+                        <div ng-repeat="column in columnList">
+                            <input type="checkbox" ng-model="column.selected" id="column-{{column.id}}" />
+                            <label class="control-label" for="column-{{column.id}}">{{column.name}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="umb-el-wrap">
+                    <label class="control-label">Format: </label>
+                    <div class="controls controls-row">
+                        <select ng-model="format">
+                            <option value="Excel">Excel Spreadsheet (*.xlsx)</option>
+                            <option value="CSV">Comma Separated Values (*.csv)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="umb-panel-footer">
+            <div class="umb-el-wrap umb-panel-buttons">
+                <div class="btn-toolbar umb-btn-toolbar pull-right">
+                    <a ng-click="close()" class="btn btn-link">
+                        <localize key="general_close">Close</localize>
+                    </a>
+
+
+                    <div class="btn-group dropup" ng-if="defaultButton">
+                        <!-- primary button -->
+                        <a class="btn btn-success" href="#" ng-click="performAction(defaultButton)" prevent-default>
+                            <localize key="{{defaultButton.labelKey}}">{{defaultButton.label}}</localize>
+                        </a>
+
+                        <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" ng-if="subButtons.length > 0">
+                            <span class="caret"></span>
+                        </a>
+
+                        <!-- sub buttons -->
+                        <ul class="dropdown-menu bottom-up" role="menu" aria-labelledby="dLabel" ng-if="subButtons.length > 0">
+                            <li ng-repeat="btn in subButtons">
+                                <a href="#" ng-click="performAction(btn)" prevent-default>
+                                    <localize key="{{btn.labelKey}}">{{btn.label}}</localize>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

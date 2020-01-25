@@ -1,29 +1,27 @@
 ﻿using AutoMapper;
+using MemberListView.Extensions;
 using MemberListView.Helpers;
 using MemberListView.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
-using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Web;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
-using Umbraco.Web.WebApi;
-using Umbraco.Web.WebApi.Filters;
 
 namespace MemberListView.Controllers
 {
     [PluginController("MemberManager")]
-    //[OutgoingDateTimeFormat]
     public class MemberApiController : BackOfficeNotificationsController
     {
         /// <summary>
@@ -46,6 +44,14 @@ namespace MemberListView.Controllers
 
         private readonly MembershipProvider _provider;
 
+        public IEnumerable<string> GetMemberGroups()
+        {
+            return Services.MemberGroupService
+                            .GetAll()
+                            .Select(g => g.Name)
+                            .OrderBy(g => g);
+        }
+
         public PagedResult<MemberListItem> GetMembers(
             int pageNumber = 1,
             int pageSize = 100,
@@ -53,22 +59,14 @@ namespace MemberListView.Controllers
             Direction orderDirection = Direction.Ascending,
             string filter = "")
         {
-            var queryString = Request.GetQueryNameValuePairs();
-            string memberTypeAlias = queryString.Where(q => q.Key == "memberType").Select(q => q.Value).FirstOrDefault();
-
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 throw new NotSupportedException("Both pageNumber and pageSize must be greater than zero");
             }
 
-            // Base Query data
-
-            Dictionary<string, string> filters = new Dictionary<string, string>();
-
-            foreach (var kvp in queryString.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
-            {
-                filters.Add(kvp.Key, kvp.Value);
-            }
+            var queryString = Request.GetQueryNameValuePairs();
+            var memberTypeAlias = GetMemberType(queryString);
+            var filters = GetFilters(queryString);
 
             var members = Mapper.Map<IEnumerable<MemberListItem>>(MemberSearch.PerformMemberSearch(filter, filters, out int totalMembers,
                                                                                                     memberTypeAlias, pageNumber, pageSize,
@@ -85,48 +83,118 @@ namespace MemberListView.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetMembersExport(
+        public IEnumerable<MemberColumn> GetMemberColumns(string memberType = null)
+        {
+            var excludedColumns = ConfigurationManager.AppSettings[Constants.Configuration.ExportExcludedColumns]
+                                                        ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                    ?? Array.Empty<string>();
+            bool foundType = false;
+            if (!string.IsNullOrWhiteSpace(memberType))
+            {
+                var type = Services.MemberTypeService.Get(memberType);
+                if (type != null)
+                {
+                    foundType = true;
+                    foreach (var col in type.GetColumns(excludedColumns))
+                    {
+                        yield return col;
+                    }
+                }
+            }
+            if (!foundType)
+            {
+                // This is only used to track columns we already have added.
+                var columns = new List<string>();
+                foreach (var type in Services.MemberTypeService.GetAll())
+                {
+                    foreach (var col in type.GetColumns(excludedColumns))
+                    {
+                        if (!columns.Contains(col.Alias))
+                        {
+                            columns.Add(col.Alias);
+                            yield return col;
+                        }
+                    }
+                }
+            }
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> GetMembersExport(
             string orderBy = "email",
             Direction orderDirection = Direction.Ascending,
-            string filter = "")
+            string filter = "",
+            ExportFormat format = ExportFormat.Excel)
         {
-            // Base Query data
             var queryString = Request.GetQueryNameValuePairs();
-            string memberType = queryString.Where(q => q.Key == "memberType").Select(q => q.Value).FirstOrDefault();
+            var memberTypeAlias = GetMemberType(queryString);
+            var filters = GetFilters(queryString);
+            var columns = GetColumns(queryString);
+
+            var members = MemberSearch.PerformMemberSearch(filter, filters, out _,
+                                                            memberTypeAlias,
+                                                            orderBy: orderBy,
+                                                            orderDirection: orderDirection)
+                                        .ToExportModel(columns);
+
+            var name = $"Members - {DateTime.Now:yyyy-MM-dd}";
+            var filename = $"Members-{DateTime.Now:yyyy-MM-dd}";
+            var stream = new MemoryStream();
+
+            string ext = "csv";
+            string mimeType = Constants.MimeTypes.CSV;
+            switch (format)
+            {
+                case ExportFormat.CSV:
+                    await members.CreateCSVAsync(stream);
+                    break;
+                case ExportFormat.Excel:
+                    ext = "xlsx";
+                    mimeType = Constants.MimeTypes.Excel;
+                    await members.CreateExcelAsync(stream, name);
+                    break;
+            }
+
+            stream.Seek(0, SeekOrigin.Begin);
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = $"{filename}.{ext}"
+            };
+
+            return response;
+        }
+
+
+        private IEnumerable<string> GetColumns(IEnumerable<KeyValuePair<string, string>> query)
+        {
+            return query.Where(q => q.Key == "columns")
+                        .Select(q => q.Value)
+                        .FirstOrDefault()
+                        ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private string GetMemberType(IEnumerable<KeyValuePair<string, string>> query)
+        {
+            return query.Where(q => q.Key == "memberType").Select(q => q.Value).FirstOrDefault();
+        }
+
+        private static Dictionary<string, string> GetFilters(IEnumerable<KeyValuePair<string, string>> query)
+        {
 
             Dictionary<string, string> filters = new Dictionary<string, string>();
 
-            foreach (var kvp in queryString.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value)))
+            foreach (var kvp in query.Where(q => (q.Key.StartsWith("f_") || q.Key == Constants.Members.Groups) && !string.IsNullOrWhiteSpace(q.Value)))
             {
                 filters.Add(kvp.Key, kvp.Value);
             }
 
-
-            var members = Mapper.Map<IEnumerable<MemberExportModel>>(MemberSearch.PerformMemberSearch(filter, filters, out _,
-                                                                                                        memberType,
-                                                                                                        orderBy: orderBy,
-                                                                                                        orderDirection: orderDirection));
-
-            var content = members.CreateCSV();
-
-            // see http://stackoverflow.com/questions/9541351/returning-binary-file-from-controller-in-asp-net-web-api
-            // & http://stackoverflow.com/questions/12975886/how-to-download-a-file-using-web-api-in-asp-net-mvc-4-and-jquery
-            // We really should use an async version - the above reference includes an example.
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(content,
-                        new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, // this is the default; we don't really need to specify it.
-                                        throwOnInvalidBytes: true // Recommended for security reasons.
-                                        ))
-            };
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = string.Format("Members_{0:yyyyMMdd}.csv", DateTime.Now)
-            };
-            return result;
+            return filters;
         }
-
 
         public void PostUnlock(string id)
         {
