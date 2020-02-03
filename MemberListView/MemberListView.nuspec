@@ -19,6 +19,11 @@
       <![CDATA[
 Installing the package enables a new Manage Dashboard on the Members section.
 
+**Version 1.5.3**
+
+* Added support for SensitiveData - Exports will be hidden if the user doesn't have permission to view sensitive data, and sensitive properties will not be viewable
+* Enhanced Export functionality - now allows selection of columns and the choice of exporting to CSV or Excel OpenFormat
+
 **Version 1.5.0**
 
 * Support for Umbraco 7.15

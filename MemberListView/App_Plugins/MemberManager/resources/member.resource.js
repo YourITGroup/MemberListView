@@ -167,6 +167,11 @@ function memberExtResource($http, $window, umbRequestHelper) {
                     $http.get("Backoffice/MemberManager/MemberApi/GetMemberColumns?memberType=" + memberType),
                     'Failed to retrieve groups');
             }
+        },
+        canExport: function () {
+                return umbRequestHelper.resourcePromise(
+                    $http.get("Backoffice/MemberManager/MemberApi/GetCanExport"),
+                    false);
         }
     };
 

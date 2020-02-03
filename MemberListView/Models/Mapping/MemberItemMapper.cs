@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Examine;
+using MemberListView.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
+using Umbraco.Core.Models;
 using Umbraco.Core.Models.Mapping;
+using Umbraco.Web;
 using Umbraco.Web.Models.ContentEditing;
 using CoreConstants = Umbraco.Core.Constants;
 
@@ -12,7 +15,7 @@ namespace MemberListView.Models.Mapping
 {
     public class MemberItemMapper : MapperConfiguration
     {
-        public override void ConfigureMappings(AutoMapper.IConfiguration config, Umbraco.Core.ApplicationContext applicationContext)
+        public override void ConfigureMappings(IConfiguration config, ApplicationContext applicationContext)
         {
             //FROM SearchResult TO MemberListItem - used when searching for members.
             config.CreateMap<SearchResult, MemberListItem>()
@@ -33,6 +36,7 @@ namespace MemberListView.Models.Mapping
                 .ForMember(member => member.Alias, expression => expression.Ignore())
                 .ForMember(member => member.ContentTypeAlias, expression => expression.Ignore())
                 .ForMember(member => member.HasPublishedVersion, expression => expression.Ignore())
+                .ForMember(dto => dto.Properties, expression => expression.ResolveUsing(new MemberSearchPropertiesResolver()))
                 .ForMember(member => member.MemberGroups, expression => expression.MapFrom(result => result[Constants.Members.Groups]
                                                                                                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                                                                                         .Select(g => g.Trim())))
@@ -55,8 +59,6 @@ namespace MemberListView.Models.Mapping
                 .ForMember(member => member.IsApproved, expression => expression.Ignore())
 
                 .ForMember(member => member.IsLockedOut, expression => expression.Ignore())
-
-                .ForMember(member => member.Properties, expression => expression.Ignore())
 
                 .AfterMap((searchResult, member) =>
                 {
@@ -105,20 +107,60 @@ namespace MemberListView.Models.Mapping
                         else if (bool.TryParse(searchResult.Fields[CoreConstants.Conventions.Member.IsLockedOut], out val))
                             member.IsLockedOut = val;
                     }
+                });
 
-                    // Get any other properties available from the fields.
-                    member.Properties = searchResult.Fields.Where(field => !field.Key.StartsWith("_") && !field.Key.StartsWith("umbraco") && !field.Key.EndsWith("_searchable") &&
+            config.CreateMap<ISearchResults, IEnumerable<MemberListItem>>()
+                  .ConvertUsing(results => results.Select(Mapper.Map<MemberListItem>));
+        }
+
+
+        /// <summary>
+        /// A resolver to map <see cref="IMember"/> properties to a collection of <see cref="ContentPropertyBasic"/>
+        /// </summary>
+        internal class MemberSearchPropertiesResolver : IValueResolver
+        {
+            public ResolutionResult Resolve(ResolutionResult source)
+            {
+                if (source.Value != null && (source.Value is SearchResult) == false)
+                    throw new AutoMapperMappingException(string.Format("Value supplied is of type {0} but expected {1}.\nChange the value resolver source type, or redirect the source value supplied to the value resolver using FromMember.", new object[]
+                    {
+                    source.Value.GetType(),
+                    typeof (SearchResult)
+                    }));
+                return source.New(
+                    //perform the mapping with the current umbraco context
+                    ResolveCore(source.Context.GetUmbracoContext(), (SearchResult)source.Value), typeof(IEnumerable<ContentPropertyDisplay>));
+            }
+
+            private IEnumerable<ContentPropertyBasic> ResolveCore(UmbracoContext umbracoContext, SearchResult content)
+            {
+                var memberType = ApplicationContext.Current.Services.MemberTypeService.Get(content.Fields["nodeTypeAlias"]);
+
+                var fields = content.Fields.Where(field => !field.Key.StartsWith("_") && !field.Key.StartsWith("umbraco") && !field.Key.EndsWith("_searchable") &&
                                                                             field.Key != "id" && field.Key != "key" &&
                                                                             field.Key != "updateDate" && field.Key != "writerName" &&
                                                                             field.Key != "loginName" && field.Key != "email" &&
                                                                             field.Key != CoreConstants.Conventions.Member.IsApproved &&
                                                                             field.Key != CoreConstants.Conventions.Member.IsLockedOut &&
                                                                             field.Key != "nodeName" && field.Key != "nodeTypeAlias")
-                                                            .Select(field => new ContentPropertyBasic { Alias = field.Key, Value = field.Value });
-                });
+                                    .Select(field => new ContentPropertyBasic { Alias = field.Key, Value = field.Value });
 
-            config.CreateMap<ISearchResults, IEnumerable<MemberListItem>>()
-                  .ConvertUsing(results => results.Select(Mapper.Map<MemberListItem>));
+                //now update the IsSensitive value
+                foreach (var prop in fields)
+                {
+                    //check if this property is flagged as sensitive
+                    var isSensitiveProperty = memberType.IsSensitiveProperty(prop.Alias);
+                    //check permissions for viewing sensitive data
+                    if (isSensitiveProperty && umbracoContext.Security.CurrentUser.HasAccessToSensitiveData() == false)
+                    {
+                        //mark this property as sensitive
+                        prop.IsSensitive = true;
+                        //clear the value
+                        prop.Value = null;
+                    }
+                }
+                return fields;
+            }
         }
     }
 }

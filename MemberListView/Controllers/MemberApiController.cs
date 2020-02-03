@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Examine;
 using MemberListView.Extensions;
 using MemberListView.Helpers;
 using MemberListView.Models;
@@ -11,7 +12,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using System.Web.Http;
 using System.Web.Security;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
@@ -68,18 +69,26 @@ namespace MemberListView.Controllers
             var memberTypeAlias = GetMemberType(queryString);
             var filters = GetFilters(queryString);
 
-            var members = Mapper.Map<IEnumerable<MemberListItem>>(MemberSearch.PerformMemberSearch(filter, filters, out int totalMembers,
-                                                                                                    memberTypeAlias, pageNumber, pageSize,
-                                                                                                    orderBy, orderDirection));
-            if (totalMembers == 0)
+            var members = MemberSearch.PerformMemberSearch(filter, filters, out int totalRecords,
+                                                            memberTypeAlias, pageNumber, pageSize,
+                                                            orderBy, orderDirection);
+            if (totalRecords == 0)
+            {
                 return new PagedResult<MemberListItem>(0, 0, 0);
+            }
 
-            var pagedResult = new PagedResult<MemberListItem>(totalMembers, pageNumber, pageSize)
+            var pagedResult = new PagedResult<MemberListItem>(totalRecords, pageNumber, pageSize)
             {
                 Items = members
+                    .Select(x => AutoMapperExtensions.MapWithUmbracoContext<SearchResult, MemberListItem>(x, UmbracoContext))
             };
-
             return pagedResult;
+        }
+
+        [HttpGet]
+        public bool GetCanExport()
+        {
+            return Security.CurrentUser.HasAccessToSensitiveData();
         }
 
         [HttpGet]
@@ -120,12 +129,18 @@ namespace MemberListView.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetMembersExport(
+        public async Task<IHttpActionResult> GetMembersExport(
             string orderBy = "email",
             Direction orderDirection = Direction.Ascending,
             string filter = "",
             ExportFormat format = ExportFormat.Excel)
         {
+            // Only export if the current user has access to sensitive data.
+            if (!Security.CurrentUser.HasAccessToSensitiveData())
+            {
+                return Ok();
+            }
+
             var queryString = Request.GetQueryNameValuePairs();
             var memberTypeAlias = GetMemberType(queryString);
             var filters = GetFilters(queryString);
@@ -166,7 +181,7 @@ namespace MemberListView.Controllers
                 FileName = $"{filename}.{ext}"
             };
 
-            return response;
+            return ResponseMessage(response);
         }
 
 

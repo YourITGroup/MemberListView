@@ -45,7 +45,8 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
             { name: 'List', path: 'views/propertyeditors/listview/layouts/list/list.html', icon: 'icon-list', isSystem: 1, selected: true }
         ],
         bulkActionPermissions: {
-            allowBulkDelete: true
+            allowBulkDelete: true,
+            allowExport: true
         }
     };
 
@@ -61,9 +62,7 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
             "canCopy": _.contains(currentUserPermissions, 'O'), //Magic Char = O
             "canCreate": _.contains(currentUserPermissions, 'C'), //Magic Char = C
             "canDelete": _.contains(currentUserPermissions, 'D'), //Magic Char = D
-            "canMove": _.contains(currentUserPermissions, 'M'), //Magic Char = M                
-            "canPublish": _.contains(currentUserPermissions, 'U'), //Magic Char = U
-            "canUnpublish": _.contains(currentUserPermissions, 'U') //Magic Char = Z (however UI says it can't be set, so if we can publish 'U' we can unpublish)
+            "canMove": _.contains(currentUserPermissions, 'M'), //Magic Char = M
         };
     }
 
@@ -109,7 +108,8 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
             layouts: $scope.model.config.layouts,
             activeLayout: listViewHelper.getLayout($routeParams.id, $scope.model.config.layouts)
         },
-        allowBulkDelete: $scope.model.config.bulkActionPermissions.allowBulkDelete
+        allowBulkDelete: $scope.model.config.bulkActionPermissions.allowBulkDelete,
+        allowExport: $scope.model.config.bulkActionPermissions.allowExport
     };
 
     // Check if selected order by field is actually custom field
@@ -421,6 +421,12 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
         $scope.contentId = id;
         $scope.isTrashed = id === "-20" || id === "-21";
 
+        if ($scope.options.allowExport) {
+            memberExtResource.canExport().then(function (result) {
+                $scope.options.allowExport = result;
+            });
+        }
+            
         $scope.options.bulkActionsAllowed = $scope.options.allowBulkDelete;
 
         $scope.getContent();

@@ -27,3 +27,4 @@ obj
 /.vs
 /MemberListView/App_Data/NuGetBackup
 *.nupkg
+/Umbraco Package

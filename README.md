@@ -22,6 +22,11 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 1.5.3**
+
+* Added support for SensitiveData - Exports will be hidden if the user doesn't have permission to view sensitive data, and sensitive properties will not be viewable
+* Enhanced Export functionality - now allows selection of columns and the choice of exporting to CSV or Excel OpenFormat
+
 **Version 1.5.0**
 
 * **Compiled against Umbraco 7.15.1**

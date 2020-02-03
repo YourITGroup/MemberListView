@@ -265,6 +265,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EventHandlers\MembershipIndexEventHandler.cs" />
+    <Compile Include="Extensions\AutoMapperExtensions.cs" />
     <Compile Include="Extensions\ExportExtension.cs" />
     <Compile Include="Helpers\MemberSearch.cs" />
     <Compile Include="Models\ExportFormat.cs" />
