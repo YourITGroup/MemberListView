@@ -45,6 +45,7 @@ namespace MemberListView.Controllers
 
         private readonly MembershipProvider _provider;
 
+        [HttpGet]
         public IEnumerable<string> GetMemberGroups()
         {
             return Services.MemberGroupService
@@ -53,6 +54,7 @@ namespace MemberListView.Controllers
                             .OrderBy(g => g);
         }
 
+        [HttpGet]
         public PagedResult<MemberListItem> GetMembers(
             int pageNumber = 1,
             int pageSize = 100,

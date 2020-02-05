@@ -32,14 +32,11 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
         includeProperties: [
             { alias: 'email', header: 'Email', isSystem: 1 },
             { alias: 'memberGroups', header: 'Group', isSystem: 1 },
-            { alias: 'contactPhoneNumber', header: 'Phone', isSystem: 0 },
-            { alias: 'company', header: 'Company', isSystem: 0 },
-            { alias: 'department', header: 'Department', isSystem: 0 },
+            { alias: 'firstName', header: 'First Name', isSystem: 0 },
+            { alias: 'lastName', header: 'Last Name', isSystem: 0 },
+            { alias: 'phone', header: 'Phone', isSystem: 0 },
             { alias: 'isApproved', header: 'Approved', isSystem: 1 },
-            { alias: 'isLockedOut', header: 'Locked Out', isSystem: 1 },
-            //{ alias: 'isEmployee', header: 'Employee', isSystem: 0 },
-            //{ alias: 'termsConditionsPrivacyPolicy', header: 'Accepted Terms', isSystem: 0 },
-            //{ alias: 'verified', header: 'Verified', isSystem: 0 }
+            { alias: 'isLockedOut', header: 'Locked Out', isSystem: 1 }
         ],
         layouts: [
             { name: 'List', path: 'views/propertyeditors/listview/layouts/list/list.html', icon: 'icon-list', isSystem: 1, selected: true }
