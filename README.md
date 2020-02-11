@@ -20,6 +20,15 @@ The MemberListView has been designed to be similar to the ContentListView proper
 
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
 
+## Support Options
+
+For bugs and general feature requests please use the Issue tracker here on Github at https://github.com/YourITGroup/umbMemberListView/issues
+
+For help with installation and configuration, we recommend the Our.Umbraco forum here: https://our.umbraco.com/packages/backoffice-extensions/memberlistview-for-umbraco-7/say-hello/
+
+For help with customisation and integration with third party packages not covered above, Your IT Team offer a paid-for service.  To start a discussion and find out more, visit https://youritteam.com.au/contact-us 
+
+
 ## Version History
 
 **Version 1.5.4**
