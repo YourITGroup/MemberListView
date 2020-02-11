@@ -22,6 +22,10 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 2.0.0**
+
+* Re-written for Umbraco 8
+
 **Version 1.5.3**
 
 * Added support for SensitiveData - Exports will be hidden if the user doesn't have permission to view sensitive data, and sensitive properties will not be viewable
@@ -64,8 +68,8 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Sample Web project:
 
-  * Uses SqlCe database - username is "admin@admin"; password is "password"
-  * Upgraded to Umbraco 7.12.0
+  * Uses SqlCe database - username is "**admin@admin.com**"; password is "**5uperP@ssw0rd**"
+  * Umbraco 8.5.3
   
-The Sample project has two member properties: `First Name` and `Last Name`.
-The version of MemberListView in this project has been modified to include these two properties in the list and examine index
+The Sample project has three member properties: `First Name`, `Last Name` and `Phone Number`.  `Phone Number` has also been marked as Sensitive.
+The version of MemberListView in the sample project has been modified to include these properties in the list.
