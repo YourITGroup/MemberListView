@@ -185,7 +185,7 @@
   <info>
     <package>
       <name>MemberListView for Umbraco 7</name>
-      <version>1.5.3</version>
+      <version>1.5.4</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>https://github.com/YourItGroup/umbMemberListView</url>
       <requirements>
@@ -210,6 +210,10 @@ The MemberListView has been designed to be similar to the ContentListView proper
 Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+
+New in Version 1.5.4
+====================
+* Improved handling of bulk operations - refresh should now display correct items after a short delay to allow the index to catch up.
 
 New in Version 1.5.3
 ====================

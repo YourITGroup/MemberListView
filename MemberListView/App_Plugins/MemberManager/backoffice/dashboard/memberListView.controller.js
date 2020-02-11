@@ -157,7 +157,8 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
             500);
 
         if (reload === true) {
-            $scope.reloadView();
+            // Allow time for operations to take effect on the index...
+            $timeout($scope.reloadView, 3000);
         }
 
         if (err.data && angular.isArray(err.data.notifications)) {
@@ -423,7 +424,7 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
                 $scope.options.allowExport = result;
             });
         }
-            
+
         $scope.options.bulkActionsAllowed = $scope.options.allowBulkDelete;
 
         $scope.getContent();
@@ -473,6 +474,11 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
                             return localizationService.localize(key, [total]);
                         },
                         confirmDeleteText + "?");
+                //if (attempt) {
+                //    attempt.then(function () {
+                //        $timeout($scope.getContent, 3000);
+                //    });
+                //}
             });
     };
 
@@ -584,11 +590,11 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
                             return localizationService.localize(key, [total]);
                         },
                         confirmUnlockText + "?");
-                if (attempt) {
-                    attempt.then(function () {
-                        $timeout($scope.getContent, 1000);
-                    });
-                }
+                //if (attempt) {
+                //    attempt.then(function () {
+                //        $timeout($scope.getContent, 3000);
+                //    });
+                //}
             });
     };
 
@@ -614,11 +620,11 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
                             return localizationService.localize(key, [total]);
                         },
                         confirmApproveText + "?");
-                if (attempt) {
-                    attempt.then(function () {
-                        $timeout($scope.getContent, 1000);
-                    });
-                }
+                //if (attempt) {
+                //    attempt.then(function () {
+                //        $timeout($scope.getContent, 3000);
+                //    });
+                //}
             });
     };
 
@@ -644,11 +650,12 @@ function memberListViewController($scope, $routeParams, $timeout, $location, mem
                             return localizationService.localize(key, [total]);
                         },
                         confirmSuspendText + "?");
-                if (attempt) {
-                    attempt.then(function () {
-                        $timeout($scope.getContent, 1000);
-                    });
-                }
+                //if (attempt) {
+                //    attempt.then(function () {
+                //        // Allow time for the index to be updated...
+                //        $timeout($scope.getContent, 3000);
+                //    });
+                //}
             });
     };
 
