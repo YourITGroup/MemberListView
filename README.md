@@ -10,15 +10,14 @@ Umbraco Package:
 Adds a MemberListView dashboard to the Members area in Umbraco 7.7+ to allow easier management of members including approval and unlocking capabilities.
 The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
-Installing the package enables a new Manage Dashboard on the Members section.
-
 ## Features
 
-The MemberListView has been designed to be similar to the ContentListView property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
+The MemberListView has been designed to be similar to the ContentListView property editor and features context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them. All actions can be performed on batches of users, as they apply to selected users only.
 
-## Member Editing
-
-Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+* Supports Umbraco Sensitive Data and GDPR
+* Export members in either CSV or Excel OpenDocument format with the flexibility to select some or of the properties
+* Enhanced filtering including filtering on Member Type and Group out of the box.
+* Bulk member actions including Suspension, Unlock, Approve and Delete.
 
 ## Support Options
 
