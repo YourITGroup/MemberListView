@@ -25,7 +25,7 @@ For bugs and general feature requests please use the Issue tracker here on Githu
 
 For help with installation and configuration, we recommend the Our.Umbraco forum here: https://our.umbraco.com/packages/backoffice-extensions/memberlistview-for-umbraco-7/say-hello/
 
-For help with customisation and integration with third party packages not covered above, Your IT Team offer a paid-for service.  To start a discussion and find out more, visit https://youritteam.com.au/contact-us 
+For help with customisation and integration with third party packages not covered above, Your IT Team offer a paid-for service.  To start a discussion and find out more, visit https://youritteam.com.au/products/open-source#memberlistview 
 
 
 ## Version History
