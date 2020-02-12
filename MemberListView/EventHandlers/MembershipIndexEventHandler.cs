@@ -35,7 +35,7 @@ namespace MemberListView.EventHandlers
         {
             var groups = Roles.GetRolesForUser(member.Username);
             e.Fields.Add(Constants.Members.Groups, groups.Aggregate("", (list, group) => string.IsNullOrEmpty(list) ? group : $"{list}, {group}"));
-            e.Fields.Add($"_{Constants.Members.Groups}", groups.Aggregate("", (list, group) => string.IsNullOrEmpty(list) ? group : $"{list}, {group}"));
+            e.Fields.Add($"_{Constants.Members.Groups}", groups.Aggregate("", (list, group) => string.IsNullOrEmpty(list) ? group : $"{list}  {group}"));
         }
 
         /// <summary>
