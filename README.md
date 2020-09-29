@@ -1,4 +1,4 @@
-# umbMemberListView
+﻿# umbMemberListView
 
 ![Member List View Logo](https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png)
 
@@ -31,6 +31,10 @@ For help with customisation and integration with third party packages not covere
 
 
 ## Version History
+
+**Version 1.5.5**
+
+* Shiny new icon - that's it 😎
 
 **Version 1.5.4**
 
