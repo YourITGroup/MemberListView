@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemberListView", "MemberListView\MemberListView.csproj", "{7EBDA322-7669-47E4-A630-8A5232F62921}"
 EndProject
@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3A025C
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Umbraco Package", "Umbraco Package", "{DD2BF28F-16EE-4FCA-847C-F1793E945529}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{DD2BF28F-16EE-4FCA-847C-F1793E945529}"
 	ProjectSection(SolutionItems) = preProject
-		Umbraco Package\package.xml = Umbraco Package\package.xml
+		Package\package.xml = Package\package.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSample", "WebSample\WebSample.csproj", "{3DC5D17C-DF03-4CAF-9D0A-D5D3526E2F3A}"

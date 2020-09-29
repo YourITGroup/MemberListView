@@ -1,5 +1,7 @@
 # umbMemberListView
 
+~[Member List View Logo](https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png)
+
 Nuget Package: 
 [![NuGet release](https://img.shields.io/nuget/v/MemberListView.svg)](https://www.nuget.org/packages/MemberListView/)
 [![NuGet release](https://img.shields.io/nuget/dt/MemberListView.svg)](https://www.nuget.org/packages/MemberListView/)

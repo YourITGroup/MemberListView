@@ -361,8 +361,19 @@ del *.nupkg</PreBuildEvent>
   echo Building NuGet Package...
   cd "$(ProjectDir)"
   "$(SolutionDir).nuget\NuGet.exe" pack -Verbosity detailed -NonInteractive -Prop Configuration=Release
+
+  Echo Copying files to package directory...
+  for /r "$(ProjectDir)App_Plugins\MemberManager" %25%25f in (*.*) do @copy "%25%25f" "$(SolutionDir)Package" /Y
+  copy "$(TargetPath)" "$(SolutionDir)Package" /Y
+
+  Echo Creating Package Zip File...
+  FOR /F "delims= usebackq" %25%25i IN (`powershell.exe -noninteractive -command "[System.Diagnostics.FileVersionInfo]::GetVersionInfo('$(TargetPath)').FileVersion"`) DO (
+    ECHO version: %25%25i
+    if exist '$(SolutionDir)MemberListView.%25%25i.zip' (del '$(SolutionDir)MemberListView.%25%25i.zip')
+    powershell Compress-Archive -Path '$(SolutionDir)Package\*.*' -DestinationPath '$(SolutionDir)MemberListView.%25%25i.zip' -Force
+)
 ) else (
-  echo Skipping NuGet Package.
+  echo Skipping Package creation.
 )</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />

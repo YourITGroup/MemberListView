@@ -185,7 +185,8 @@
   <info>
     <package>
       <name>MemberListView for Umbraco 7</name>
-      <version>1.5.4</version>
+      <version>1.5.5</version>
+      <iconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</iconUrl>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>https://github.com/YourItGroup/umbMemberListView</url>
       <requirements>
