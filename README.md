@@ -1,4 +1,6 @@
-# umbMemberListView
+# Member List View for Umbraco 8
+
+![Member List View Logo](https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png)
 
 Nuget Package: 
 [![NuGet release](https://img.shields.io/nuget/v/MemberListView.svg)](https://www.nuget.org/packages/MemberListView/)
@@ -7,14 +9,14 @@ Nuget Package:
 Umbraco Package:
 [![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.org/projects/backoffice-extensions/memberlistview-for-umbraco-7) 
 
-Adds a MemberListView dashboard to the Members area in Umbraco 7.7+ to allow easier management of members including approval and unlocking capabilities.
-The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
+Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
+The MemberListView for Umbraco 8 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
 Installing the package enables a new Manage Dashboard on the Members section.
 
 ## Features
 
-The MemberListView has been designed to be similar to the ContentListView property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
+The Member List View has been designed to be similar to the ContentListView property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
 
 ## Member Editing
 
@@ -68,8 +70,8 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Sample Web project:
 
-  * Uses SqlCe database - username is "**admin@admin.com**"; password is "**5uperP@ssw0rd**"
-  * Umbraco 8.5.3
+  * Uses SqlCe database - username is "**admin@admin.com**"; password is "**Password123**"
+  * Umbraco 8.7.0
   
 The Sample project has three member properties: `First Name`, `Last Name` and `Phone Number`.  `Phone Number` has also been marked as Sensitive.
 The version of MemberListView in the sample project has been modified to include these properties in the list.
