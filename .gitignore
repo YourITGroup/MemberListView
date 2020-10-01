@@ -380,3 +380,5 @@ MigrationBackup/
 **/App_Data/Models/ood.flag
 
 **/._*
+/package
+/WebSampleV8/App_Data/Models

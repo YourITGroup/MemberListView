@@ -3,48 +3,68 @@
   <files>
     <file>
       <guid>package.manifest</guid>
-      <orgPath>/App_Plugins/MemberManager</orgPath>
+      <orgPath>/App_Plugins/MemberListView</orgPath>
       <orgName>package.manifest</orgName>
     </file>
     <file>
-      <guid>memberListView.controller.js</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dashboard</orgPath>
-      <orgName>memberListView.controller.js</orgName>
+      <guid>memberManager.controller.js</guid>
+      <orgPath>/App_Plugins/MemberListView/dashboard</orgPath>
+      <orgName>memberManager.controller.js</orgName>
     </file>
     <file>
-      <guid>memberListView.html</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dashboard</orgPath>
-      <orgName>memberListView.html</orgName>
+      <guid>memberManager.html</guid>
+      <orgPath>/App_Plugins/MemberListView/dashboard</orgPath>
+      <orgName>memberManager.html</orgName>
     </file>
     <file>
-      <guid>edit.html</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dialogs/member</orgPath>
-      <orgName>edit.html</orgName>
+      <guid>export.html</guid>
+      <orgPath>/App_Plugins/MemberListView/dialogs/member</orgPath>
+      <orgName>export.html</orgName>
     </file>
     <file>
-      <guid>member.edit.controller.js</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dialogs/member</orgPath>
-      <orgName>member.edit.controller.js</orgName>
+      <guid>export.controller.js</guid>
+      <orgPath>/App_Plugins/MemberListView/dialogs/member</orgPath>
+      <orgName>export.controller.js</orgName>
     </file>
     <file>
       <guid>filter.html</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dialogs/member</orgPath>
+      <orgPath>/App_Plugins/MemberListView/dialogs/member</orgPath>
       <orgName>filter.html</orgName>
     </file>
     <file>
-      <guid>member.filter.controller.js</guid>
-      <orgPath>/App_Plugins/MemberManager/backoffice/dialogs/member</orgPath>
-      <orgName>member.filter.controller.js</orgName>
+      <guid>filter.controller.js</guid>
+      <orgPath>/App_Plugins/MemberListView/dialogs/member</orgPath>
+      <orgName>filter.controller.js</orgName>
     </file>
     <file>
       <guid>memberListView.css</guid>
-      <orgPath>/App_Plugins/MemberManager/css</orgPath>
+      <orgPath>/App_Plugins/MemberListView/css</orgPath>
       <orgName>memberListView.css</orgName>
     </file>
     <file>
       <guid>member.resource.js</guid>
-      <orgPath>/App_Plugins/MemberManager/resources</orgPath>
+      <orgPath>/App_Plugins/MemberListView/resources</orgPath>
       <orgName>member.resource.js</orgName>
+    </file>
+    <file>
+      <guid>list.html</guid>
+      <orgPath>/App_Plugins/MemberListView/layouts/list</orgPath>
+      <orgName>list.html</orgName>
+    </file>
+    <file>
+      <guid>list.listviewlayout.controller.js</guid>
+      <orgPath>/App_Plugins/MemberListView/layouts/list</orgPath>
+      <orgName>list.listviewlayout.controller.js</orgName>
+    </file>
+    <file>
+      <guid>action.html</guid>
+      <orgPath>/App_Plugins/MemberListView/overlays</orgPath>
+      <orgName>action.html</orgName>
+    </file>
+    <file>
+      <guid>action.controller.js</guid>
+      <orgPath>/App_Plugins/MemberListView/overlays</orgPath>
+      <orgName>action.controller.js</orgName>
     </file>
     <file>
       <guid>MemberListView.dll</guid>
@@ -53,115 +73,116 @@
     </file>
     <file>
       <guid>cs.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>cs.xml</orgName>
     </file>
     <file>
       <guid>da.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>da.xml</orgName>
     </file>
     <file>
       <guid>de.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>de.xml</orgName>
     </file>
     <file>
       <guid>en-gb.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>en-gb.xml</orgName>
     </file>
     <file>
       <guid>en-us.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>en-us.xml</orgName>
     </file>
     <file>
       <guid>es.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>es.xml</orgName>
     </file>
     <file>
       <guid>fr.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>fr.xml</orgName>
     </file>
     <file>
       <guid>he.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>he.xml</orgName>
     </file>
     <file>
       <guid>it.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>it.xml</orgName>
     </file>
     <file>
       <guid>ja.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>ja.xml</orgName>
     </file>
     <file>
       <guid>ko.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>ko.xml</orgName>
     </file>
     <file>
       <guid>nb.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>nb.xml</orgName>
     </file>
     <file>
       <guid>nl.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>nl.xml</orgName>
     </file>
     <file>
       <guid>pl.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>pl.xml</orgName>
     </file>
     <file>
       <guid>pt.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>pt.xml</orgName>
     </file>
     <file>
       <guid>ru.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>ru.xml</orgName>
     </file>
     <file>
       <guid>sv.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>sv.xml</orgName>
     </file>
     <file>
       <guid>tr.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>tr.xml</orgName>
     </file>
     <file>
       <guid>zh-tw.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>zh-tw.xml</orgName>
     </file>
     <file>
       <guid>zh.xml</guid>
-      <orgPath>/App_Plugins/MemberManager/lang</orgPath>
+      <orgPath>/App_Plugins/MemberListView/lang</orgPath>
       <orgName>zh.xml</orgName>
     </file>
   </files>
   <info>
     <package>
-      <name>MemberListView for Umbraco 7.15.x</name>
-      <version>1.5.1</version>
+      <name>MemberListView for Umbraco 8.6+</name>
+      <version>2.0.0</version>
+      <iconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</iconUrl>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
-      <url>https://github.com/KOBENDigital/umbMemberListView</url>
+      <url>https://github.com/YourITGroup/umbMemberListView</url>
       <requirements>
-        <major>7</major>
-        <minor>15</minor>
-        <patch>1</patch>
+        <major>8</major>
+        <minor>6</minor>
+        <patch>0</patch>
       </requirements>
     </package>
     <author>
@@ -169,17 +190,22 @@
       <website>http://youritteam.com.au</website>
     </author>
     <readme>
-  <![CDATA[The MemberListView for Umbraco 7 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
+  <![CDATA[The MemberListView for Umbraco 8 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
-Installing the package enables a new Manage Dashboard on the Members section.
+Installing the package enables a new Manage Members Dashboard on the Members section.
 
 Features
 ========
-The MemberListView has been designed to be similar to the ContentListView property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
+The MemberListView has been designed to be similar to the List View property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
 
 Member Editing
 ==============
-Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
+Member Editing can be done without leaving the MemberListView by clicking on a member name, which uses the Infinite Editor edit the member.
+
+New in Version 2.0.0
+====================
+
+* Re-written for Umbraco 8
 
 New in Version 1.5.0
 ====================
@@ -228,18 +254,5 @@ Currently Bulk Deletion will throw a lot of errors due to Database commit blocki
   <DictionaryItems />
   <Languages />
   <DataTypes />
-  <Actions>
-    <Action runat="install" alias="addDashboardSection" dashboardAlias="MemberManagerDashboardSection">
-      <section>
-        <areas>
-          <area>member</area>
-        </areas>
-        <tab caption="Manage">
-          <control showOnce="false" addPanel="false" panelCaption="">
-        /app_plugins/MemberManager/backoffice/dashboard/memberListView.html
-      </control>
-        </tab>
-      </section>
-    </Action>
-  </Actions>
+  <Actions />
 </umbPackage>

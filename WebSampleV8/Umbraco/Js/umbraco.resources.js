@@ -19,7 +19,7 @@
                 return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('authenticationApiBaseUrl', 'Get2FAProviders')), 'Could not retrive two factor provider info');
             },
             send2FACode: function send2FACode(provider) {
-                return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('authenticationApiBaseUrl', 'PostSend2FACode'), angular.toJson(provider)), 'Could not send code');
+                return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('authenticationApiBaseUrl', 'PostSend2FACode'), Utilities.toJson(provider)), 'Could not send code');
             },
             verify2FACode: function verify2FACode(provider, code) {
                 return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('authenticationApiBaseUrl', 'PostVerify2FACode'), {
@@ -870,12 +870,12 @@
                 });
             },
             getBlueprintById: function getBlueprintById(id) {
-                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetBlueprintById', [{ id: id }])), 'Failed to retrieve data for content id ' + id).then(function (result) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetBlueprintById', { id: id })), 'Failed to retrieve data for content id ' + id).then(function (result) {
                     return $q.when(umbDataFormatter.formatContentGetData(result));
                 });
             },
             getNotifySettingsById: function getNotifySettingsById(id) {
-                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetNotificationOptions', [{ contentId: id }])), 'Failed to retrieve data for content id ' + id);
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetNotificationOptions', { contentId: id })), 'Failed to retrieve data for content id ' + id);
             },
             setNotifySettingsById: function setNotifySettingsById(id, options) {
                 if (!id) {
@@ -953,18 +953,58 @@
      *
      */
             getScaffold: function getScaffold(parentId, alias) {
-                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetEmpty', [
-                    { contentTypeAlias: alias },
-                    { parentId: parentId }
-                ])), 'Failed to retrieve data for empty content item type ' + alias).then(function (result) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetEmpty', {
+                    contentTypeAlias: alias,
+                    parentId: parentId
+                })), 'Failed to retrieve data for empty content item type ' + alias).then(function (result) {
+                    return $q.when(umbDataFormatter.formatContentGetData(result));
+                });
+            },
+            /**
+     * @ngdoc method
+     * @name umbraco.resources.contentResource#getScaffoldByKey
+     * @methodOf umbraco.resources.contentResource
+     *
+     * @description
+     * Returns a scaffold of an empty content item, given the id of the content item to place it underneath and the content type alias.
+      *
+     * - Parent Id must be provided so umbraco knows where to store the content
+      * - Content Type Id must be provided so umbraco knows which properties to put on the content scaffold
+      *
+     * The scaffold is used to build editors for content that has not yet been populated with data.
+      *
+     * ##usage
+     * <pre>
+     * contentResource.getScaffoldByKey(1234, '...')
+     *    .then(function(scaffold) {
+     *        var myDoc = scaffold;
+      *        myDoc.name = "My new document";
+     *
+     *        contentResource.publish(myDoc, true)
+     *            .then(function(content){
+     *                alert("Retrieved, updated and published again");
+     *            });
+     *    });
+      * </pre>
+      *
+     * @param {Int} parentId id of content item to return
+      * @param {String} contentTypeGuid contenttype guid to base the scaffold on
+     * @returns {Promise} resourcePromise object containing the content scaffold.
+     *
+     */
+            getScaffoldByKey: function getScaffoldByKey(parentId, contentTypeKey) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetEmptyByKey', {
+                    contentTypeKey: contentTypeKey,
+                    parentId: parentId
+                })), 'Failed to retrieve data for empty content item id ' + contentTypeKey).then(function (result) {
                     return $q.when(umbDataFormatter.formatContentGetData(result));
                 });
             },
             getBlueprintScaffold: function getBlueprintScaffold(parentId, blueprintId) {
-                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetEmpty', [
-                    { blueprintId: blueprintId },
-                    { parentId: parentId }
-                ])), 'Failed to retrieve blueprint for id ' + blueprintId).then(function (result) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentApiBaseUrl', 'GetEmpty', {
+                    blueprintId: blueprintId,
+                    parentId: parentId
+                })), 'Failed to retrieve blueprint for id ' + blueprintId).then(function (result) {
                     return $q.when(umbDataFormatter.formatContentGetData(result));
                 });
             },
@@ -1045,10 +1085,10 @@
                 }
                 //converts the value to a js bool
                 function toBool(v) {
-                    if (angular.isNumber(v)) {
+                    if (Utilities.isNumber(v)) {
                         return v > 0;
                     }
-                    if (angular.isString(v)) {
+                    if (Utilities.isString(v)) {
                         return v === 'true';
                     }
                     if (typeof v === 'boolean') {
@@ -1365,9 +1405,9 @@
                     loginPageId: loginPageId,
                     errorPageId: errorPageId
                 };
-                if (angular.isArray(groups) && groups.length) {
+                if (Utilities.isArray(groups) && groups.length) {
                     publicAccess.groups = groups;
-                } else if (angular.isArray(usernames) && usernames.length) {
+                } else if (Utilities.isArray(usernames) && usernames.length) {
                     publicAccess.usernames = usernames;
                 } else {
                     throw 'must supply either userName/password or roles';
@@ -1632,6 +1672,9 @@
             },
             createDefaultTemplate: function createDefaultTemplate(id) {
                 return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('contentTypeApiBaseUrl', 'PostCreateDefaultTemplate', { id: id })), 'Failed to create default template for content type with id ' + id);
+            },
+            hasContentNodes: function hasContentNodes(id) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('contentTypeApiBaseUrl', 'HasContentNodes', [{ id: id }])), 'Failed to retrieve indication for whether content type with id ' + id + ' has associated content nodes');
             }
         };
     }
@@ -1691,7 +1734,7 @@
                 if (!newPassword) {
                     return $q.reject({ errorMsg: 'newPassword cannot be empty' });
                 }
-                return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('currentUserApiBaseUrl', 'PostSetInvitedUserPassword'), angular.toJson(newPassword)), 'Failed to change password');
+                return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('currentUserApiBaseUrl', 'PostSetInvitedUserPassword'), Utilities.toJson(newPassword)), 'Failed to change password');
             },
             /**
      * @ngdoc method
@@ -2190,6 +2233,46 @@
     'use strict';
     /**
     * @ngdoc service
+    * @name umbraco.resources.elementTypeResource
+    * @description Loads in data for element types
+    **/
+    function elementTypeResource($q, $http, umbRequestHelper) {
+        return {
+            getAll: function getAll() {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('elementTypeApiBaseUrl', 'GetAll')), 'Failed to retrieve element types');
+            }
+        };
+    }
+    angular.module('umbraco.resources').factory('elementTypeResource', elementTypeResource);
+    'use strict';
+    /**
+ * @ngdoc service
+ * @name umbraco.resources.emailMarketingResource
+ * @description Used to add a backoffice user to Umbraco's email marketing system, if user opts in
+ *
+ *
+ **/
+    function emailMarketingResource($http, umbRequestHelper) {
+        // LOCAL
+        // http://localhost:7071/api/EmailProxy
+        // LIVE
+        // https://emailcollector.umbraco.io/api/EmailProxy
+        var emailApiUrl = 'https://emailcollector.umbraco.io/api/EmailProxy';
+        //the factory object returned
+        return {
+            postAddUserToEmailMarketing: function postAddUserToEmailMarketing(user) {
+                return umbRequestHelper.resourcePromise($http.post(emailApiUrl, {
+                    name: user.name,
+                    email: user.email,
+                    usergroup: user.userGroups
+                }), 'Failed to add user to email marketing list');
+            }
+        };
+    }
+    angular.module('umbraco.resources').factory('emailMarketingResource', emailMarketingResource);
+    'use strict';
+    /**
+    * @ngdoc service
     * @name umbraco.resources.entityResource
     * @description Loads in basic data for all entities
     *
@@ -2299,6 +2382,18 @@
                     { culture: culture }
                 ])), 'Failed to retrieve url for id:' + id);
             },
+            getUrlByUdi: function getUrlByUdi(udi, culture) {
+                if (!udi) {
+                    return '';
+                }
+                if (!culture) {
+                    culture = '';
+                }
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('entityApiBaseUrl', 'GetUrl', [
+                    { udi: udi },
+                    { culture: culture }
+                ])), 'Failed to retrieve url for UDI:' + udi);
+            },
             /**
      * @ngdoc method
      * @name umbraco.resources.entityResource#getById
@@ -2331,11 +2426,17 @@
                     { type: type }
                 ])), 'Failed to retrieve entity data for id ' + id);
             },
-            getUrlAndAnchors: function getUrlAndAnchors(id) {
+            getUrlAndAnchors: function getUrlAndAnchors(id, culture) {
                 if (id === -1 || id === '-1') {
                     return null;
                 }
-                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('entityApiBaseUrl', 'GetUrlAndAnchors', [{ id: id }])), 'Failed to retrieve url and anchors data for id ' + id);
+                if (!culture) {
+                    culture = '';
+                }
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('entityApiBaseUrl', 'GetUrlAndAnchors', [
+                    { id: id },
+                    { culture: culture }
+                ])), 'Failed to retrieve url and anchors data for id ' + id);
             },
             getAnchors: function getAnchors(rteContent) {
                 if (!rteContent || rteContent.length === 0) {
@@ -2729,6 +2830,32 @@
             return resource;
         }
         angular.module('umbraco.resources').factory('healthCheckResource', healthCheckResource);
+    }());
+    'use strict';
+    /**
+ * @ngdoc service
+ * @name umbraco.resources.imageUrlGeneratorResource
+ * @function
+ *
+ * @description
+ * Used by the various controllers to get an image URL formatted correctly for the current image URL generator
+ */
+    (function () {
+        'use strict';
+        function imageUrlGeneratorResource($http, umbRequestHelper) {
+            function getCropUrl(mediaPath, width, height, imageCropMode, animationProcessMode) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('imageUrlGeneratorApiBaseUrl', 'GetCropUrl', {
+                    mediaPath: mediaPath,
+                    width: width,
+                    height: height,
+                    imageCropMode: imageCropMode,
+                    animationProcessMode: animationProcessMode
+                })), 'Failed to get crop URL');
+            }
+            var resource = { getCropUrl: getCropUrl };
+            return resource;
+        }
+        angular.module('umbraco.resources').factory('imageUrlGeneratorResource', imageUrlGeneratorResource);
     }());
     'use strict';
     (function () {
@@ -3442,10 +3569,10 @@
                 }
                 //converts the value to a js bool
                 function toBool(v) {
-                    if (angular.isNumber(v)) {
+                    if (Utilities.isNumber(v)) {
                         return v > 0;
                     }
-                    if (angular.isString(v)) {
+                    if (Utilities.isString(v)) {
                         return v === 'true';
                     }
                     if (typeof v === 'boolean') {
@@ -3610,6 +3737,26 @@
                     { 'searchFrom': searchFrom }
                 ];
                 return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('mediaApiBaseUrl', 'Search', args)), 'Failed to retrieve media items for search: ' + query);
+            },
+            getPagedReferences: function getPagedReferences(id, options) {
+                var defaults = {
+                    pageSize: 25,
+                    pageNumber: 1,
+                    entityType: 'DOCUMENT'
+                };
+                if (options === undefined) {
+                    options = {};
+                }
+                //overwrite the defaults if there are any specified
+                angular.extend(defaults, options);
+                //now copy back to the options we will use
+                options = defaults;
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('mediaApiBaseUrl', 'GetPagedReferences', {
+                    id: id,
+                    entityType: options.entityType,
+                    pageNumber: options.pageNumber,
+                    pageSize: options.pageSize
+                })), 'Failed to retrieve usages for media of id ' + id);
             }
         };
     }
@@ -3834,10 +3981,10 @@
                 }
                 //converts the value to a js bool
                 function toBool(v) {
-                    if (angular.isNumber(v)) {
+                    if (Utilities.isNumber(v)) {
                         return v > 0;
                     }
-                    if (angular.isString(v)) {
+                    if (Utilities.isString(v)) {
                         return v === 'true';
                     }
                     if (typeof v === 'boolean') {
@@ -4556,6 +4703,24 @@
      */
             deleteById: function deleteById(id) {
                 return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('relationTypeApiBaseUrl', 'DeleteById', [{ id: id }])), 'Failed to delete item ' + id);
+            },
+            getPagedResults: function getPagedResults(id, options) {
+                var defaults = {
+                    pageSize: 25,
+                    pageNumber: 1
+                };
+                if (options === undefined) {
+                    options = {};
+                }
+                //overwrite the defaults if there are any specified
+                angular.extend(defaults, options);
+                //now copy back to the options we will use
+                options = defaults;
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('relationTypeApiBaseUrl', 'GetPagedResults', {
+                    id: id,
+                    pageNumber: options.pageNumber,
+                    pageSize: options.pageSize
+                })), 'Failed to get paged relations for id ' + id);
             }
         };
     }
@@ -4928,7 +5093,13 @@
             function getTours() {
                 return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('tourApiBaseUrl', 'GetTours')), 'Failed to get tours');
             }
-            var resource = { getTours: getTours };
+            function getToursForDoctype(doctypeAlias) {
+                return umbRequestHelper.resourcePromise($http.get(umbRequestHelper.getApiUrl('tourApiBaseUrl', 'GetToursForDoctype', [{ doctypeAlias: doctypeAlias }])), 'Failed to get tours');
+            }
+            var resource = {
+                getTours: getTours,
+                getToursForDoctype: getToursForDoctype
+            };
             return resource;
         }
         angular.module('umbraco.resources').factory('tourResource', tourResource);
@@ -5370,6 +5541,34 @@
             }
             /**
       * @ngdoc method
+      * @name umbraco.resources.usersResource#changePassword
+      * @methodOf umbraco.resources.usersResource
+      *
+      * @description
+      * Changes a user's password
+      *
+      * ##usage
+      * <pre>
+      * usersResource.changePassword(changePasswordModel)
+      *    .then(function() {
+      *        // password changed
+      *    });
+      * </pre>
+      * 
+      * @param {Object} model object to save
+      * @returns {Promise} resourcePromise object containing the updated user.
+      *
+      */
+            function changePassword(changePasswordModel) {
+                if (!changePasswordModel) {
+                    throw 'password model not specified';
+                }
+                //need to convert the password data into the correctly formatted save data - it is *not* the same and we don't want to over-post
+                var formattedPasswordData = umbDataFormatter.formatChangePasswordModel(changePasswordModel);
+                return umbRequestHelper.resourcePromise($http.post(umbRequestHelper.getApiUrl('userApiBaseUrl', 'PostChangePassword'), formattedPasswordData), 'Failed to save user');
+            }
+            /**
+      * @ngdoc method
       * @name umbraco.resources.usersResource#deleteNonLoggedInUser
       * @methodOf umbraco.resources.usersResource
       *
@@ -5401,6 +5600,7 @@
                 createUser: createUser,
                 inviteUser: inviteUser,
                 saveUser: saveUser,
+                changePassword: changePassword,
                 deleteNonLoggedInUser: deleteNonLoggedInUser,
                 clearAvatar: clearAvatar
             };

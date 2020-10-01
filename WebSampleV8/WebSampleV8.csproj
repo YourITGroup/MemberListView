@@ -1,5 +1,5 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\UmbracoCms.8.5.3\build\UmbracoCms.props" Condition="Exists('..\packages\UmbracoCms.8.5.3\build\UmbracoCms.props')" />
+  <Import Project="..\packages\UmbracoCms.8.7.0\build\UmbracoCms.props" Condition="Exists('..\packages\UmbracoCms.8.7.0\build\UmbracoCms.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -44,8 +44,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClientDependency.Core, Version=1.9.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClientDependency.1.9.8\lib\net45\ClientDependency.Core.dll</HintPath>
+    <Reference Include="ClientDependency.Core, Version=1.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClientDependency.1.9.9\lib\net45\ClientDependency.Core.dll</HintPath>
     </Reference>
     <Reference Include="ClientDependency.Core.Mvc, Version=1.9.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ClientDependency-Mvc5.1.9.3\lib\net45\ClientDependency.Core.Mvc.dll</HintPath>
@@ -53,8 +53,8 @@
     <Reference Include="CSharpTest.Net.Collections, Version=14.906.1403.1082, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
       <HintPath>..\packages\CSharpTest.Net.Collections.14.906.1403.1082\lib\net40\CSharpTest.Net.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Examine, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Examine.1.0.1\lib\net452\Examine.dll</HintPath>
+    <Reference Include="Examine, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Examine.1.0.2\lib\net452\Examine.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.8.14.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.8.14\lib\Net45\HtmlAgilityPack.dll</HintPath>
@@ -243,19 +243,19 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Core.8.5.3\lib\net472\Umbraco.Core.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Core.8.7.0\lib\net472\Umbraco.Core.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Examine, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.5.3\lib\net472\Umbraco.Examine.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Web.8.7.0\lib\net472\Umbraco.Examine.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.ModelsBuilder.Embedded, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.5.3\lib\net472\Umbraco.ModelsBuilder.Embedded.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Web.8.7.0\lib\net472\Umbraco.ModelsBuilder.Embedded.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Web, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.5.3\lib\net472\Umbraco.Web.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Web.8.7.0\lib\net472\Umbraco.Web.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Web.UI, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.5.3\lib\net472\Umbraco.Web.UI.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Web.8.7.0\lib\net472\Umbraco.Web.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -264,37 +264,43 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\MemberManager\backoffice\dashboard\memberListView.controller.js" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dashboard\memberListView.html" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\edit.controller.js" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\edit.html" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\export.controller.js" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\export.html" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\filter.controller.js" />
-    <Content Include="App_Plugins\MemberManager\backoffice\dialogs\member\filter.html" />
-    <Content Include="App_Plugins\MemberManager\css\memberListView.css" />
-    <Content Include="App_Plugins\MemberManager\css\memberListView.min.css" />
-    <Content Include="App_Plugins\MemberManager\lang\cs.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\da.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\de.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\en-gb.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\en-us.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\es.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\fr.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\he.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\it.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\ja.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\ko.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\nb.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\nl.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\pl.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\pt.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\ru.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\sv.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\tr.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\zh-tw.xml" />
-    <Content Include="App_Plugins\MemberManager\lang\zh.xml" />
-    <Content Include="App_Plugins\MemberManager\resources\member.resource.js" />
+    <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.controller.js" />
+    <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.html" />
+    <Content Include="App_Plugins\MemberListView\dashboard\memberManager.controller.js" />
+    <Content Include="App_Plugins\MemberListView\dashboard\memberManager.html" />
+    <Content Include="App_Plugins\MemberListView\layouts\list\list.listviewlayout.controller.js" />
+    <Content Include="App_Plugins\MemberListView\layouts\list\list.html" />
+    <Content Include="App_Plugins\MemberListView\overlays\action.html" />
+    <Content Include="App_Plugins\MemberListView\overlays\action.controller.js" />
+    <Content Include="App_Plugins\MemberListView\propertyEditors\listView.controller.js" />
+    <Content Include="App_Plugins\MemberListView\propertyEditors\listView.html" />
+    <Content Include="App_Plugins\MemberListView\dialogs\member\export.controller.js" />
+    <Content Include="App_Plugins\MemberListView\dialogs\member\export.html" />
+    <Content Include="App_Plugins\MemberListView\dialogs\member\filter.controller.js" />
+    <Content Include="App_Plugins\MemberListView\dialogs\member\filter.html" />
+    <Content Include="App_Plugins\MemberListView\css\memberListView.css" />
+    <Content Include="App_Plugins\MemberListView\css\memberListView.min.css" />
+    <Content Include="App_Plugins\MemberListView\lang\cs.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\da.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\de.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\en-gb.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\en-us.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\es.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\fr.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\he.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\it.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\ja.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\ko.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\nb.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\nl.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\pl.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\pt.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\ru.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\sv.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\tr.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\zh-tw.xml" />
+    <Content Include="App_Plugins\MemberListView\lang\zh.xml" />
+    <Content Include="App_Plugins\MemberListView\resources\member.resource.js" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -333,7 +339,12 @@
     <Content Include="config\HealthChecks.config" />
     <Content Include="config\ClientDependency.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
-    <Content Include="App_Plugins\MemberManager\package.manifest" />
+    <Content Include="App_Plugins\MemberListView\package.manifest" />
+    <Content Include="App_Plugins\MemberListView\scss\memberListView.scss" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
@@ -344,6 +355,7 @@
     <Content Include="Views\Partials\Grid\Editors\Base.cshtml" />
     <Content Include="Views\Partials\Grid\Bootstrap3.cshtml" />
     <Content Include="Views\Partials\Grid\Bootstrap3-Fluid.cshtml" />
+    <Content Include="Views\Partials\BlockList\Default.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -352,12 +364,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MemberListView.Web\MemberListView.Web.csproj">
-      <Project>{d7335c36-ccd7-4c47-b74e-666d71546052}</Project>
-      <Name>MemberListView.Web</Name>
+    <ProjectReference Include="..\MemberListView\MemberListView.csproj">
+      <Project>{7ebda322-7669-47e4-a630-8a5232f62921}</Project>
+      <Name>MemberListView</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -389,11 +400,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets'))" />
-    <Error Condition="!Exists('..\packages\UmbracoCms.8.5.3\build\UmbracoCms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UmbracoCms.8.5.3\build\UmbracoCms.props'))" />
-    <Error Condition="!Exists('..\packages\UmbracoCms.8.5.3\build\UmbracoCms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UmbracoCms.8.5.3\build\UmbracoCms.targets'))" />
+    <Error Condition="!Exists('..\packages\UmbracoCms.8.7.0\build\UmbracoCms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UmbracoCms.8.7.0\build\UmbracoCms.props'))" />
+    <Error Condition="!Exists('..\packages\UmbracoCms.8.7.0\build\UmbracoCms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\UmbracoCms.8.7.0\build\UmbracoCms.targets'))" />
   </Target>
   <Import Project="..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets" Condition="Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" />
-  <Import Project="..\packages\UmbracoCms.8.5.3\build\UmbracoCms.targets" Condition="Exists('..\packages\UmbracoCms.8.5.3\build\UmbracoCms.targets')" />
+  <Import Project="..\packages\UmbracoCms.8.7.0\build\UmbracoCms.targets" Condition="Exists('..\packages\UmbracoCms.8.7.0\build\UmbracoCms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
