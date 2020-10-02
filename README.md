@@ -75,3 +75,6 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
   
 The Sample project has three member properties: `First Name`, `Last Name` and `Phone Number`.  `Phone Number` has also been marked as Sensitive.
 The version of MemberListView in the sample project has been modified to include these properties in the list.
+
+## Logo
+The package logo uses the Family (by Oksana Latysheva, UA) icon from the Noun Project, licensed under CC BY 3.0 US.
