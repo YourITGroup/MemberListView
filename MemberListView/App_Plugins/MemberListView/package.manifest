@@ -1,0 +1,13 @@
+{
+	"javascript": [
+		"~/App_Plugins/MemberListView/resources/member.resource.js",
+		"~/App_Plugins/MemberListView/overlays/action.controller.js",
+		"~/App_Plugins/MemberListView/layouts/list/list.listviewlayout.controller.js",
+		"~/App_Plugins/MemberListView/dashboard/memberManager.controller.js",
+		"~/App_Plugins/MemberListView/dialogs/member/filter.controller.js",
+		"~/App_Plugins/MemberListView/dialogs/member/export.controller.js"
+	],
+	"css": [
+		"~/App_Plugins/MemberListView/css/memberListView.css"
+	]
+}

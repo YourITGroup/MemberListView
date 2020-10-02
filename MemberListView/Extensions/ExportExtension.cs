@@ -1,18 +1,15 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
-using Examine;
 using MemberListView.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Umbraco.Core;
 using Umbraco.Core.Models;
-using CoreConstants = Umbraco.Core.Constants;
 
 namespace MemberListView.Extensions
 {
@@ -50,17 +47,28 @@ namespace MemberListView.Extensions
                 rows.Add(row);
             }
 
-            using (var sw = new StreamWriter(stream, Encoding.UTF8))
+            // Can't use using because it will dispose of the stream!
+            var sw = new StreamWriter(stream, Encoding.UTF8);
+            if (includeHeaders)
             {
-                if (includeHeaders)
-                {
-                    await sw.WriteAsync($"{fileColumns.Aggregate("", (a, b) => (a == "" ? a : a + fieldSeparator) + b)}{Environment.NewLine}");
-                }
-                foreach (var row in rows)
-                {
-                    await sw.WriteAsync($"{row.Aggregate("", (a, b) => (a == "" ? a : a + fieldSeparator) + ((b.Value is string) ? stringDelimiter.ToString() : "") + b.Value.ToString() + ((b.Value is string) ? stringDelimiter.ToString() : ""))}{Environment.NewLine}");
-                }
+                await sw.WriteAsync($"{fileColumns.Aggregate("", (a, b) => (string.IsNullOrEmpty(a) ? a : a + fieldSeparator) + b)}{Environment.NewLine}");
             }
+            foreach (var row in rows)
+            {
+                await sw.WriteAsync($"{row.Aggregate("", (a, b) => string.IsNullOrEmpty(a) ? b.GetValue(stringDelimiter) : $"{a}{fieldSeparator}{b.GetValue(stringDelimiter)}")}{Environment.NewLine}");
+            }
+
+            // We can't close the stream, so we need to flush it.
+            sw.Flush();
+        }
+
+        internal static string GetValue(this KeyValuePair<string, object> value, char delimiter)
+        {
+            if (value.Value is string)
+            {
+                return $"{delimiter}{value.Value}{delimiter}";
+            }
+            return $"{value.Value}";
         }
 
         public static async System.Threading.Tasks.Task CreateExcelAsync(this IEnumerable<object> list, Stream stream, string sheetName, bool includeHeaders = true)
@@ -185,48 +193,37 @@ namespace MemberListView.Extensions
             if (o != null)
             {
                 var d = new Dictionary<string, TVal>();
-                if (o is SearchResult)
+
+                var props = TypeDescriptor.GetProperties(o);
+                foreach (var prop in props.Cast<PropertyDescriptor>())
                 {
-                    var sr = o as SearchResult;
-                    d.Add("Id", (TVal)(sr.Id as object));
-                    foreach (var prop in sr.Fields)
+                    var val = prop.GetValue(o);
+                    // Flatten any dictionaries or lists.
+                    if (val != null)
                     {
-                        d.Add(prop.Key, (TVal)(prop.Value as object));
-                    }
-                }
-                else
-                {
-                    var props = TypeDescriptor.GetProperties(o);
-                    foreach (var prop in props.Cast<PropertyDescriptor>())
-                    {
-                        var val = prop.GetValue(o);
-                        // Flatten any dictionaries or lists.
-                        if (val != null)
+                        if (IsDictionary(val.GetType()))
                         {
-                            if (IsDictionary(val.GetType()))
+                            var dict = (IDictionary)val;
+                            foreach (var key in dict.Keys)
                             {
-                                var dict = (IDictionary)val;
-                                foreach (var key in dict.Keys)
-                                {
-                                    // If the item name is not already defined, we don't need to qualify it.
-                                    if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
-                                        d.Add($"{prop.Name}_{key}", (TVal)dict[key]);
-                                    else
-                                        d.Add(key.ToString(), (TVal)dict[key]);
-                                }
+                                // If the item name is not already defined, we don't need to qualify it.
+                                if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
+                                    d.Add($"{prop.Name}_{key}", (TVal)dict[key]);
+                                else
+                                    d.Add(key.ToString(), (TVal)dict[key]);
                             }
-                            else if (!(val is string) && IsEnumerable(val.GetType()))
+                        }
+                        else if (!(val is string) && IsEnumerable(val.GetType()))
+                        {
+                            int i = 0;
+                            foreach (var item in (IEnumerable)val)
                             {
-                                int i = 0;
-                                foreach (var item in (IEnumerable)val)
-                                {
-                                    d.Add($"{prop.Name}_{i++}", (TVal)item);
-                                }
+                                d.Add($"{prop.Name}_{i++}", (TVal)item);
                             }
-                            else
-                            {
-                                d.Add(prop.Name, (TVal)val);
-                            }
+                        }
+                        else
+                        {
+                            d.Add(prop.Name, (TVal)val);
                         }
                     }
                 }
@@ -284,69 +281,6 @@ namespace MemberListView.Extensions
                 {
                     yield return property;
                 }
-            }
-        }
-
-        internal static IEnumerable<MemberExportModel> ToExportModel(this IEnumerable<SearchResult> searchResults, IEnumerable<string> includedColumns)
-        {
-            foreach (var result in searchResults)
-            {
-                Guid key = Guid.Empty;
-                if (!result.Fields.ContainsKey("__key") || !Guid.TryParse(result.Fields["__key"], out key))
-                {
-                    if (result.Fields.ContainsKey("__Key"))
-                    {
-                        Guid.TryParse(result.Fields["__Key"], out key);
-                    }
-                }
-
-                if (key == Guid.Empty)
-                {
-                    yield break;
-                }
-
-                // Hack: using the internal ExportMember method on the MemberService as it auto does auditing etc.
-                var memberService = ApplicationContext.Current.Services.MemberService;
-                var exportMethod = memberService.GetType().GetMethod("ExportMember", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                dynamic exportedData = exportMethod.Invoke(memberService, new object[] { key }) as dynamic;
-
-                var record = ApplicationContext.Current.Services.MemberService.GetByKey(key);
-                var member = new MemberExportModel
-                {
-                    Id = record.Id,
-                    Key = key,
-                    Name = record.Name,
-                    Username = record.Username,
-                    Email = record.Email,
-                    MemberGroups = result[Constants.Members.Groups],
-                    MemberType = record.ContentTypeAlias,
-                    IsApproved = record.IsApproved,
-                    IsLockedOut = record.IsLockedOut
-                };
-
-                foreach (var property in includedColumns)
-                {
-                    // Try to work out the type
-                    object propertyValue;
-                    switch (record.Properties[property].PropertyType.PropertyEditorAlias)
-                    {
-                        case CoreConstants.PropertyEditors.TrueFalseAlias:
-                            propertyValue = record.GetValue<bool>(property);
-                            break;
-                        case CoreConstants.PropertyEditors.DateAlias:
-                            propertyValue = record.GetValue<DateTime?>(property)?.Date;
-                            break;
-                        case CoreConstants.PropertyEditors.DateTimeAlias:
-                            propertyValue = record.GetValue<DateTime?>(property);
-                            break;
-                        default:
-                            propertyValue = record.GetValue(property);
-                            break;
-                    }
-                    member.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
-                }
-
-                yield return member;
             }
         }
 

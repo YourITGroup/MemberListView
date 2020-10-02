@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MemberListView.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Umbraco.Core.Models;
+using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Core.Services;
 
 namespace MemberListView.Services
@@ -9,7 +9,7 @@ namespace MemberListView.Services
     public interface IMemberExtendedService : IMemberService
     {
         /// <summary>
-        /// Gets a list of paged <see cref="IMember"/> objects
+        /// Gets a list of paged <see cref="IMember"/> objects matching the criteria
         /// </summary>
         /// <remarks>An <see cref="IMember"/> can be of type <see cref="IMember"/> </remarks>
         /// <param name="pageIndex">Current page index</param>
@@ -19,11 +19,37 @@ namespace MemberListView.Services
         /// <param name="orderDirection">Direction to order by</param>
         /// <param name="orderBySystemField">Flag to indicate when ordering by system field</param>
         /// <param name="memberTypeAlias"></param>
+        /// <param name="groups"></param>
         /// <param name="filter">Search text filter</param>
         /// <param name="additionalFilters">additional filter conditions</param>
         /// <param name="isApproved">Optional filter on IsApproved state</param>
         /// <param name="isLockedOut">Optional filter on IsLockedOut state</param>
         /// <returns><see cref="IEnumerable{T}"/></returns>
-        IEnumerable<Umbraco.Core.Models.IMember> GetAll(long pageIndex, int pageSize, out long totalRecords, string orderBy, Umbraco.Core.Persistence.DatabaseModelDefinitions.Direction orderDirection, bool orderBySystemField, string memberTypeAlias, string filter, IDictionary<string, string> additionalFilters = null, bool? isApproved = null, bool? isLockedOut = null);
+        IEnumerable<IMember> GetPage(long pageIndex, int pageSize, out long totalRecords, string orderBy,
+                                     Direction orderDirection, bool orderBySystemField, string memberTypeAlias,
+                                     IEnumerable<int> groups, string filter,
+                                     IDictionary<string, string> additionalFilters = null, bool? isApproved = null,
+                                     bool? isLockedOut = null);
+
+        /// <summary>
+        /// Gets all <see cref="MemberExportModel"/> objects matching the criteria
+        /// </summary>
+        /// <param name="orderBy">Field to order by</param>
+        /// <param name="orderDirection">Direction to order by</param>
+        /// <param name="orderBySystemField">Flag to indicate when ordering by system field</param>
+        /// <param name="memberTypeAlias"></param>
+        /// <param name="groups"></param>
+        /// <param name="filter">Search text filter</param>
+        /// <param name="includedColumns">List of columns to include in the export</param>
+        /// <param name="additionalFilters">additional filter conditions</param>
+        /// <param name="isApproved">Optional filter on IsApproved state</param>
+        /// <param name="isLockedOut">Optional filter on IsLockedOut state</param>
+        /// <returns><see cref="IEnumerable{T}"/></returns>
+        IEnumerable<MemberExportModel> GetForExport(string orderBy, Direction orderDirection, bool orderBySystemField,
+                                          string memberTypeAlias, IEnumerable<int> groups, string filter,
+                                          IEnumerable<string> includedColumns,
+                                          IDictionary<string, string> additionalFilters = null, bool? isApproved = null,
+                                          bool? isLockedOut = null);
+
     }
 }

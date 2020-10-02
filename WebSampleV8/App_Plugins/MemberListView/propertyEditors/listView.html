@@ -1,0 +1,180 @@
+﻿<div ng-controller="MemberListView.Dashboard.MemberListViewController" class="umb-property-editor umb-listview">
+
+    <div class="row-fluid">
+        <umb-editor-sub-header ng-class="{'--state-selection':(selection.length > 0)}">
+
+            <umb-editor-sub-header-content-left>
+
+                <umb-editor-sub-header-section ng-if="(listViewAllowedTypes && listViewAllowedTypes.length > 0 && (selection.length == 0)) && (currentNodePermissions == null || currentNodePermissions.canCreate)">
+
+                    <!-- Renders when it's only possible to create one specific member type -->
+                    <div class="btn-group" ng-show="createAllowedButtonSingle">
+                        <button type="button" class="btn btn-outline umb-outline" ng-click="createBlank(entityType,listViewAllowedTypes[0].alias)" prevent-default>
+                            <localize key="actions_create">Create</localize> {{listViewAllowedTypes[0].name}}
+                        </button>
+                    </div>
+
+                    <!-- Renders when it's possible to create multiple member types -->
+                    <div class="btn-group" ng-show="createAllowedButtonMulti" deep-blur="leaveDropdown()">
+                        <button type="button" class="btn btn-white dropdown-toggle" aria-expanded="{{page.createDropdownOpen === undefined ? false : page.createDropdownOpen}}" ng-click="toggleDropdown()">
+                            <localize key="actions_create">Create</localize>
+                            <span class="caret" aria-hidden="true"></span>
+                        </button>
+
+                        <umb-dropdown ng-if="page.createDropdownOpen" on-close="page.createDropdownOpen = false">
+                            <umb-dropdown-item ng-repeat="contentType in listViewAllowedTypes track by contentType.key | orderBy:'name':false">
+                                <button type="button" ng-click="createBlank(entityType,contentType.alias)" prevent-default>
+                                    <i class="{{::contentType.icon}}" aria-hidden="true"></i>
+                                    {{::contentType.name}}
+                                </button>
+                            </umb-dropdown-item>
+                        </umb-dropdown>
+                    </div>
+
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section ng-if="selection.length > 0">
+                    <umb-button type="button"
+                                label="Clear selection"
+                                label-key="buttons_clearSelection"
+                                action="clearSelection()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section ng-if="selection.length > 0">
+                    <strong ng-show="!actionInProgress">{{ selectedItemsCount() }} <localize key="general_of">of</localize> {{ listViewResultSet.items.length }} <localize key="general_selected">selected</localize></strong>
+                    <strong ng-show="actionInProgress" ng-bind="bulkStatus"></strong>
+
+                    <umb-loader position="bottom" ng-show="actionInProgress"></umb-loader>
+                </umb-editor-sub-header-section>
+
+            </umb-editor-sub-header-content-left>
+
+            <umb-editor-sub-header-content-right>
+
+                <umb-editor-sub-header-section ng-show="selection.length == 0">
+                    <umb-mini-search model="options.filterData.filter"
+                                        on-search="makeSearch()"
+                                        on-start-typing="onSearchStartTyping()">
+                    </umb-mini-search>
+
+                    <umb-button type="button"
+                                button-style="white"
+                                label="Filter"
+                                label-key="memberManager_filter"
+                                icon="icon-filter"
+                                action="filter()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="options.filterData.display"
+                                type="button"
+                                button-style="white"
+                                label="Clear Filter"
+                                label-key="memberManager_clearFilter"
+                                icon="icon-block"
+                                action="clearFilter()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section ng-if="options.allowExport">
+                    <umb-button type="button"
+                                button-style="white"
+                                label="Export"
+                                label-key="memberManager_exportMembers"
+                                icon="icon-download"
+                                action="export()"
+                                disabled="actionInProgress">
+                    </umb-button>
+                </umb-editor-sub-header-section>
+
+                <umb-editor-sub-header-section ng-if="selection.length > 0">
+                    <span class="umb-status-label" ng-bind="vm.bulkStatus" ng-show="vm.selection.length > 0"></span>
+
+                    <umb-button ng-if="canUnlock() && options.allowUnlock"
+                                type="button"
+                                button-style="white"
+                                label="Unlock"
+                                label-key="actions_unlock"
+                                icon="icon-unlocked color-green"
+                                action="unlock()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="canApprove() && options.allowApprove"
+                                type="button"
+                                button-style="white"
+                                label="Approve"
+                                label-key="actions_approve"
+                                icon="icon-check color-green"
+                                action="approve()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="canSuspend() && options.allowSuspend"
+                                type="button"
+                                button-style="white"
+                                label="Suspend"
+                                label-key="actions_suspend"
+                                icon="icon-block color-red"
+                                action="suspend()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                    <umb-button ng-if="options.allowBulkDelete"
+                                type="button"
+                                button-style="white"
+                                label="Delete"
+                                label-key="actions_delete"
+                                icon="icon-trash color-red"
+                                action="delete()"
+                                disabled="actionInProgress">
+                    </umb-button>
+
+                </umb-editor-sub-header-section>
+
+            </umb-editor-sub-header-content-right>
+        </umb-editor-sub-header>
+    </div>
+
+    <umb-box ng-if="options.filterData.display">
+        <umb-box-content>
+            <div class="filter-display">
+                <div ng-repeat="displayFilter in options.filterData.display">
+                    <strong>{{displayFilter.title}}</strong>
+                    <span>{{displayFilter.value}}</span>
+                </div>
+            </div>
+        </umb-box-content>
+    </umb-box>
+
+    <umb-list-view-layout ng-if="viewLoaded"
+                            content-id=""
+                            folders="folders"
+                            items="listViewResultSet.items"
+                            selection="selection"
+                            options="options"
+                            entity-type="{{entityType}}"
+                            on-get-content="getContent(contentId)">
+    </umb-list-view-layout>
+
+    <umb-load-indicator ng-show="!viewLoaded"></umb-load-indicator>
+
+    <div class="flex justify-center">
+        <umb-pagination ng-if="listViewResultSet.totalPages"
+                        page-number="options.pageNumber"
+                        total-pages="listViewResultSet.totalPages"
+                        on-next="next"
+                        on-prev="prev"
+                        on-go-to-page="goToPage">
+        </umb-pagination>
+    </div>
+
+    <umb-overlay ng-if="ysodOverlay.show"
+                    model="ysodOverlay"
+                    position="right"
+                    view="ysodOverlay.view">
+    </umb-overlay>
+</div>

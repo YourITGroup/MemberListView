@@ -13,15 +13,11 @@
     </description>
     <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.15 +</summary>
     <copyright>Copyright 2020 Robert Foster</copyright>
-    <projectUrl>https://github.com/YourItGroup/umbMemberListView</projectUrl>
+    <projectUrl>https://github.com/YourITGroup/umbMemberListView</projectUrl>
     <language />
     <releaseNotes>
       <![CDATA[
 Installing the package enables a new Manage Dashboard on the Members section.
-
-**Version 1.5.4**
-
-* Improved handling of bulk operations - refresh should now display correct items after a short delay to allow the index to catch up.
 
 **Version 1.5.3**
 
@@ -69,7 +65,7 @@ Installing the package enables a new Manage Dashboard on the Members section.
     
     <tags>Umbraco Membership Member Management</tags>
     <dependencies>
-      <dependency id="UmbracoCMS" version="[7.15.1, 8.0)"></dependency>
+      <dependency id="UmbracoCMS" version="[7.15.1, )"></dependency>
     </dependencies>
   </metadata>
   <files>

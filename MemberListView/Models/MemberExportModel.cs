@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MemberListView.Models
 {
@@ -20,7 +21,11 @@ namespace MemberListView.Models
 
         public string MemberType { get; set; }
 
-        public string MemberGroups { get; set; }
+        public List<string> Groups { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public DateTime UpdateDate { get; set; }
 
         private Dictionary<string, object> properties;
         public IDictionary<string, object> Properties

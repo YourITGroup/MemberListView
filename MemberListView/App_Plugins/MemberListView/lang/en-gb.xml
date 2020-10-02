@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en_gb" intName="English (GB)" localName="English (GB)" lcid="" culture="en-GB">
+  <creator>
+    <name>Robert Foster</name>
+    <link></link>
+  </creator>
+  <area alias="dashboardTabs">
+    <key alias="memberManager">Manage Members</key>
+  </area>
+  <area alias="general">
+    <key alias="isApproved">Approved</key>
+    <key alias="isLockedOut">Locked</key>
+    <key alias="memberGroups">Groups</key>
+  </area>
+  <area alias="actions">
+    <key alias="approve">Approve</key>
+    <key alias="suspend">Suspend</key>
+    <key alias="applyFilter">Apply Filter</key>
+    <key alias="clearFilter">Clear Filter</key>
+  </area>
+  <area alias="bulk">
+    <key alias="unlockItemOfItem">Unlocking %0% Member</key>
+    <key alias="unlockItemOfItems">Unlocking %0% of %1% Members</key>
+    <key alias="unlockedItem">Unlocked %0% Member</key>
+    <key alias="unlockedItems">Unlocked %0% Members</key>
+    <key alias="suspendItemOfItem">Suspending %0% Member</key>
+    <key alias="suspendItemOfItems">Suspending %0% of %1% Members</key>
+    <key alias="suspendedItem">Suspended %0% Member</key>
+    <key alias="suspendedItems">Suspended %0% Members</key>
+    <key alias="approveItemOfItem">Approving %0% Member</key>
+    <key alias="approveItemOfItems">Approving %0% of %1% Members</key>
+    <key alias="approvedItem">Approved %0% Member</key>
+    <key alias="approvedItems">Approved %0% Members</key>
+  </area>
+  <area alias="memberManager">
+    <key alias="filter">Filter</key>
+    <key alias="clearFilter">Clear Filter</key>
+    <key alias="exportMembers">Export Members</key>
+    <key alias="export">Export</key>
+    <key alias="applyFilter">Apply Filter</key>
+    <key alias="confirmExport">Exporting large numbers of members may take some time.  Are you sure you want to continue?</key>
+    <key alias="confirmUnlock">Are you sure you want to unlock the selected members?</key>
+    <key alias="confirmSuspend">Are you sure you want to suspend the selected members?</key>
+    <key alias="confirmApprove">Are you sure you want to approve the selected members?</key>
+    <key alias="suspended">Suspended</key>
+    <key alias="approved">Approved</key>
+    <key alias="lockedOut">Locked Out</key>
+    <key alias="unlocked">Unlocked</key>
+    <key alias="yesApprove">Yes, approve</key>
+    <key alias="yesSuspend">Yes, suspend</key>
+    <key alias="yesUnlock">Yes, unlock</key>
+    <key alias="exportableRecords">Exportable records</key>
+    <key alias="exportAlert">Exporting a large number of members may take some time.</key>
+    <key alias="memberCount">%0% members</key>
+    <key alias="exportAppliedFilters">Applied Filters</key>
+    <key alias="columns">Columns</key>
+    <key alias="format">Format</key>
+    <key alias="columnsDescription">Select the columns to include in the exported data</key>
+  </area>
+</language>
