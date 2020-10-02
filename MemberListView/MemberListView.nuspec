@@ -8,10 +8,12 @@
     <owners>Robert Foster</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 7.15 + to allow easier management of members including approval and unlocking capabilities.
+      <![CDATA[Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
+      
+      For Umbraco 7.15 install version 1.5.5
           ]]>
     </description>
-    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 7.15 +</summary>
+    <summary>Adds a MemberListView dashboard to the Members area in Umbraco 8.6+</summary>
     <copyright>Copyright 2020 Robert Foster</copyright>
     <projectUrl>https://github.com/YourITGroup/umbMemberListView</projectUrl>
     <language />
@@ -19,6 +21,17 @@
       <![CDATA[
 Installing the package enables a new Manage Dashboard on the Members section.
 
+**Version 2.0.0**
+
+* Re-written for Umbraco 8 🎉
+
+**Version 1.5.5**
+
+* Shiny new icon - that's it 😎
+
+Version 1.5.4
+
+Improved handling of bulk operations - refresh should now display correct items after a short delay to allow the index to catch up.
 **Version 1.5.3**
 
 * Added support for SensitiveData - Exports will be hidden if the user doesn't have permission to view sensitive data, and sensitive properties will not be viewable
