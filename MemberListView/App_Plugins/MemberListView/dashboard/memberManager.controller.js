@@ -78,7 +78,7 @@
 
     $scope.options = {
         pageSize: $scope.model.config.pageSize ? $scope.model.config.pageSize : 10,
-        pageNumber: $routeParams.page && !isNaN($routeParams.page) && Number($routeParams.page) > 0 ? $routeParams.page : 0,
+        pageNumber: $routeParams.page && !isNaN($routeParams.page) && Number($routeParams.page) > 0 ? $routeParams.page : 1,
         filterData: {
             filter: $routeParams.filter ? $routeParams.filter : ''
         },

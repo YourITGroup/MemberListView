@@ -1,4 +1,5 @@
-﻿using MemberListView.Models.Mapping;
+﻿using MemberListView.Indexing;
+using MemberListView.Models.Mapping;
 using MemberListView.Services;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
@@ -19,6 +20,7 @@ namespace MemberListView.Composing
                 .Add<MemberListItemMapDefinition>();
 
             composition.Components().Append<MemberListViewComponent>();
+            composition.Components().Append<MemberIndexingComponent>();
 
             composition.Register<IMemberExtendedService, MemberExtendedService>();
         }

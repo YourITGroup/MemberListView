@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Examine;
+using System;
+using System.Collections.Generic;
 using System.Web.Security;
 using Umbraco.Core;
 using Umbraco.Core.Mapping;
@@ -13,11 +15,13 @@ namespace MemberListView.Models.Mapping
     {
         private readonly IUserService userService;
         private readonly IMemberTypeService memberTypeService;
+        private readonly IMemberService memberService;
 
-        public MemberListItemMapDefinition(IUserService userService, IMemberTypeService memberTypeService)
+        public MemberListItemMapDefinition(IUserService userService, IMemberTypeService memberTypeService, IMemberService memberService)
         {
             this.userService = userService;
             this.memberTypeService = memberTypeService;
+            this.memberService = memberService;
         }
 
         public void DefineMaps(UmbracoMapper mapper)

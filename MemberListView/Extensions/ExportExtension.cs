@@ -47,17 +47,28 @@ namespace MemberListView.Extensions
                 rows.Add(row);
             }
 
-            using (var sw = new StreamWriter(stream, Encoding.UTF8))
+            // Can't use using because it will dispose of the stream!
+            var sw = new StreamWriter(stream, Encoding.UTF8);
+            if (includeHeaders)
             {
-                if (includeHeaders)
-                {
-                    await sw.WriteAsync($"{fileColumns.Aggregate("", (a, b) => (string.IsNullOrEmpty(a) ? a : a + fieldSeparator) + b)}{Environment.NewLine}");
-                }
-                foreach (var row in rows)
-                {
-                    await sw.WriteAsync($"{row.Aggregate("", (a, b) => (string.IsNullOrEmpty(a) ? a : a + fieldSeparator) + ((b.Value is string) ? stringDelimiter.ToString() : "") + b.Value.ToString() + ((b.Value is string) ? stringDelimiter.ToString() : ""))}{Environment.NewLine}");
-                }
+                await sw.WriteAsync($"{fileColumns.Aggregate("", (a, b) => (string.IsNullOrEmpty(a) ? a : a + fieldSeparator) + b)}{Environment.NewLine}");
             }
+            foreach (var row in rows)
+            {
+                await sw.WriteAsync($"{row.Aggregate("", (a, b) => string.IsNullOrEmpty(a) ? b.GetValue(stringDelimiter) : $"{a}{fieldSeparator}{b.GetValue(stringDelimiter)}")}{Environment.NewLine}");
+            }
+
+            // We can't close the stream, so we need to flush it.
+            sw.Flush();
+        }
+
+        internal static string GetValue(this KeyValuePair<string, object> value, char delimiter)
+        {
+            if (value.Value is string)
+            {
+                return $"{delimiter}{value.Value}{delimiter}";
+            }
+            return $"{value.Value}";
         }
 
         public static async System.Threading.Tasks.Task CreateExcelAsync(this IEnumerable<object> list, Stream stream, string sheetName, bool includeHeaders = true)

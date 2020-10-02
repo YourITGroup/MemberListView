@@ -75,14 +75,14 @@ namespace MemberListView.Controllers
 
         [HttpGet]
         public PagedResult<MemberListItem> GetPagedMembers(
-            int pageNumber = 0,
+            int pageNumber = 1,
             int pageSize = 100,
             string orderBy = "email",
             Direction orderDirection = Direction.Ascending,
             bool orderBySystemField = false,
             string filter = "")
         {
-            if (pageNumber < 0 || pageSize <= 0)
+            if (pageNumber <= 0 || pageSize <= 0)
             {
                 throw new NotSupportedException("Both pageNumber and pageSize must be greater than zero");
             }
@@ -93,7 +93,7 @@ namespace MemberListView.Controllers
             var isLockedOut = Request.GetIsLockedOut();
             var isApproved = Request.GetIsApproved();
 
-            var members = memberExtendedService.GetPage(pageNumber, pageSize, out long totalRecords, orderBy, orderDirection,
+            var members = memberExtendedService.GetPage(pageNumber - 1, pageSize, out long totalRecords, orderBy, orderDirection,
                                                         orderBySystemField, typeAlias, groups, filter, filters, isApproved, isLockedOut);
             if (totalRecords == 0)
             {
@@ -183,7 +183,7 @@ namespace MemberListView.Controllers
             switch (format)
             {
                 case ExportFormat.CSV:
-                    await members.CreateCSVAsync(stream);
+                    await members.ToList().CreateCSVAsync(stream);
                     break;
                 case ExportFormat.Excel:
                     ext = "xlsx";

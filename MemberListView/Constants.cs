@@ -22,7 +22,7 @@
         internal static class Members
         {
             public const string Groups = "memberGroups";
-            public const string Type = "memberType";
+            public const string MemberType = "memberType";
             public const string MemberApproved = "umbracoMemberApproved";
             public const string MemberLockedOut = "umbracoMemberLockedOut";
         }

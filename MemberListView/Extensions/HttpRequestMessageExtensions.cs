@@ -20,7 +20,7 @@ namespace MemberListView.Extensions
         internal static string GetMemberTypeFromQuery(this HttpRequestMessage request)
         {
             return request.GetQueryNameValuePairs()
-                        .FirstOrDefault(q => q.Key == Constants.Members.Type).Value;
+                        .FirstOrDefault(q => q.Key == Constants.Members.MemberType).Value;
         }
 
         internal static bool? GetIsLockedOut(this HttpRequestMessage request)

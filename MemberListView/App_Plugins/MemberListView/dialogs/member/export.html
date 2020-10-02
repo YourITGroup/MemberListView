@@ -16,7 +16,7 @@
                         <umb-pane>
 
                             <umb-control-group localize="label" label="@memberManager_exportableRecords">
-                                <span><localize key="memberManager_memberCount" tokens="vm.totalItems">{{vm.totalItems}} members</localize></span>
+                                <span><localize key="memberManager_memberCount" tokens="[vm.totalItems]">{{vm.totalItems}} members</localize></span>
                                 <div class="alert alert-warning" ng-if="totalItems > 100">
                                     <localize key="memberManager_exportAlert">Exporting a large number of members may take some time.</localize>
                                 </div>
