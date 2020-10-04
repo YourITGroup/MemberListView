@@ -73,7 +73,7 @@ Improved handling of bulk operations - refresh should now display correct items 
 * Export - Filtered members can now be exported to a CSV file containing basic fields. 
       ]]>
     </releaseNotes>
-    <iconUrl>https://youritteam.blob.core.windows.net/assets/youritteam_64.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</iconUrl>
     <icon>images\icon.png</icon>
     
     <tags>Umbraco Membership Member Management</tags>
