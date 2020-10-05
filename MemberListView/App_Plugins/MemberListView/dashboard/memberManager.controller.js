@@ -9,9 +9,6 @@
     const getIdCallback = function (selected) {
         return selected.key
     }
-    //const createEditUrlCallback = function (item) {
-    //    return "/" + $scope.entityType + "/" + $scope.entityType + "/edit/" + item.key + "?page=" + $scope.options.pageNumber + "&listName=" + $scope.contentId
-    //}
 
     let labels = {}
 
@@ -36,9 +33,9 @@
         includeProperties: [
             { alias: 'email', header: 'Email', isSystem: 1 },
             { alias: 'memberGroups', header: 'Groups', isSystem: 0 },
-            { alias: 'firstName', header: 'First Name', isSystem: 0 },
-            { alias: 'lastName', header: 'Last Name', isSystem: 0 },
-            { alias: 'phoneNumber', header: 'Phone', isSystem: 0 },
+//            { alias: 'firstName', header: 'First Name', isSystem: 0 },
+//            { alias: 'lastName', header: 'Last Name', isSystem: 0 },
+//            { alias: 'phoneNumber', header: 'Phone', isSystem: 0 },
             { alias: 'isApproved', header: 'Approved', isSystem: 0 },
             { alias: 'isLockedOut', header: 'Locked Out', isSystem: 0 }
         ],

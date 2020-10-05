@@ -264,6 +264,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Umbraco.sdf" />
     <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.controller.js" />
     <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.html" />
     <Content Include="App_Plugins\MemberListView\dashboard\memberManager.controller.js" />
@@ -364,6 +365,9 @@
       <Project>{7ebda322-7669-47e4-a630-8a5232f62921}</Project>
       <Name>MemberListView</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\MacroPartials\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
