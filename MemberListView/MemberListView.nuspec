@@ -78,7 +78,7 @@ Improved handling of bulk operations - refresh should now display correct items 
     
     <tags>Umbraco Membership Member Management</tags>
     <dependencies>
-      <dependency id="UmbracoCMS" version="[7.15.1, )"></dependency>
+      <dependency id="UmbracoCMS" version="[8.6.0, 9.0.0)"></dependency>
     </dependencies>
   </metadata>
   <files>
