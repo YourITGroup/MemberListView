@@ -336,7 +336,6 @@
     <Content Include="App_Plugins\MemberListView\overlays\action.html" />
     <Content Include="App_Plugins\MemberListView\resources\member.resource.js" />
     <Content Include="icon.png" />
-    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\Dashboard.config.transform" />
@@ -350,12 +349,6 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
