@@ -338,7 +338,6 @@
     <Content Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config\Dashboard.config.transform" />
     <Content Include="MemberListView.nuspec">
       <SubType>Designer</SubType>
     </Content>
