@@ -21,7 +21,7 @@
                             <umb-control-group ng-show="vm.memberTypes && vm.memberTypes.length > 1"
                                                localize="label" label="@memberManager_memberType">
                                 <select ng-model="vm.filterData.memberType">
-                                    <option value=""><localize key="memberManager_optionAll">- All -</localize></option>
+                                    <option ng-value=""><localize key="memberManager_optionAll">- All -</localize></option>
                                     <option ng-repeat="memberType in vm.memberTypes" ng-value="memberType.alias">{{memberType.name}}</option>
                                 </select>
                             </umb-control-group>
@@ -42,18 +42,18 @@
                         <umb-pane>
                             <umb-control-group localize="label" label="@memberManager_approved">
                                 <select ng-model="vm.filterData.umbracoMemberApproved">
-                                    <option value=""><localize key="memberManager_optionAll">- All -</localize></option>
-                                    <option value="1"><localize key="memberManager_optionApprovedOnly">Approved Only</localize></option>
-                                    <option value="0"><localize key="memberManager_optionSuspendedOnly">Suspended Only</localize></option>
+                                    <option ng-value=""><localize key="memberManager_optionAll">- All -</localize></option>
+                                    <option ng-value="1"><localize key="memberManager_optionApprovedOnly">Approved Only</localize></option>
+                                    <option ng-value="0"><localize key="memberManager_optionSuspendedOnly">Suspended Only</localize></option>
                                 </select>
                             </umb-control-group>
                         </umb-pane>
                         <umb-pane>
                             <umb-control-group localize="label" label="@memberManager_lockedOut">
                                 <select ng-model="vm.filterData.umbracoMemberLockedOut">
-                                    <option value=""><localize key="memberManager_optionAll">- All -</localize>-</option>
-                                    <option value="1"><localize key="memberManager_optionLockedOutOnly">Locked Out Only</localize></option>
-                                    <option value="0"><localize key="memberManager_optionActiveOnly">Active Only</localize></option>
+                                    <option ng-value=""><localize key="memberManager_optionAll">- All -</localize>-</option>
+                                    <option ng-value="1"><localize key="memberManager_optionLockedOutOnly">Locked Out Only</localize></option>
+                                    <option ng-value="0"><localize key="memberManager_optionActiveOnly">Active Only</localize></option>
                                 </select>
                             </umb-control-group>
                         </umb-pane>

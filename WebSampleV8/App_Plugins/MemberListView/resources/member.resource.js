@@ -7,7 +7,6 @@
  * @returns {umbraco.resources.memberExtResource} memberExtResource
  *
  * @param {any} $http Http Service
- * @param {any} $window Window
  * @param {any} umbRequestHelper Umbraco Request Helper
  **/
 function memberExtResource($http, umbRequestHelper) {
@@ -203,10 +202,10 @@ function memberExtResource($http, umbRequestHelper) {
 
     //converts the value to a js bool
     function toBool(v) {
-        if (Utilities.isNumber(v)) {
+        if (typeof v === 'number') {
             return v > 0
         }
-        if (Utilities.isString(v)) {
+        if (typeof v === 'string') {
             return v === "true"
         }
         if (typeof v === "boolean") {

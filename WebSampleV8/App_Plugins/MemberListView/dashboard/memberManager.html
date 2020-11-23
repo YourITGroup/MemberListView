@@ -68,7 +68,7 @@
                                 disabled="actionInProgress">
                     </umb-button>
 
-                    <umb-button ng-if="options.filterData.display"
+                    <umb-button ng-if="options.filterData.display && options.filterData.display.length > 0"
                                 type="button"
                                 button-style="white"
                                 label="Clear Filter"
@@ -139,7 +139,7 @@
         </umb-editor-sub-header>
     </div>
 
-    <umb-box ng-if="options.filterData.display">
+    <umb-box ng-if="options.filterData.display && options.filterData.display.length > 0">
         <umb-box-content>
             <div class="filter-display">
                 <div ng-repeat="displayFilter in options.filterData.display">

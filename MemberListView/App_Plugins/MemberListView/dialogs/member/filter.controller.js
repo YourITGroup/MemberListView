@@ -166,16 +166,5 @@
             })
         }
 
-        // this method is called for all action buttons and then we proxy based on the btn definition
-        $scope.performAction = function (btn) {
-
-            if (!btn || !angular.isFunction(btn.handler)) {
-                throw "btn.handler must be a function reference"
-            }
-
-            btn.handler.apply(this)
-        }
-
-
         init()
     })

@@ -41,7 +41,7 @@ namespace MemberListView.Indexing
         {
             if (!examineManager.TryGetIndex(indexName, out IIndex index))
             {
-                logger.Warn<MemberIndexingComponent>($"No index found by the name {Umbraco.Core.Constants.UmbracoIndexes.ExternalIndexName}");
+                logger.Warn<MemberIndexingComponent>($"No index found by the name {indexName}");
             }
             else
             {
@@ -92,7 +92,7 @@ namespace MemberListView.Indexing
 
         private void IndexProviderTransformingIndexValues(object sender, IndexingItemEventArgs e)
         {
-            var indexProvider = sender as BaseIndexProvider;
+            //var indexProvider = sender as BaseIndexProvider;
 
             var memberTypes = memberTypeService.GetAll().Select(x => x.Alias);
 

@@ -8,7 +8,7 @@ using Umbraco.Core.Mapping;
 namespace MemberListView.Composing
 {
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class MemberListViewComposer : IUserComposer, IComposer, IDiscoverable
+    public class MemberListViewComposer : IUserComposer
     {
         public MemberListViewComposer()
         {
