@@ -8,16 +8,16 @@ namespace MemberListView.Indexing
 {
     public class ExtendedMemberValueSetValidator : ValueSetValidator
     {
-        public MemberValueSetValidator() : base(null, null, DefaultMemberIndexFields, null)
+        public ExtendedMemberValueSetValidator() : base(null, null, DefaultMemberIndexFields, null)
         {
         }
 
-        public MemberValueSetValidator(IEnumerable<string> includeItemTypes, IEnumerable<string> excludeItemTypes)
+        public ExtendedMemberValueSetValidator(IEnumerable<string> includeItemTypes, IEnumerable<string> excludeItemTypes)
             : base(includeItemTypes, excludeItemTypes, DefaultMemberIndexFields, null)
         {
         }
 
-        public MemberValueSetValidator(IEnumerable<string> includeItemTypes, IEnumerable<string> excludeItemTypes, IEnumerable<string> includeFields, IEnumerable<string> excludeFields)
+        public ExtendedMemberValueSetValidator(IEnumerable<string> includeItemTypes, IEnumerable<string> excludeItemTypes, IEnumerable<string> includeFields, IEnumerable<string> excludeFields)
             : base(includeItemTypes, excludeItemTypes, includeFields, excludeFields)
         {
         }

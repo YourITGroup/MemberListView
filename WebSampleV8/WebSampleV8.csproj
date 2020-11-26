@@ -361,13 +361,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MemberListView\MemberListView.csproj">
-      <Project>{7ebda322-7669-47e4-a630-8a5232f62921}</Project>
-      <Name>MemberListView</Name>
-    </ProjectReference>
+    <Folder Include="Views\MacroPartials\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\MacroPartials\" />
+    <ProjectReference Include="..\MemberListView\MemberListView.csproj">
+      <Project>{214c964c-014a-418a-a745-ead4521cefda}</Project>
+      <Name>MemberListView</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

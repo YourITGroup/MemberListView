@@ -136,7 +136,7 @@ function memberExtResource($http, umbRequestHelper) {
                     "GetExportedMembers",
                     params),
                 config).then(function (response) {
-                    headers = response.headers()
+                    const headers = response.headers()
                     try {
                         var filename = headers['x-filename']
 

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<umbPackage>
+  <info>
+    <package>
+      <name>$Name$</name>
+      <version>$Version$</version>
+      <iconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</iconUrl>
+      <licence url="https://opensource.org/licenses/MIT">MIT</licence>
+      <url>https://github.com/YourITGroup/umbMemberListView</url>
+      <requirements type="strict">
+        <major>8</major>
+        <minor>6</minor>
+        <patch>0</patch>
+      </requirements>
+    </package>
+    <author>
+      <name>Robert Foster</name>
+      <website>http://youritteam.com.au</website>
+    </author>
+    <contributors>
+      <contributor>robertjf72</contributor>
+    </contributors>
+    <readme><![CDATA[
+The MemberListView for Umbraco 8 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
+
+Installing the package enables a new Manage Members Dashboard on the Members section.
+
+Features
+========
+The MemberListView has been designed to be similar to the List View property editor and features a Create button to allow for quick creation of new Members and context-sensitive action buttons to Unlock, Approve or Suspend members depending on the status of their account as well as the ability to Delete them.  All actions can be performed on batches of users, as they apply to selected users only.
+
+Member Editing
+==============
+Member Editing can be done without leaving the MemberListView by clicking on a member name, which uses the Infinite Editor edit the member.
+
+New in Version 2.0.0
+====================
+
+* Re-written for Umbraco 8
+
+New in Version 1.5.0
+====================
+
+* Refreshed to be more inline with current Umbraco styling and practices.
+* Filtering and columns now much easier to customise.
+* Added multiple Member Group filtering out of the box
+
+New in Version 1.3.0
+====================
+* Support for Localization with plugin-based lang files
+* Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
+
+New in Version 1.2.0
+====================
+* Compiled against Umbraco 7.7
+* Fixed issue with suspending/activating/deleting members
+
+New in Version 0.9.12
+=====================
+* Fixed "Error: Argument 'MemberManager.Dashboard.MemberListViewController' is not a function" issue due to update in ClientDependency module
+
+New in Version 0.9.11
+=====================
+* UI cleanup - paging now consistent with 7.2.0 ListView
+* Issue with UnApproved members showing up in the list as approved.
+
+New in Version 0.9.10
+=====================
+* Export - Export now supports additional user indexed fields. If you add a property to a member type and want it to be exported, add it to the IndexUserFields collection in the ExamineIndex.config file.
+
+New in Version 0.9.9
+====================
+* Search is now lightning fast, although some modification to the Examine Index configuration is required. 
+* Filtering - filtering has now been moved to a dialog, includes Membership Flags and MemberType as default fields and is extendable.
+* Export - Filtered members can now be exported to a CSV file containing basic fields. 
+
+Current issues
+==============
+Currently Bulk Deletion will throw a lot of errors due to Database commit blocking.  Deleting one at a time however should not be affected.
+]]></readme>
+  </info>
+  <files>
+    <folder path="MemberListView/App_Plugins/MemberListView" orgPath="App_Plugins/MemberListView" /> 
+    <file path="MemberListView/bin/Release/net472/MemberListView.dll" orgPath="bin/MemberListView.dll" />
+</files>
+  <Actions />
+  <control />
+  <DocumentTypes />
+  <Templates />
+  <Stylesheets />
+  <Macros />
+  <DictionaryItems />
+  <Languages />
+  <DataTypes />
+</umbPackage>

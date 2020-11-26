@@ -1,306 +1,128 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7EBDA322-7669-47E4-A630-8A5232F62921}</ProjectGuid>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MemberListView</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
     <AssemblyName>MemberListView</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <Use64BitIISExpress />
-    <UseGlobalApplicationHostFile />
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <RootNamespace>MemberListView</RootNamespace>
+    <Copyright>Copyright © 2020 Robert Foster</Copyright>
+    <AssemblyVersion>2.0.6.0</AssemblyVersion>
+    <FileVersion>2.0.6.0</FileVersion>
+    <Description>Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
+      
+For Umbraco 7.15 install version 1.5.5</Description>
+    <PackageReleaseNotes>
+Installing the package enables a new Manage Dashboard on the Members section.
+
+**Version 2.0.0**
+
+* Re-written for Umbraco 8 🎉
+
+**Version 1.5.5**
+
+* Shiny new icon - that's it 😎
+
+Version 1.5.4
+
+Improved handling of bulk operations - refresh should now display correct items after a short delay to allow the index to catch up.
+**Version 1.5.3**
+
+* Added support for SensitiveData - Exports will be hidden if the user doesn't have permission to view sensitive data, and sensitive properties will not be viewable
+* Enhanced Export functionality - now allows selection of columns and the choice of exporting to CSV or Excel OpenFormat
+
+**Version 1.5.0**
+
+* Support for Umbraco 7.15
+* Refreshed listview to be more inline with current Umbraco styling and practices.
+* Filtering and columns now much easier to customise.
+* Added multiple Member Group filtering out of the box
+
+**Version 1.3.0**
+* Support for Localization with plugin-based lang files
+* Fixed issue where selecting a row caused the "You have unsaved changes" message to appear on navigation.
+
+**Version 1.2.0**
+
+* **Compiled against Umbraco 7.7**
+* Fixed issue with suspending/activating/deleting members
+
+**Version 0.9.12**
+
+* Fixed "Error: Argument 'MemberManager.Dashboard.MemberListViewController' is not a function" issue due to update in ClientDependency module
+
+**Version 0.9.11**
+
+* UI cleanup - paging now consistent with 7.2.0 ListView
+* Issue with UnApproved members showing up in the list as approved.
+
+**Version 0.9.10**
+
+* Export - Export now supports additional user indexed fields. If you add a property to a member type and want it to be exported, add it to the IndexUserFields collection in the ExamineIndex.config file.
+
+**Version 0.9.9**
+
+* Search is now lightning fast, although some modification to the Examine Index configuration is required. 
+* Filtering - filtering has now been moved to a dialog, includes Membership Flags and MemberType as default fields and is extendable.
+* Export - Filtered members can now be exported to a CSV file containing basic fields.</PackageReleaseNotes>
+    <PackageTags>Umbraco Membership Member Management</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
+    <Company>Your IT Group Pty Ltd</Company>
+    <Authors>Robert Foster</Authors>
+    <Version>2.0.6.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/YourITGroup/umbMemberListView</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ClientDependency.Core, Version=1.9.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClientDependency.1.9.9\lib\net45\ClientDependency.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ClientDependency.Core.Mvc, Version=1.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClientDependency-Mvc5.1.9.3\lib\net45\ClientDependency.Core.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
-    </Reference>
-    <Reference Include="CSharpTest.Net.Collections, Version=14.906.1403.1082, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSharpTest.Net.Collections.14.906.1403.1082\lib\net40\CSharpTest.Net.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.10.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.10.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="Examine, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Examine.1.0.2\lib\net452\Examine.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
-    </Reference>
-    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.8.14.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.8.14\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="ImageProcessor, Version=2.7.0.100, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ImageProcessor.2.7.0.100\lib\net452\ImageProcessor.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.5.4.0\lib\net46\LightInject.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject.Annotation, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.Annotation.1.1.0\lib\net46\LightInject.Annotation.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject.Mvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.Mvc.2.0.0\lib\net46\LightInject.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject.Web, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.Web.2.0.0\lib\net46\LightInject.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject.WebApi, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.WebApi.2.0.0\lib\net46\LightInject.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Markdown, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1b320cc08ad5aa89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Markdown.2.2.1\lib\net451\Markdown.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.2\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="MiniProfiler, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.4.0.138\lib\net461\MiniProfiler.dll</HintPath>
-    </Reference>
-    <Reference Include="MiniProfiler.Shared, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.Shared.4.0.138\lib\net461\MiniProfiler.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NPoco, Version=3.9.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPoco.3.9.4\lib\net45\NPoco.dll</HintPath>
-    </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Semver, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Semver.2.0.4\lib\net452\Semver.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.2.8.0\lib\net46\Serilog.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Enrichers.Process, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Enrichers.Process.2.0.1\lib\net45\Serilog.Enrichers.Process.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Enrichers.Thread, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Enrichers.Thread.3.0.0\lib\net45\Serilog.Enrichers.Thread.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Filters.Expressions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Filters.Expressions.2.0.0\lib\net45\Serilog.Filters.Expressions.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Formatting.Compact, Version=1.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Formatting.Compact.1.0.0\lib\net45\Serilog.Formatting.Compact.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Formatting.Compact.Reader, Version=1.0.3.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Formatting.Compact.Reader.1.0.3\lib\net45\Serilog.Formatting.Compact.Reader.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Settings.AppSettings, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Settings.AppSettings.2.2.2\lib\net45\Serilog.Settings.AppSettings.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Sinks.Async, Version=1.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Sinks.Async.1.3.0\lib\net45\Serilog.Sinks.Async.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Sinks.File.4.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Sinks.Map, Version=1.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Sinks.Map.1.0.0\lib\netstandard2.0\Serilog.Sinks.Map.dll</HintPath>
-    </Reference>
-    <Reference Include="Superpower, Version=1.0.0.0, Culture=neutral, PublicKeyToken=aec39280ded1b3a7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Superpower.2.0.0\lib\net45\Superpower.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Umbraco.SqlServerCE.4.0.0.1\lib\net472\System.Data.SqlServerCe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Umbraco.SqlServerCE.4.0.0.1\lib\net472\System.Data.SqlServerCe.Entity.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Linq.Expressions" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.9.0\lib\netstandard2.0\System.Threading.Tasks.Dataflow.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Net.Http">
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest">
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Core.8.6.0\lib\net472\Umbraco.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Umbraco.Examine, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.6.0\lib\net472\Umbraco.Examine.dll</HintPath>
-    </Reference>
-    <Reference Include="Umbraco.ModelsBuilder.Embedded, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.6.0\lib\net472\Umbraco.ModelsBuilder.Embedded.dll</HintPath>
-    </Reference>
-    <Reference Include="Umbraco.Web, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.6.0\lib\net472\Umbraco.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="Umbraco.Web.UI, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Web.8.6.0\lib\net472\Umbraco.Web.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
+    <Compile Remove="Indexing\ExtendedMemberValueSetValidator.cs" />
   </ItemGroup>
-  <ItemGroup />
+
   <ItemGroup>
-    <Compile Include="Composing\MemberListViewComponent.cs" />
-    <Compile Include="Composing\MemberListViewComposer.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Controllers\MemberController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dashboards\MemberManagerDashboard.cs" />
-    <Compile Include="Extensions\ExportExtension.cs" />
-    <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
-    <Compile Include="Extensions\SearchExtensions.cs" />
-    <Compile Include="Indexing\MemberIndexingComponent.cs" />
-    <Compile Include="Models\ExportFormat.cs" />
-    <Compile Include="Models\Mapping\MemberListItemMapDefinition.cs" />
-    <Compile Include="Models\MemberColumn.cs" />
-    <Compile Include="Models\MemberExportModel.cs" />
-    <Compile Include="Models\MemberListItem.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IMemberExtendedService.cs" />
-    <Compile Include="Services\MemberExtendedService.cs" />
+    <None Remove="App_Plugins\MemberListView\css\memberListView.css" />
+    <None Remove="App_Plugins\MemberListView\css\memberListView.min.css" />
+    <None Remove="App_Plugins\MemberListView\dashboard\memberManager.controller.js" />
+    <None Remove="App_Plugins\MemberListView\dashboard\memberManager.html" />
+    <None Remove="App_Plugins\MemberListView\dialogs\member\export.controller.js" />
+    <None Remove="App_Plugins\MemberListView\dialogs\member\export.html" />
+    <None Remove="App_Plugins\MemberListView\dialogs\member\filter.controller.js" />
+    <None Remove="App_Plugins\MemberListView\dialogs\member\filter.html" />
+    <None Remove="App_Plugins\MemberListView\lang\cs.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\da.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\de.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\en-gb.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\en-us.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\es.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\fr.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\he.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\it.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\ja.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\ko.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\nb.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\nl.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\pl.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\pt.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\ru.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\sv.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\tr.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\zh-tw.xml" />
+    <None Remove="App_Plugins\MemberListView\lang\zh.xml" />
+    <None Remove="App_Plugins\MemberListView\layouts\list\list.html" />
+    <None Remove="App_Plugins\MemberListView\layouts\list\list.listviewlayout.controller.js" />
+    <None Remove="App_Plugins\MemberListView\overlays\action.controller.js" />
+    <None Remove="App_Plugins\MemberListView\overlays\action.html" />
+    <None Remove="App_Plugins\MemberListView\package.manifest" />
+    <None Remove="App_Plugins\MemberListView\resources\member.resource.js" />
+    <None Remove="App_Plugins\MemberListView\scss\memberListView.scss" />
+    <None Remove="icon.png" />
+    <None Remove="MemberListView.nuspec" />
+    <None Remove="packages.config" />
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="App_Plugins\MemberListView\css\memberListView.css" />
     <Content Include="App_Plugins\MemberListView\css\memberListView.min.css" />
@@ -334,85 +156,41 @@
     <Content Include="App_Plugins\MemberListView\layouts\list\list.listviewlayout.controller.js" />
     <Content Include="App_Plugins\MemberListView\overlays\action.controller.js" />
     <Content Include="App_Plugins\MemberListView\overlays\action.html" />
+    <Content Include="App_Plugins\MemberListView\package.manifest" />
     <Content Include="App_Plugins\MemberListView\resources\member.resource.js" />
+    <Content Include="App_Plugins\MemberListView\scss\memberListView.scss" />
     <Content Include="icon.png" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="MemberListView.nuspec">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Plugins\MemberListView\package.manifest" />
-    <Content Include="App_Plugins\MemberListView\scss\memberListView.scss" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="UmbracoCms.Core" Version="8.6.0" />
+    <PackageReference Include="UmbracoCms.Web" Version="8.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.ApplicationServices" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controllers\MemberController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
-  </Target>
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
-        <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>62243</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:62243/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-        </WebProjectProperties>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-  <PropertyGroup>
-    <PreBuildEvent>cd "$(ProjectDir)"
-del *.nupkg</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
-  echo Building NuGet Package...
-  cd "$(ProjectDir)"
-  "$(SolutionDir).nuget\NuGet.exe" pack -Verbosity detailed -NonInteractive -Prop Configuration=Release
 
-  Echo Copying files to package directory...
-  del "$(SolutionDir)Package\*.*" /q
-  for /r "$(ProjectDir)App_Plugins\MemberListView" %25%25f in (*.*) do @copy "%25%25f" "$(SolutionDir)Package" /Y
-  copy "$(SolutionDir)Umbraco Package\package.xml" "$(SolutionDir)Package" /Y
-  copy "$(TargetPath)" "$(SolutionDir)Package" /Y
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="cd &quot;$(ProjectDir)&quot;&#xD;&#xA;del *.nupkg" />
+  </Target>
 
-  Echo Creating Package Zip File...
-  FOR /F "delims= usebackq" %25%25i IN (`powershell.exe -noninteractive -command "[System.Diagnostics.FileVersionInfo]::GetVersionInfo('$(TargetPath)').FileVersion"`) DO (
-    ECHO version: %25%25i
-    if exist '$(SolutionDir)MemberListView.%25%25i.zip' (del '$(SolutionDir)MemberListView.%25%25i.zip')
-    powershell Compress-Archive -Path '$(SolutionDir)Package\*.*' -DestinationPath '$(SolutionDir)MemberListView.%25%25i.zip' -Force
-)
-) else (
-  echo Skipping Package creation.
-)</PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets" Condition="Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets'))" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;  Echo Creating Package Zip File...&#xD;&#xA;  cd &quot;$(SolutionDir)&quot;&#xD;&#xA;  FOR /F &quot;delims= usebackq&quot; %25%25i IN (`powershell.exe -noninteractive -command &quot;[System.Diagnostics.FileVersionInfo]::GetVersionInfo('$(TargetPath)').FileVersion&quot;`) DO (&#xD;&#xA;    ECHO version: %25%25i&#xD;&#xA;    umbpack pack ./package.xml -p Name=$(ProjectName);Version=%25%25i&#xD;&#xA;  )&#xD;&#xA;) else (&#xD;&#xA;  echo Skipping Package creation.&#xD;&#xA;)" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
+
 </Project>
