@@ -80,7 +80,10 @@
         pageSize: $scope.model.config.pageSize ? $scope.model.config.pageSize : 10,
         pageNumber: $routeParams.page && !isNaN($routeParams.page) && Number($routeParams.page) > 0 ? $routeParams.page : 1,
         filterData: {
-            filter: $routeParams.filter ? $routeParams.filter : ''
+            filter: $routeParams.filter ? $routeParams.filter : '',
+            umbracoMemberApproved: null,
+            umbracoMemberLockedOut: null,
+
         },
         orderBy: ($routeParams.orderBy ? $routeParams.orderBy : $scope.model.config.orderBy ? $scope.model.config.orderBy : 'email').trim(),
         orderDirection: ($routeParams.orderDirection ? $routeParams.orderDirection : $scope.model.config.orderDirection ? $scope.model.config.orderDirection : "desc").trim(),

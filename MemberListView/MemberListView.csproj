@@ -5,8 +5,8 @@
     <AssemblyName>MemberListView</AssemblyName>
     <RootNamespace>MemberListView</RootNamespace>
     <Copyright>Copyright © 2020 Robert Foster</Copyright>
-    <AssemblyVersion>2.0.6.0</AssemblyVersion>
-    <FileVersion>2.0.6.0</FileVersion>
+    <AssemblyVersion>2.0.7.0</AssemblyVersion>
+    <FileVersion>2.0.7.0</FileVersion>
     <Description>Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
       
 For Umbraco 7.15 install version 1.5.5</Description>
@@ -68,7 +68,7 @@ Improved handling of bulk operations - refresh should now display correct items 
     <PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
     <Company>Your IT Group Pty Ltd</Company>
     <Authors>Robert Foster</Authors>
-    <Version>2.0.6.0</Version>
+    <Version>2.0.7.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/YourITGroup/umbMemberListView</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

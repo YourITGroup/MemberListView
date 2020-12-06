@@ -20,7 +20,8 @@
     <contributors>
       <contributor>robertjf72</contributor>
     </contributors>
-    <readme><![CDATA[
+    <readme>
+  <![CDATA[
 The MemberListView for Umbraco 8 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
 Installing the package enables a new Manage Members Dashboard on the Members section.

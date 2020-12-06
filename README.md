@@ -24,9 +24,17 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 2.0.7**
+
+* Various bug fixes including fix for Suspended/Locked filtering.
+
+**Version 2.0.4**
+
+* Backwards compatibility fix for Umbraco 8.6
+
 **Version 2.0.0**
 
-* Re-written for Umbraco 8
+* Re-written for Umbraco 8 🎉
 
 **Version 1.5.5**
 

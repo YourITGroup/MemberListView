@@ -66,20 +66,20 @@
             if ($scope.vm.filterData.memberType && $scope.vm.filterData.memberType.length > 0) {
                 displaySearch.push({ title: "Member Type", value: getMemberTypeName() })
             }
-            if ($scope.vm.filterData.umbracoMemberApproved) {
-                displaySearch.push({ title: "Approved", value: $scope.vm.filterData.umbracoMemberApproved === "1" ? "Approved" : "Suspended" })
+            if ($scope.vm.filterData.umbracoMemberApproved !== null) {
+                displaySearch.push({ title: "Approved", value: $scope.vm.filterData.umbracoMemberApproved === 1 ? "Approved" : "Suspended" })
             }
 
-            if ($scope.vm.filterData.umbracoMemberLockedOut) {
-                displaySearch.push({ title: "Locked Out", value: $scope.vm.filterData.umbracoMemberLockedOut === "1" ? "Locked Out" : "Active" })
+            if ($scope.vm.filterData.umbracoMemberLockedOut !== null) {
+                displaySearch.push({ title: "Locked Out", value: $scope.vm.filterData.umbracoMemberLockedOut === 1 ? "Locked Out" : "Active" })
             }
 
             return {
                 filter: $scope.vm.filterData.filter,
                 memberType: $scope.vm.filterData.memberType,
                 memberGroups: processFilterList(displaySearch, "Member Groups", $scope.vm.memberGroups, true),
-                umbracoMemberApproved: !$scope.vm.filterData.umbracoMemberApproved ? "" : $scope.vm.filterData.umbracoMemberApproved,
-                umbracoMemberLockedOut: !$scope.vm.filterData.umbracoMemberLockedOut ? "" : $scope.vm.filterData.umbracoMemberLockedOut,
+                umbracoMemberApproved: $scope.vm.filterData.umbracoMemberApproved,
+                umbracoMemberLockedOut: $scope.vm.filterData.umbracoMemberLockedOut,
 
                 // Additional filters should have the f_ prefix and should match the alias of the member property.
 

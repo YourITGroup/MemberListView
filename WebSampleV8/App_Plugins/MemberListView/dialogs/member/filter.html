@@ -42,7 +42,7 @@
                         <umb-pane>
                             <umb-control-group localize="label" label="@memberManager_approved">
                                 <select ng-model="vm.filterData.umbracoMemberApproved">
-                                    <option ng-value=""><localize key="memberManager_optionAll">- All -</localize></option>
+                                    <option ng-value="null"><localize key="memberManager_optionAll">- All -</localize></option>
                                     <option ng-value="1"><localize key="memberManager_optionApprovedOnly">Approved Only</localize></option>
                                     <option ng-value="0"><localize key="memberManager_optionSuspendedOnly">Suspended Only</localize></option>
                                 </select>
@@ -51,7 +51,7 @@
                         <umb-pane>
                             <umb-control-group localize="label" label="@memberManager_lockedOut">
                                 <select ng-model="vm.filterData.umbracoMemberLockedOut">
-                                    <option ng-value=""><localize key="memberManager_optionAll">- All -</localize>-</option>
+                                    <option ng-value="null"><localize key="memberManager_optionAll">- All -</localize>-</option>
                                     <option ng-value="1"><localize key="memberManager_optionLockedOutOnly">Locked Out Only</localize></option>
                                     <option ng-value="0"><localize key="memberManager_optionActiveOnly">Active Only</localize></option>
                                 </select>

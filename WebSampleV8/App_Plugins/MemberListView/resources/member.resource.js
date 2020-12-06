@@ -222,13 +222,20 @@ function memberExtResource($http, umbRequestHelper) {
         for (prop in filter) {
             if (filter.hasOwnProperty(prop) &&
                 filter[prop] &&
-                (prop.startsWith('f_') ||
+                (
+                    (prop.startsWith('f_') ||
                     prop === 'filter' ||
                     prop === 'memberType' ||
-                    prop === 'memberGroups' ||
-                    prop === 'umbracoMemberApproved' ||
-                    prop === 'umbracoMemberLockedOut') &&
-                filter[prop].length > 0) {
+                    prop === 'memberGroups') &&
+                    filter[prop].length > 0
+                ) || 
+                (
+                    (prop === 'umbracoMemberApproved' ||
+                    prop === 'umbracoMemberLockedOut') && 
+                    filter[prop] !== null
+                )
+            )
+            {
 
                 // Add a new dictionary entry.
                 var entry = {}
