@@ -17,6 +17,11 @@
         color: #999;
         margin-top: 20px;
     }
+
+    .umb-table-cell > * {
+        overflow: visible;
+        white-space: unset;
+    }
 }
 
 .filter-display {
