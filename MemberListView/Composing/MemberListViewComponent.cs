@@ -44,6 +44,8 @@ namespace MemberListView.Composing
             }
         }
 
-        public void Terminate() => throw new NotImplementedException();
+        public void Terminate()
+        {
+        }
     }
 }

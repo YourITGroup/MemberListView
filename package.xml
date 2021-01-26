@@ -34,6 +34,21 @@ Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which uses the Infinite Editor edit the member.
 
+New in Version 2.0.7.2
+======================
+
+* fixed Component Terminate throwing NotImplementException
+
+New in Version 2.0.7
+====================
+
+* Various bug fixes including fix for Suspended/Locked filtering.
+
+New in Version 2.0.4
+====================
+
+* Backwards compatibility fix for Umbraco 8.6
+
 New in Version 2.0.0
 ====================
 
