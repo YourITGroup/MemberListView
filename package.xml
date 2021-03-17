@@ -98,7 +98,7 @@ Currently Bulk Deletion will throw a lot of errors due to Database commit blocki
   <files>
     <folder path="MemberListView/App_Plugins/MemberListView" orgPath="App_Plugins/MemberListView" /> 
     <file path="MemberListView/bin/Release/net472/MemberListView.dll" orgPath="bin/MemberListView.dll" />
-</files>
+  </files>
   <Actions />
   <control />
   <DocumentTypes />

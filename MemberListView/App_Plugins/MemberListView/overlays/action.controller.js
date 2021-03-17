@@ -1,4 +1,5 @@
 ﻿function actionController($scope, localizationService) {
+    "use strict";
 
     localizationService.localize($scope.model.actionKey).then(function (value) {
         $scope.question = value

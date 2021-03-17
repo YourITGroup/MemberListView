@@ -1,4 +1,5 @@
 ﻿function memberListViewController($scope, $interpolate, $routeParams, $timeout, $location, memberResource, memberExtResource, memberTypeResource, notificationsService, iconHelper, localizationService, listViewHelper, overlayService, editorService, eventsService) {
+    "use strict";
 
     // We are specifically targeting Members.
     $scope.entityType = "member"
@@ -375,7 +376,7 @@
 
     }
 
-    isSuspended = function (item) {
+    function isSuspended (item) {
         return _.some($scope.listViewResultSet.items, function (member) {
             if (member.key === item.key)
                 return member.isApproved === labels['suspendedLabel']
@@ -383,7 +384,7 @@
         })
     }
 
-    isApproved = function (item) {
+    function isApproved (item) {
         return _.some($scope.listViewResultSet.items, function (member) {
             if (member.key === item.key)
                 return member.isApproved === labels['approvedLabel']
@@ -391,7 +392,7 @@
         })
     }
 
-    isUnlocked = function (item) {
+    function isUnlocked (item) {
         return _.some($scope.listViewResultSet.items, function (member) {
             if (member.key === item.key)
                 return member.isLockedOut === labels['unlockedLabel']
@@ -399,20 +400,20 @@
         })
     }
 
-    getLockedIcon = function (locked) {
-        return locked ? 'icon-lock color-red' : 'icon-unlocked color-green'
-    }
+    //function getLockedIcon (locked) {
+    //    return locked ? 'icon-lock color-red' : 'icon-unlocked color-green'
+    //}
 
-    getSuspendedIcon = function (approved) {
-        return approved ? 'icon-check color-green' : 'icon-block color-red'
-    }
+    //function getSuspendedIcon (approved) {
+    //    return approved ? 'icon-check color-green' : 'icon-block color-red'
+    //}
 
-    getLockedDescription = function (locked) {
+    function getLockedDescription (locked) {
         var key = locked ? 'lockedOut' : 'unlocked'
         return labels[key + 'Label']
     }
 
-    getSuspendedDescription = function (approved) {
+    function getSuspendedDescription (approved) {
         var key = approved ? 'approved' : 'suspended'
         return labels[key + 'Label']
     }

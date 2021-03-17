@@ -1,4 +1,5 @@
 ﻿function memberListViewController($scope, $interpolate, $routeParams, $timeout, $location, memberResource, memberExtResource, memberTypeResource, notificationsService, iconHelper, localizationService, listViewHelper, overlayService, editorService, eventsService) {
+    "use strict";
 
     // We are specifically targeting Members.
     $scope.entityType = "member"

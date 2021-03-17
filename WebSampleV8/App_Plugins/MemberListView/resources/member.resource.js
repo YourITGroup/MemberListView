@@ -10,6 +10,7 @@
  * @param {any} umbRequestHelper Umbraco Request Helper
  **/
 function memberExtResource($http, umbRequestHelper) {
+    "use strict";
     var memberExtResource = {
         approveByKey: function (key) {
             if (!key) {
@@ -184,19 +185,19 @@ function memberExtResource($http, umbRequestHelper) {
                 params.push({ memberType: memberType })
             }
             return umbRequestHelper.resourcePromise(
-                    $http.get(umbRequestHelper.getApiUrl(
-                        "memberListViewBaseUrl",
-                        "GetMemberColumns",
+                $http.get(umbRequestHelper.getApiUrl(
+                    "memberListViewBaseUrl",
+                    "GetMemberColumns",
                     params)),
-                    'Failed to retrieve groups')
+                'Failed to retrieve groups')
         },
 
         canExport: function () {
-                return umbRequestHelper.resourcePromise(
-                    $http.get(umbRequestHelper.getApiUrl(
-                        "memberListViewBaseUrl",
-                        "GetCanExport")),
-                    false)
+            return umbRequestHelper.resourcePromise(
+                $http.get(umbRequestHelper.getApiUrl(
+                    "memberListViewBaseUrl",
+                    "GetCanExport")),
+                false)
         }
     }
 
@@ -219,23 +220,22 @@ function memberExtResource($http, umbRequestHelper) {
             return
         var dict = []
 
-        for (prop in filter) {
+        for (var prop in filter) {
             if (filter.hasOwnProperty(prop) &&
                 filter[prop] &&
                 (
                     (prop.startsWith('f_') ||
-                    prop === 'filter' ||
-                    prop === 'memberType' ||
-                    prop === 'memberGroups') &&
+                        prop === 'filter' ||
+                        prop === 'memberType' ||
+                        prop === 'memberGroups') &&
                     filter[prop].length > 0
-                ) || 
+                ) ||
                 (
                     (prop === 'umbracoMemberApproved' ||
-                    prop === 'umbracoMemberLockedOut') && 
+                        prop === 'umbracoMemberLockedOut') &&
                     filter[prop] !== null
                 )
-            )
-            {
+            ) {
 
                 // Add a new dictionary entry.
                 var entry = {}

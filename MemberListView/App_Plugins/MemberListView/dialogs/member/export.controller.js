@@ -1,5 +1,6 @@
 ﻿angular.module("umbraco").controller("MemberManager.Dialogs.Member.ExportController",
     function ($scope, memberExtResource) {
+        "use strict";
 
         $scope.vm = {
             filterData: $scope.model.filterData,

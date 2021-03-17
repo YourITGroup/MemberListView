@@ -1,5 +1,6 @@
 ﻿angular.module("umbraco").controller("MemberManager.Dialogs.Member.FilterController",
     function ($scope) {
+        "use strict";
 
         $scope.defaultButton = null
         $scope.subButtons = []

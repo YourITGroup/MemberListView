@@ -39,14 +39,18 @@
                                 <div class="filter-checkbox-list">
                                     <div class="filter-header">
                                         <div>
-                                            <input type="checkbox" ng-checked="allSelected(vm.columnList)" ng-click="selectAll(vm.columnList)" id="column-all" />
-                                            <label class="control-label" for="column-all">Select / deselect all columns</label>
+                                            <label class="control-label" for="column-all">
+                                                <input type="checkbox" ng-checked="allSelected(vm.columnList)" ng-click="selectAll(vm.columnList)" id="column-all" />
+                                                Select / deselect all columns
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="filter-content">
                                         <div ng-repeat="column in vm.columnList">
-                                            <input type="checkbox" ng-model="column.selected" id="column-{{column.id}}" />
-                                            <label class="control-label" for="column-{{column.id}}">{{column.name}}</label>
+                                            <label class="control-label" for="column-{{column.id}}">
+                                                <input type="checkbox" ng-model="column.selected" id="column-{{column.id}}" />
+                                                {{column.name}}
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

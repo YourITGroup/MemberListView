@@ -32,8 +32,10 @@
                                 <div class="filter-checkbox-list">
                                     <div class="filter-content">
                                         <div ng-repeat="group in vm.memberGroups">
-                                            <input type="checkbox" ng-model="group.selected" id="group-{{group.id}}" />
-                                            <label class="control-label" for="group-{{group.id}}">{{group.name}}</label>
+                                            <label class="control-label" for="group-{{group.id}}">
+                                                <input type="checkbox" ng-model="group.selected" id="group-{{group.id}}" />
+                                                {{group.name}}
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

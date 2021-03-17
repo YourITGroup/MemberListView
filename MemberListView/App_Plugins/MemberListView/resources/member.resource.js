@@ -10,6 +10,7 @@
  * @param {any} umbRequestHelper Umbraco Request Helper
  **/
 function memberExtResource($http, umbRequestHelper) {
+    "use strict";
     var memberExtResource = {
         approveByKey: function (key) {
             if (!key) {
@@ -219,7 +220,7 @@ function memberExtResource($http, umbRequestHelper) {
             return
         var dict = []
 
-        for (prop in filter) {
+        for (var prop in filter) {
             if (filter.hasOwnProperty(prop) &&
                 filter[prop] &&
                 (
