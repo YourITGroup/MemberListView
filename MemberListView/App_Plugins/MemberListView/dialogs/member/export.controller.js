@@ -1,5 +1,5 @@
 ﻿angular.module("umbraco").controller("MemberManager.Dialogs.Member.ExportController",
-    function ($scope, memberExtResource) {
+    function ($scope, memberListViewResource) {
         "use strict";
 
         $scope.vm = {
@@ -14,7 +14,7 @@
         }
 
         function init() {
-            memberExtResource.getMemberColumns($scope.vm.filterData.memberType).then(function (data) {
+            memberListViewResource.getMemberColumns($scope.vm.filterData.memberType).then(function (data) {
                 // We use this to preserve the original filter data.
                 $scope.vm.columnList = setSelected(data, $scope.vm.exportData.columns)
             })
@@ -22,7 +22,7 @@
         }
 
         // Loop through a list of select options and set selected for values that appear in a filter list
-        setSelected = function (list, filter) {
+        const setSelected = function (list, filter) {
             // Convert string arrays to a select item object.
             const newList = _.map(list, function (item, index, list) {
                 if (typeof list[index] === "string") {
@@ -59,7 +59,7 @@
 
             return newList        }
 
-        processColumnList = function (list) {
+        const processColumnList = function (list) {
             var filteredList = _.filter(list, function (i) {
                 return i.selected
             })

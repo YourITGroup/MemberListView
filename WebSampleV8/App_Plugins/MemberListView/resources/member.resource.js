@@ -1,17 +1,17 @@
 ﻿/**
  * @ngdoc service
- * @name umbraco.resources.memberExtResource
+ * @name umbraco.resources.memberListViewResource
  * 
  * @description Member Management
  * 
- * @returns {umbraco.resources.memberExtResource} memberExtResource
+ * @returns {umbraco.resources.memberListViewResource} memberListViewResource
  *
  * @param {any} $http Http Service
  * @param {any} umbRequestHelper Umbraco Request Helper
  **/
-function memberExtResource($http, umbRequestHelper) {
+function memberListViewResource($http, umbRequestHelper) {
     "use strict";
-    var memberExtResource = {
+    var memberListViewResource = {
         approveByKey: function (key) {
             if (!key) {
                 throw "key cannot be null"
@@ -249,7 +249,7 @@ function memberExtResource($http, umbRequestHelper) {
 
     }
 
-    return memberExtResource
+    return memberListViewResource
 }
 
-angular.module('umbraco.resources').factory('memberExtResource', memberExtResource)
+angular.module('umbraco.resources').factory('memberListViewResource', memberListViewResource)

@@ -1,11 +1,11 @@
-﻿function memberListViewController($scope, $interpolate, $routeParams, $timeout, $location, memberResource, memberExtResource, memberTypeResource, notificationsService, iconHelper, localizationService, listViewHelper, overlayService, editorService, eventsService) {
+﻿function memberListViewController($scope, $interpolate, $routeParams, $timeout, $location, memberResource, memberListViewResource, memberTypeResource, notificationsService, iconHelper, localizationService, listViewHelper, overlayService, editorService, eventsService) {
     "use strict";
 
     // We are specifically targeting Members.
     $scope.entityType = "member"
     const contentResource = memberResource
     const getContentTypesCallback = memberTypeResource.getTypes
-    const getListResultsCallback = memberExtResource.getPagedResults
+    const getListResultsCallback = memberListViewResource.getPagedResults
     const deleteItemCallback = contentResource.deleteByKey
     const getIdCallback = function (selected) {
         return selected.key
@@ -429,7 +429,7 @@
             submit: function (model) {
                 $scope.options.columns = model.columns
                 $scope.options.format = model.format
-                memberExtResource.getExport($scope.options)
+                memberListViewResource.getExport($scope.options)
                 editorService.close()
             },
             close: function () {
@@ -469,7 +469,7 @@
         $scope.selected = _.filter(tmpSelected, function (item) { return isLockedOut(item) })
 
         applySelected(
-            function (selected, index) { return memberExtResource.unlockByKey(getIdCallback(selected[index])) },
+            function (selected, index) { return memberListViewResource.unlockByKey(getIdCallback(selected[index])) },
             function (count, total) {
                 var key = total === 1 ? "bulk_unlockItemOfItem" : "bulk_unlockItemOfItems"
                 return localizationService.localize(key, [count, total])
@@ -507,7 +507,7 @@
         $scope.selected = _.filter(tmpSelected, function (item) { return isSuspended(item) })
 
         applySelected(
-            function (selected, index) { return memberExtResource.approveByKey(getIdCallback(selected[index])) },
+            function (selected, index) { return memberListViewResource.approveByKey(getIdCallback(selected[index])) },
             function (count, total) {
                 var key = total === 1 ? "bulk_approveItemOfItem" : "bulk_approveItemOfItems"
                 return localizationService.localize(key, [count, total])
@@ -547,7 +547,7 @@
         $scope.selected = _.filter(tmpSelected, function (item) { return !isSuspended(item) })
 
         applySelected(
-            function (selected, index) { return memberExtResource.suspendByKey(getIdCallback(selected[index])) },
+            function (selected, index) { return memberListViewResource.suspendByKey(getIdCallback(selected[index])) },
             function (count, total) {
                 var key = total === 1 ? "bulk_suspendItemOfItem" : "bulk_suspendItemOfItems"
                 return localizationService.localize(key, [count, total])
@@ -689,7 +689,7 @@
             id = 'all-members' 
         }
 
-        memberExtResource.getMemberGroups().then(function (groups) {
+        memberListViewResource.getMemberGroups().then(function (groups) {
             $scope.memberGroups = groups
         })
 
@@ -703,7 +703,7 @@
         $scope.isTrashed = id === "-20" || id === "-21"
 
         if ($scope.options.allowExport) {
-            memberExtResource.canExport().then(function (result) {
+            memberListViewResource.canExport().then(function (result) {
                 $scope.options.allowExport = result
             })
         }

@@ -296,7 +296,7 @@ namespace MemberListView.Services
                 var searcher = index.GetSearcher();
                 return searcher.CreateQuery(IndexTypes.Member, defaultOperation: operation);
             }
-            logger.Warn<MemberExtendedService>("Could not retrieve index {indexName}", "ExternalIndex");
+            logger.Warn<MemberExtendedService>("Could not retrieve index {indexType}", indexType);
             return null;
         }
 
