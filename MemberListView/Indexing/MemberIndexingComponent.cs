@@ -110,7 +110,7 @@ namespace MemberListView.Indexing
 
         private void AddGroups(IndexingItemEventArgs e)
         {
-            var groups = memberService.GetAllRoles(int.Parse(e.ValueSet.Id)).Aggregate("", (list, group) => string.IsNullOrEmpty(list) ? group : $"{list},{group}");
+            var groups = memberService.GetAllRoles(int.Parse(e.ValueSet.Id)).Aggregate("", (list, group) => string.IsNullOrEmpty(list) ? group : $"{list} {group}");
             e.ValueSet.Add(Constants.Members.Groups, groups);
         }
 

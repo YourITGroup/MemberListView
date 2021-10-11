@@ -37,11 +37,19 @@ namespace MemberListView.Extensions
 
         internal static IEnumerable<int> GetGroupsFromQuery(this HttpRequestMessage request)
         {
-            return request.GetQueryNameValuePairs()
-                        .Where(q => q.Key == Constants.Members.Groups)
-                        .Select(q => int.TryParse(q.Value, out int groupId) ? groupId : (int?)null)
-                        .Where(q => q != null)
-                        .Select(q => q.Value);
+            var groups = request.GetQueryNameValuePairs()
+                        .FirstOrDefault(q => q.Key == Constants.Members.Groups).Value;
+            if (groups == null)
+            {
+                yield break;
+            }
+            foreach(var id in groups?.Split(new[] { ','}))
+            {
+                if (int.TryParse(id, out int groupId))
+                {
+                    yield return groupId;
+                }
+            }
         }
 
         internal static Dictionary<string, string> GetFilters(this HttpRequestMessage request)

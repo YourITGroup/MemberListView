@@ -34,6 +34,11 @@ Member Editing
 ==============
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which uses the Infinite Editor edit the member.
 
+New in Version 2.1.1
+======================
+
+* Fixed member group filtering
+
 New in Version 2.0.7.2
 ======================
 

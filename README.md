@@ -24,6 +24,10 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 
 ## Version History
 
+**Version 2.1.1**
+
+* Fixed issue filtering on Member Groups
+
 **Version 2.0.9**
 
 * Fixes to work with Umbraco 8.12 - previously wasn't enforcing `"strict mode";` which was causing everything to fall in a heap.
