@@ -1,4 +1,5 @@
-﻿using MemberListView.Controllers;
+﻿#if !NET5_0_OR_GREATER
+using MemberListView.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Web;
@@ -49,3 +50,4 @@ namespace MemberListView.Composing
         }
     }
 }
+#endif

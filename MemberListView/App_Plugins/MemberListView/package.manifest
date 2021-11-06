@@ -1,4 +1,12 @@
 {
+	"dashboards": [
+		{
+			"alias": "memberManager",
+			"view": "/App_Plugins/MemberListView/dashboard/memberManager.html",
+			"sections": [ "member" ],
+			"weight": -10
+		}
+	],
 	"javascript": [
 		"~/App_Plugins/MemberListView/resources/member.resource.js",
 		"~/App_Plugins/MemberListView/overlays/action.controller.js",

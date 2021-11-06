@@ -4,10 +4,10 @@
     {
         public const string PluginName = "MemberListView";
 
-        internal static class Dashboards
-        {
-            public const string MemberManager = "memberManager";
-        }
+        //internal static class Dashboards
+        //{
+        //    public const string MemberManager = "memberManager";
+        //}
 
         internal static class PropertyEditors
         {

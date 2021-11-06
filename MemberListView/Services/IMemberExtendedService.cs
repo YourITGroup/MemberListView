@@ -1,8 +1,14 @@
 ﻿using MemberListView.Models;
 using System.Collections.Generic;
+#if NET5_0_OR_GREATER
+using Umbraco.Cms.Core;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Services;
+#else
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.DatabaseModelDefinitions;
 using Umbraco.Core.Services;
+#endif
 
 namespace MemberListView.Services
 {

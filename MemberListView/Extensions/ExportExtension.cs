@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml;
+//using DocumentFormat.OpenXml;
 using MemberListView.Models;
 using System;
 using System.Collections;
@@ -8,8 +8,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+#if NET5_0_OR_GREATER
+using Umbraco.Cms.Core.Models;
+#else
 using Umbraco.Core;
 using Umbraco.Core.Models;
+#endif
 
 namespace MemberListView.Extensions
 {
