@@ -320,43 +320,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Umbraco.sdf" />
-    <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.controller.js" />
-    <Content Include="App_Plugins\MemberListView\dashboard\dashboard_new.html" />
-    <Content Include="App_Plugins\MemberListView\dashboard\memberManager.controller.js" />
-    <Content Include="App_Plugins\MemberListView\dashboard\memberManager.html" />
-    <Content Include="App_Plugins\MemberListView\layouts\list\list.listviewlayout.controller.js" />
-    <Content Include="App_Plugins\MemberListView\layouts\list\list.html" />
-    <Content Include="App_Plugins\MemberListView\overlays\action.html" />
-    <Content Include="App_Plugins\MemberListView\overlays\action.controller.js" />
-    <Content Include="App_Plugins\MemberListView\propertyEditors\listView.controller.js" />
-    <Content Include="App_Plugins\MemberListView\propertyEditors\listView.html" />
-    <Content Include="App_Plugins\MemberListView\dialogs\member\export.controller.js" />
-    <Content Include="App_Plugins\MemberListView\dialogs\member\export.html" />
-    <Content Include="App_Plugins\MemberListView\dialogs\member\filter.controller.js" />
-    <Content Include="App_Plugins\MemberListView\dialogs\member\filter.html" />
-    <Content Include="App_Plugins\MemberListView\css\memberListView.css" />
-    <Content Include="App_Plugins\MemberListView\css\memberListView.min.css" />
-    <Content Include="App_Plugins\MemberListView\lang\cs.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\da.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\de.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\en-gb.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\en-us.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\es.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\fr.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\he.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\it.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\ja.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\ko.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\nb.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\nl.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\pl.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\pt.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\ru.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\sv.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\tr.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\zh-tw.xml" />
-    <Content Include="App_Plugins\MemberListView\lang\zh.xml" />
-    <Content Include="App_Plugins\MemberListView\resources\member.resource.js" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -389,7 +352,6 @@
     <Content Include="config\imageprocessor\cache.config" />
     <Content Include="config\umbracoSettings.config" />
     <Content Include="config\ClientDependency.config" />
-    <Content Include="App_Plugins\MemberListView\package.manifest" />
     <Content Include="Media\Web.config" />
     <Content Include="config\tinyMceConfig.config" />
     <Content Include="config\serilog.user.config" />
@@ -415,6 +377,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Plugins\" />
     <Folder Include="Views\MacroPartials\" />
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +424,9 @@
   </Target>
   <Import Project="..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets" Condition="Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" />
   <Import Project="..\packages\UmbracoCms.8.16.0\build\UmbracoCms.targets" Condition="Exists('..\packages\UmbracoCms.8.16.0\build\UmbracoCms.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy $(SolutionDir)MemberListView\App_Plugins\MemberListView\*.* $(ProjectDir)App_Plugins\MemberListView\ /S /E /Y</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
