@@ -25,7 +25,7 @@ namespace MemberListView.Extensions
 
         internal static bool? GetIsLockedOut(this HttpRequest request)
         {
-            return int.TryParse(request.Query[Constants.Members.MemberType].FirstOrDefault(), out int boolValue) ? boolValue == 1 : null;
+            return int.TryParse(request.Query[Constants.Members.MemberLockedOut].FirstOrDefault(), out int boolValue) ? boolValue == 1 : null;
         }
 
         internal static bool? GetIsApproved(this HttpRequest request)

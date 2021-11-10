@@ -2,6 +2,7 @@
 using MemberListView.Models.Mapping;
 using MemberListView.Services;
 #if NET5_0_OR_GREATER
+using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
@@ -29,8 +30,7 @@ namespace MemberListView.Composing
 #if NET5_0_OR_GREATER
         public void Compose(IUmbracoBuilder builder)
         {
-            builder.WithCollectionBuilder<MapDefinitionCollectionBuilder>()
-                .Add<MemberListItemMapDefinition>();
+            builder.MapDefinitions().Add<MemberListItemMapDefinition>();
 
             builder.Components().Append<MemberIndexingComponent>();
             builder.AddNotificationHandler<ServerVariablesParsingNotification, ServerVariablesParsingHandler>();

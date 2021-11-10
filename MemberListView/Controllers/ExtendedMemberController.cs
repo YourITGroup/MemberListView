@@ -207,7 +207,7 @@ namespace MemberListView.Controllers
         [HttpGet]
         public IEnumerable<MemberColumn> GetMemberColumns(string memberType = null)
         {
-            var excludedColumns = settings.ExcludedColumns;
+            var excludedColumns = settings.ExcludedColumns ?? Array.Empty<string>();
             bool foundType = false;
             if (!string.IsNullOrWhiteSpace(memberType))
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 #if NET5_0_OR_GREATER
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.Membership;
 using Umbraco.Cms.Core.Services;
 #else
 using Umbraco.Core.Models;

@@ -62,6 +62,6 @@
     <key alias="optionApprovedOnly">Approved Only</key>
     <key alias="optionSuspendedOnly">Suspended Only</key>
     <key alias="optionLockedOutOnly">Locked Out Only</key>
-    <key alias="optionActiveOnly">Active Only</key>
+    <key alias="optionActiveOnly">Unlocked Only</key>
   </area>
 </language>

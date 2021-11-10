@@ -67,11 +67,11 @@
             if ($scope.vm.filterData.memberType && $scope.vm.filterData.memberType.length > 0) {
                 displaySearch.push({ title: "Member Type", value: getMemberTypeName() })
             }
-            if ($scope.vm.filterData.umbracoMemberApproved) {
+            if ($scope.vm.filterData.umbracoMemberApproved === 1 || $scope.vm.filterData.umbracoMemberApproved === 0) {
                 displaySearch.push({ title: "Approved", value: $scope.vm.filterData.umbracoMemberApproved === 1 ? "Approved" : "Suspended" })
             }
 
-            if ($scope.vm.filterData.umbracoMemberLockedOut) {
+            if ($scope.vm.filterData.umbracoMemberLockedOut === 1 || $scope.vm.filterData.umbracoMemberLockedOut === 0) {
                 displaySearch.push({ title: "Locked Out", value: $scope.vm.filterData.umbracoMemberLockedOut === 1 ? "Locked Out" : "Active" })
             }
 

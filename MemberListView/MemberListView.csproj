@@ -97,5 +97,8 @@ For Umbraco 7.15 install version 1.5.5</Description>
 	<ItemGroup>
 	  <PackageReference Include="ClosedXML" Version="0.95.4" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Mapping\" />
+	</ItemGroup>
 
 </Project>

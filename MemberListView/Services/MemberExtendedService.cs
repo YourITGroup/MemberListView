@@ -1,7 +1,6 @@
 ﻿using Examine;
 using Examine.Search;
 using MemberListView.Extensions;
-using MemberListView.Models;
 using MemberListView.Utility;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,9 @@ using Umbraco.Cms.Infrastructure.Examine;
 using Umbraco.Extensions;
 using static Umbraco.Cms.Core.Constants;
 using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Models.Membership;
 #else
+using MemberListView.Models;
 using Umbraco.Core;
 using Umbraco.Core.Events;
 using Umbraco.Core.IO;
@@ -138,12 +139,15 @@ namespace MemberListView.Services
 
         private MemberExportModel MapToExportModel(IMember record, IEnumerable<string> includedColumns)
         {
+#if NET5_0_OR_GREATER
+            var model = ExportMember(record.Key);
+#else
             // Hack: using the internal ExportMember method on the MemberService as it auto does auditing etc.
             // We don't actually use this data though.
             var exportMethod = typeof(MemberService).GetMethod("ExportMember", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             _ = exportMethod.Invoke(this, new object[] { record.Key }) as dynamic;
 
-            var member = new MemberExportModel
+            var model = new MemberExportModel
             {
                 Id = record.Id,
                 Key = record.Key,
@@ -179,11 +183,12 @@ namespace MemberListView.Services
                             propertyValue = record.GetValue(property);
                             break;
                     }
-                    member.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
+                    model.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
                 }
             }
+#endif
 
-            return member;
+            return model;
         }
 
         private IEnumerable<ISearchResult> PerformExamineSearch(long pageIndex, int pageSize, out long totalRecords,
@@ -211,7 +216,8 @@ namespace MemberListView.Services
                 var groupNames = memberGroupService.GetByIds(groups).Select(x => x.Name);
                 if (groupNames.Any())
                 {
-                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.ToArray());
+                    // Keywords need to be all lowercase for Examine 2.0
+                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.Select(g => new ExamineValue(Examineness.Escaped, g.ToLower())).Cast<IExamineValue>().ToArray());
                 }
             }
 
@@ -294,10 +300,10 @@ namespace MemberListView.Services
             }
 
 #if NET5_0_OR_GREATER
-            QueryOptions options = new(0, (int)(pageSize * pageIndex));
+            QueryOptions options = new(0, (int)(pageSize * (pageIndex + 1)));
             var results = ordering.Execute(options);
 #else
-            var results = ordering.Execute((int)(pageSize * pageIndex));
+            var results = ordering.Execute((int)(pageSize * (pageIndex + 1)));
 #endif
             totalRecords = results.TotalItemCount;
 

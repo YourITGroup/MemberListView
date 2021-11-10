@@ -1,4 +1,4 @@
-# Member List View for Umbraco 8
+# Member List View for Umbraco 8 & 9
 
 ![Member List View Logo](https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png)
 
@@ -10,7 +10,7 @@ Umbraco Package:
 [![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.com/packages/backoffice-extensions/memberlistview/) 
 
 Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
-The MemberListView for Umbraco 8 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
+The MemberListView for Umbraco 8 and 9 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
 Installing the package enables a new Manage Dashboard on the Members section.
 
@@ -23,6 +23,10 @@ The Member List View has been designed to be similar to the ContentListView prop
 Member Editing can be done without leaving the MemberListView by clicking on a member name, which creates a Dialog pulled in from the right side to edit the member.
 
 ## Version History
+
+**Version 2.2.0**
+
+* Now Dual-Targeting dotNet Framework and dotnet5 to upport Umbraco 8 and 9 from the same package
 
 **Version 2.1.1**
 

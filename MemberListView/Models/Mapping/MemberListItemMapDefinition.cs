@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 #if NET5_0_OR_GREATER
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.ContentEditing;
@@ -35,9 +36,14 @@ namespace MemberListView.Models.Mapping
         }
 
 #if NET5_0_OR_GREATER
-        public void DefineMaps(IUmbracoMapper mapper) => mapper.Define<IMember, MemberListItem>(Map);
+        public void DefineMaps(IUmbracoMapper mapper) 
+            => mapper.Define<IMember, MemberListItem>(
+                    (source, context) => new MemberListItem(), 
+                    Map
+                );
 #else
-        public void DefineMaps(UmbracoMapper mapper) =>  mapper.Define<IMember, MemberListItem>(Map);
+        public void DefineMaps(UmbracoMapper mapper) =>  mapper.Define<IMember, MemberListItem>(
+                    (source, context) => new MemberListItem(), Map);
 #endif
 
         private UserProfile GetOwner(IContentBase source, MapperContext context)
@@ -66,7 +72,12 @@ namespace MemberListView.Models.Mapping
             target.Owner = GetOwner(source, context);
             target.ParentId = source.ParentId;
             target.Path = source.Path;
-            target.Properties = context.MapEnumerable<Property, ContentPropertyBasic>((IEnumerable<Property>)source.Properties);
+#if NET5_0_OR_GREATER
+            var properties = source.Properties.ToArray();
+            target.Properties = context.MapEnumerable<IProperty, ContentPropertyBasic>(properties);
+#else
+            target.Properties = context.MapEnumerable<Property, ContentPropertyBasic>(source.Properties);
+#endif
             target.SortOrder = source.SortOrder;
             target.State = null;
             target.Udi = Udi.Create(UdiEntityType.Member, source.Key);

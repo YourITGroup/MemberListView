@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 #if NET5_0_OR_GREATER
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.Membership;
 #else
 using Umbraco.Core;
 using Umbraco.Core.Models;
@@ -222,7 +223,18 @@ namespace MemberListView.Extensions
                             int i = 0;
                             foreach (var item in (IEnumerable)val)
                             {
+#if NET5_0_OR_GREATER
+                                if (item is MemberExportProperty exportProperty)
+                                {
+                                    d.Add(exportProperty.Name, (TVal)exportProperty.Value);
+                                }
+                                else
+                                {
+                                    d.Add($"{prop.Name}_{i++}", (TVal)item);
+                                }
+#else
                                 d.Add($"{prop.Name}_{i++}", (TVal)item);
+#endif
                             }
                         }
                         else

@@ -14,13 +14,15 @@ namespace MemberListView.Utility
         internal Settings(IConfiguration configuration)
         {
             ExcludedColumns = configuration[Constants.Configuration.ExportExcludedColumns]
-                                    ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                    ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                ?? Array.Empty<string>();
         }
 #else
         internal Settings()
         {
             ExcludedColumns = ConfigurationManager.AppSettings[Constants.Configuration.ExportExcludedColumns]
-                                    ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                    ?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                ?? Array.Empty<string>();
         }
 #endif
 
