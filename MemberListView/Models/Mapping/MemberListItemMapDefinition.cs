@@ -1,13 +1,24 @@
-﻿using Examine;
-using System;
-using System.Collections.Generic;
-using System.Web.Security;
+﻿using System.Collections.Generic;
+using System.Linq;
+#if NET5_0_OR_GREATER
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Mapping;
+using Umbraco.Cms.Core.Models.Membership;
+using Umbraco.Extensions;
+using static Umbraco.Cms.Core.Constants;
+using Umbraco.Cms.Core;
+using UserProfile = Umbraco.Cms.Core.Models.ContentEditing.UserProfile;
+#else
 using Umbraco.Core;
 using Umbraco.Core.Mapping;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web.Models.ContentEditing;
+using static Umbraco.Core.Constants;
+#endif
 
 namespace MemberListView.Models.Mapping
 {
@@ -24,10 +35,16 @@ namespace MemberListView.Models.Mapping
             this.memberService = memberService;
         }
 
-        public void DefineMaps(UmbracoMapper mapper)
-        {
-            mapper.Define<IMember, MemberListItem>((source, context) => new MemberListItem(), Map);
-        }
+#if NET5_0_OR_GREATER
+        public void DefineMaps(IUmbracoMapper mapper) 
+            => mapper.Define<IMember, MemberListItem>(
+                    (source, context) => new MemberListItem(), 
+                    Map
+                );
+#else
+        public void DefineMaps(UmbracoMapper mapper) =>  mapper.Define<IMember, MemberListItem>(
+                    (source, context) => new MemberListItem(), Map);
+#endif
 
         private UserProfile GetOwner(IContentBase source, MapperContext context)
         {
@@ -35,9 +52,9 @@ namespace MemberListView.Models.Mapping
             return profile == null ? null : context.Map<IProfile, UserProfile>(profile);
         }
 
-        private static IEnumerable<string> GetMemberGroups(string username)
+        private IEnumerable<string> GetMemberGroups(string username)
         {
-            var userRoles = username.IsNullOrWhiteSpace() ? null : Roles.GetRolesForUser(username);
+            var userRoles = username.IsNullOrWhiteSpace() ? null : memberService.GetAllRoles(username);
 
             return userRoles;
         }
@@ -55,10 +72,15 @@ namespace MemberListView.Models.Mapping
             target.Owner = GetOwner(source, context);
             target.ParentId = source.ParentId;
             target.Path = source.Path;
+#if NET5_0_OR_GREATER
+            var properties = source.Properties.ToArray();
+            target.Properties = context.MapEnumerable<IProperty, ContentPropertyBasic>(properties);
+#else
             target.Properties = context.MapEnumerable<Property, ContentPropertyBasic>(source.Properties);
+#endif
             target.SortOrder = source.SortOrder;
             target.State = null;
-            target.Udi = Udi.Create(Umbraco.Core.Constants.UdiEntityType.Member, source.Key);
+            target.Udi = Udi.Create(UdiEntityType.Member, source.Key);
             target.UpdateDate = source.UpdateDate;
             target.Username = source.Username;
 

@@ -383,3 +383,7 @@ MigrationBackup/
 /package
 /WebSampleV8/App_Data/Models
 /WebSampleV8/Umbraco
+/WebSample.UmbracoV9/App_Plugins/MemberListView
+/WebSample.UmbracoV9/wwwroot/umbraco
+/WebSample.UmbracoV9/umbraco
+/WebSampleV8/App_Plugins/MemberListView

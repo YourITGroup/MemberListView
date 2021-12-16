@@ -1,11 +1,26 @@
 ﻿using Examine;
 using Examine.Search;
 using MemberListView.Extensions;
-using MemberListView.Models;
+using MemberListView.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+#if NET5_0_OR_GREATER
+using Umbraco.Cms.Core;
+using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Persistence.Repositories;
+using Umbraco.Cms.Core.Scoping;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Services.Implement;
+using Umbraco.Cms.Infrastructure.Examine;
+using Umbraco.Extensions;
+using static Umbraco.Cms.Core.Constants;
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Models.Membership;
+#else
+using MemberListView.Models;
 using Umbraco.Core;
 using Umbraco.Core.Events;
 using Umbraco.Core.IO;
@@ -17,28 +32,36 @@ using Umbraco.Core.Scoping;
 using Umbraco.Core.Services;
 using Umbraco.Core.Services.Implement;
 using Umbraco.Examine;
-using Umbraco.Web;
-using Umbraco.Web.Search;
+using static Umbraco.Core.Constants;
+#endif
 
 namespace MemberListView.Services
 {
     public class MemberExtendedService : MemberService, IMemberExtendedService
     {
-        private readonly ILogger logger;
+        private readonly Logging<MemberExtendedService> logger;
         private readonly IMemberGroupService memberGroupService;
         private readonly IMemberRepository memberRepository;
         private readonly IExamineManager examineManager;
 
-        //private 
+#if NET5_0_OR_GREATER
+        public MemberExtendedService(IScopeProvider provider, ILoggerFactory loggerFactory, IEventMessagesFactory eventMessagesFactory, IMemberGroupService memberGroupService,
+            IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository, IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
+            IExamineManager examineManager)
+            : base(provider, loggerFactory, eventMessagesFactory, memberGroupService, memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
+        {
+            this.logger = new Logging<MemberExtendedService>(loggerFactory.CreateLogger<MemberExtendedService>());
+#else
         public MemberExtendedService(IScopeProvider provider, ILogger logger, IEventMessagesFactory eventMessagesFactory,
-                                     IMemberGroupService memberGroupService, IMediaFileSystem mediaFileSystem,
+        IMemberGroupService memberGroupService, IMediaFileSystem mediaFileSystem,
                                      IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository,
                                      IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
                                      IExamineManager examineManager)
             : base(provider, logger, eventMessagesFactory, memberGroupService, mediaFileSystem, 
                   memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
         {
-            this.logger = logger;
+            this.logger = new Logging<MemberExtendedService>(logger);
+#endif
             this.memberGroupService = memberGroupService;
             this.memberRepository = memberRepository;
             this.examineManager = examineManager;
@@ -53,7 +76,7 @@ namespace MemberListView.Services
         {
             using (var scope = ScopeProvider.CreateScope(autoComplete: true))
             {
-                scope.ReadLock(Umbraco.Core.Constants.Locks.MemberTree);
+                scope.ReadLock(Locks.MemberTree);
                 // Use the database method unless we have complex search.
                 totalRecords = 0;
 
@@ -116,12 +139,15 @@ namespace MemberListView.Services
 
         private MemberExportModel MapToExportModel(IMember record, IEnumerable<string> includedColumns)
         {
+#if NET5_0_OR_GREATER
+            var model = ExportMember(record.Key);
+#else
             // Hack: using the internal ExportMember method on the MemberService as it auto does auditing etc.
             // We don't actually use this data though.
             var exportMethod = typeof(MemberService).GetMethod("ExportMember", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             _ = exportMethod.Invoke(this, new object[] { record.Key }) as dynamic;
 
-            var member = new MemberExportModel
+            var model = new MemberExportModel
             {
                 Id = record.Id,
                 Key = record.Key,
@@ -140,28 +166,29 @@ namespace MemberListView.Services
             {
                 // Try to work out the type
                 object propertyValue;
-                if (record.Properties.IndexOfKey(property) > -1)
+                if (record.Properties.Contains(property)) //.IndexOfKey(property) > -1)
                 {
                     switch (record.Properties[property].PropertyType.PropertyEditorAlias)
                     {
-                        case Umbraco.Core.Constants.PropertyEditors.Aliases.Boolean:
+                        case PropertyEditors.Aliases.Boolean:
                             propertyValue = record.GetValue<bool>(property);
                             break;
-                        case Umbraco.Core.Constants.PropertyEditors.Legacy.Aliases.Date:
+                        case PropertyEditors.Legacy.Aliases.Date:
                             propertyValue = record.GetValue<DateTime?>(property)?.Date;
                             break;
-                        case Umbraco.Core.Constants.PropertyEditors.Aliases.DateTime:
+                        case PropertyEditors.Aliases.DateTime:
                             propertyValue = record.GetValue<DateTime?>(property);
                             break;
                         default:
                             propertyValue = record.GetValue(property);
                             break;
                     }
-                    member.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
+                    model.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
                 }
             }
+#endif
 
-            return member;
+            return model;
         }
 
         private IEnumerable<ISearchResult> PerformExamineSearch(long pageIndex, int pageSize, out long totalRecords,
@@ -189,18 +216,19 @@ namespace MemberListView.Services
                 var groupNames = memberGroupService.GetByIds(groups).Select(x => x.Name);
                 if (groupNames.Any())
                 {
-                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.ToArray());
+                    // Keywords need to be all lowercase for Examine 2.0
+                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.Select(g => new ExamineValue(Examineness.Escaped, g.ToLower())).Cast<IExamineValue>().ToArray());
                 }
             }
 
             if (isApproved.HasValue)
             {
-                op = query.And(op).BooleanField(Umbraco.Core.Constants.Conventions.Member.IsApproved, isApproved.Value);
+                op = query.And(op).BooleanField(Conventions.Member.IsApproved, isApproved.Value);
             }
 
             if (isLockedOut.HasValue)
             {
-                op = query.And(op).BooleanField(Umbraco.Core.Constants.Conventions.Member.IsLockedOut, isLockedOut.Value);
+                op = query.And(op).BooleanField(Conventions.Member.IsLockedOut, isLockedOut.Value);
             }
 
             var basicFields = new List<string>() { "id", "__NodeId", "__Key", "email", "loginName" };
@@ -271,7 +299,12 @@ namespace MemberListView.Services
                 ordering = op.OrderByDescending(new SortableField(orderBy.ToLower() == "name" ? "nodeName" : orderBy, SortType.String));
             }
 
-            var results = ordering.Execute((int)(pageSize * pageIndex));
+#if NET5_0_OR_GREATER
+            QueryOptions options = new(0, (int)(pageSize * (pageIndex + 1)));
+            var results = ordering.Execute(options);
+#else
+            var results = ordering.Execute((int)(pageSize * (pageIndex + 1)));
+#endif
             totalRecords = results.TotalItemCount;
 
 
@@ -289,14 +322,18 @@ namespace MemberListView.Services
             return results;
         }
 
-        private IQuery InitialiseMemberQuery(BooleanOperation operation = BooleanOperation.And, string indexType = Umbraco.Core.Constants.UmbracoIndexes.MembersIndexName)
+        private IQuery InitialiseMemberQuery(BooleanOperation operation = BooleanOperation.And, string indexType = UmbracoIndexes.MembersIndexName)
         {
             if (examineManager.TryGetIndex(indexType, out var index))
             {
+#if NET5_0_OR_GREATER
+                var searcher = index.Searcher;
+#else
                 var searcher = index.GetSearcher();
+#endif
                 return searcher.CreateQuery(IndexTypes.Member, defaultOperation: operation);
             }
-            logger.Warn<MemberExtendedService>("Could not retrieve index {indexType}", indexType);
+            logger.LogWarning("Could not retrieve index {indexType}", indexType);
             return null;
         }
 

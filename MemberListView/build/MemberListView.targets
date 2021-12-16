@@ -1,0 +1,28 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<MemberListViewContentFilesPath>$(MSBuildThisFileDirectory)..\content\App_Plugins\MemberListView\**\*.*</MemberListViewContentFilesPath>
+	</PropertyGroup>
+
+	<Target Name="CopyMemberListViewAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<MemberListViewContentFiles Include="$(MemberListViewContentFilesPath)" />
+			<MemberListViewRazorFiles Include="$(MemberListViewRazorFilesPath)" />
+		</ItemGroup>
+		<Message Text="Copying MemberListView Plugin files: $(MemberListViewContentFilesPath) - #@(MemberListViewContentFiles->Count()) files"  Importance="high" />
+		<Copy
+				SourceFiles="@(MemberListViewContentFiles)"
+				DestinationFiles="@(MemberListViewContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\MemberListView\%(RecursiveDir)%(Filename)%(Extension)')"
+				SkipUnchangedFiles="true" />
+				
+	</Target>
+
+	<Target Name="CleanMemberListViewAssets" BeforeTargets="Clean">
+		<ItemGroup>
+			<MemberListViewDir Include="$(MSBuildProjectDirectory)\App_Plugins\MemberListView\" />
+		</ItemGroup>
+		<Message Text="Clean old MemberListView plugin files" Importance="high" />
+		<RemoveDir Directories="@(MemberListViewDir)"  />
+	</Target>
+
+</Project>

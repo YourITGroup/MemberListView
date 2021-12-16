@@ -1,32 +1,47 @@
 ﻿using Examine;
-using Examine.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MemberListView.Utility;
+#if NET5_0_OR_GREATER
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.PropertyEditors;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
+using static Umbraco.Cms.Core.Constants;
+#else
+using Examine.Providers;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
-using Umbraco.Core.Persistence.Repositories;
 using Umbraco.Core.PropertyEditors;
 using Umbraco.Core.Services;
+using static Umbraco.Core.Constants;
+#endif
 
 namespace MemberListView.Indexing
 {
     public class MemberIndexingComponent : IComponent
     {
         private readonly IExamineManager examineManager;
-        private readonly ILogger logger;
+        private readonly Logging<MemberIndexingComponent> logger;
         private readonly IMemberTypeService memberTypeService;
         private readonly IMemberService memberService;
         private readonly PropertyEditorCollection propertyEditors;
 
+#if NET5_0_OR_GREATER
+        public MemberIndexingComponent(IExamineManager examineManager, ILogger<MemberIndexingComponent> logger,
+#else
         public MemberIndexingComponent(IExamineManager examineManager, ILogger logger,
-                                    IMemberTypeService memberTypeService, IMemberService memberService,
+#endif
+        IMemberTypeService memberTypeService, IMemberService memberService,
                                     PropertyEditorCollection propertyEditors)
         {
             this.examineManager = examineManager;
-            this.logger = logger;
+            this.logger = new Logging<MemberIndexingComponent>(logger);
             this.memberTypeService = memberTypeService;
             this.memberService = memberService;
             this.propertyEditors = propertyEditors;
@@ -34,28 +49,44 @@ namespace MemberListView.Indexing
 
         public void Initialize()
         {
-            SetupIndexTransformation(Umbraco.Core.Constants.UmbracoIndexes.MembersIndexName);
+            SetupIndexTransformation(UmbracoIndexes.MembersIndexName);
         }
 
         private void SetupIndexTransformation(string indexName)
         {
             if (!examineManager.TryGetIndex(indexName, out IIndex index))
             {
-                logger.Warn<MemberIndexingComponent>($"No index found by the name {indexName}");
+                logger.LogWarning("No index found by the name {indexName}", indexName);
             }
             else
             {
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.Comments, FieldDefinitionTypes.FullText));
+#if !NET5_0_OR_GREATER
+                var fields = index.FieldDefinitionCollection;
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.Comments, FieldDefinitionTypes.FullText));
 
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.IsLockedOut, FieldDefinitionTypes.FullTextSortable));
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.IsApproved, FieldDefinitionTypes.FullTextSortable));
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.FailedPasswordAttempts, FieldDefinitionTypes.Integer));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.IsLockedOut, FieldDefinitionTypes.FullTextSortable));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.IsApproved, FieldDefinitionTypes.FullTextSortable));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.FailedPasswordAttempts, FieldDefinitionTypes.Integer));
 
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.LastLoginDate, FieldDefinitionTypes.DateTime));
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.LastLockoutDate, FieldDefinitionTypes.DateTime));
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Umbraco.Core.Constants.Conventions.Member.LastPasswordChangeDate, FieldDefinitionTypes.DateTime));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.LastLoginDate, FieldDefinitionTypes.DateTime));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.LastLockoutDate, FieldDefinitionTypes.DateTime));
+                fields.AddOrUpdate(new FieldDefinition(Conventions.Member.LastPasswordChangeDate, FieldDefinitionTypes.DateTime));
 
-                index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(Constants.Members.Groups, FieldDefinitionTypes.FullTextSortable));
+                fields.AddOrUpdate(new FieldDefinition(Constants.Members.Groups, FieldDefinitionTypes.FullTextSortable));
+
+                // Add other user-defined properties.
+                //var memberTypes = memberTypeService.GetAll();
+                //foreach (var memberType in memberTypes)
+                //{
+                //    foreach (var prop in memberType.PropertyTypes)
+                //    {
+                //        if (!index.FieldDefinitionCollection.Any(f => f.Name == prop.Alias))
+                //        {
+                //            index.FieldDefinitionCollection.AddOrUpdate(new FieldDefinition(prop.Alias, GetFieldDefinitionType(prop)));
+                //        }
+                //    }
+                //}
+#endif
 
                 // Add other user-defined properties.
                 //var memberTypes = memberTypeService.GetAll();
@@ -73,7 +104,7 @@ namespace MemberListView.Indexing
                 //we need to cast because BaseIndexProvider contains the TransformingIndexValues event
                 if (!(index is BaseIndexProvider indexProvider))
                 {
-                    logger.Warn<MemberIndexingComponent>("Could not cast {index} to BaseIndexProvider", index);
+                    logger.LogWarning("Could not cast {index} to BaseIndexProvider", index);
                     throw new InvalidOperationException($"Could not cast {index} to BaseIndexProvider");
                 }
 
@@ -124,14 +155,14 @@ namespace MemberListView.Indexing
         ///  </remarks>
         private void IndexMembershipFields(IndexingItemEventArgs e, IMember member)
         {
-            if (!e.ValueSet.Values.ContainsKey(Umbraco.Core.Constants.Conventions.Member.IsLockedOut))
+            if (!e.ValueSet.Values.ContainsKey(Conventions.Member.IsLockedOut))
             {
-                e.ValueSet.Add(Umbraco.Core.Constants.Conventions.Member.IsLockedOut, member.IsLockedOut.ToString());
+                e.ValueSet.Add(Conventions.Member.IsLockedOut, member.IsLockedOut.ToString());
             }
 
-            if (!e.ValueSet.Values.ContainsKey(Umbraco.Core.Constants.Conventions.Member.IsApproved))
+            if (!e.ValueSet.Values.ContainsKey(Conventions.Member.IsApproved))
             {
-                e.ValueSet.Add(Umbraco.Core.Constants.Conventions.Member.IsApproved, member.IsApproved.ToString());
+                e.ValueSet.Add(Conventions.Member.IsApproved, member.IsApproved.ToString());
             }
 
             var values = new Dictionary<string, IEnumerable<object>>();
@@ -154,7 +185,12 @@ namespace MemberListView.Indexing
             }
 
         }
+
+#if NET5_0_OR_GREATER
+        protected void AddPropertyValue(IProperty property, string culture, string segment, IDictionary<string, IEnumerable<object>> values)
+#else
         protected void AddPropertyValue(Property property, string culture, string segment, IDictionary<string, IEnumerable<object>> values)
+#endif
         {
             var editor = propertyEditors[property.PropertyType.PropertyEditorAlias];
             if (editor == null) return;
@@ -202,25 +238,25 @@ namespace MemberListView.Indexing
         {
         }
 
-        private string GetFieldDefinitionType(PropertyType prop)
-        {
-            switch (prop.PropertyEditorAlias)
-            {
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.Boolean:
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.Slider:
-                    return FieldDefinitionTypes.Integer;
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.Integer:
-                    return FieldDefinitionTypes.Long;
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.Decimal:
-                    return FieldDefinitionTypes.Double;
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.DateTime:
-                case Umbraco.Core.Constants.PropertyEditors.Legacy.Aliases.Date:
-                    return FieldDefinitionTypes.DateTime;
-                case Umbraco.Core.Constants.PropertyEditors.Aliases.EmailAddress:
-                    return FieldDefinitionTypes.EmailAddress;
-                default:
-                    return FieldDefinitionTypes.FullText;
-            }
-        }
+        //private string GetFieldDefinitionType(PropertyType prop)
+        //{
+        //    switch (prop.PropertyEditorAlias)
+        //    {
+        //        case PropertyEditors.Aliases.Boolean:
+        //        case PropertyEditors.Aliases.Slider:
+        //            return FieldDefinitionTypes.Integer;
+        //        case PropertyEditors.Aliases.Integer:
+        //            return FieldDefinitionTypes.Long;
+        //        case PropertyEditors.Aliases.Decimal:
+        //            return FieldDefinitionTypes.Double;
+        //        case PropertyEditors.Aliases.DateTime:
+        //        case PropertyEditors.Legacy.Aliases.Date:
+        //            return FieldDefinitionTypes.DateTime;
+        //        case PropertyEditors.Aliases.EmailAddress:
+        //            return FieldDefinitionTypes.EmailAddress;
+        //        default:
+        //            return FieldDefinitionTypes.FullText;
+        //    }
+        //}
     }
 }

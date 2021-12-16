@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml;
+//using DocumentFormat.OpenXml;
 using MemberListView.Models;
 using System;
 using System.Collections;
@@ -8,8 +8,13 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+#if NET5_0_OR_GREATER
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.Membership;
+#else
 using Umbraco.Core;
 using Umbraco.Core.Models;
+#endif
 
 namespace MemberListView.Extensions
 {
@@ -218,7 +223,18 @@ namespace MemberListView.Extensions
                             int i = 0;
                             foreach (var item in (IEnumerable)val)
                             {
+#if NET5_0_OR_GREATER
+                                if (item is MemberExportProperty exportProperty)
+                                {
+                                    d.Add(exportProperty.Name, (TVal)exportProperty.Value);
+                                }
+                                else
+                                {
+                                    d.Add($"{prop.Name}_{i++}", (TVal)item);
+                                }
+#else
                                 d.Add($"{prop.Name}_{i++}", (TVal)item);
+#endif
                             }
                         }
                         else
