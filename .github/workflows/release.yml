@@ -1,4 +1,4 @@
-name: OpenOrClosed - Release
+name: MemberListView - Release
 
 on:
   push:
