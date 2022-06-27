@@ -4,9 +4,7 @@
 	<TargetFrameworks>net5.0;net472</TargetFrameworks>
 	<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 	<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-	<Copyright>Copyright © 2021 Robert Foster</Copyright>
-	<AssemblyVersion>2.2.0</AssemblyVersion>
-	<FileVersion>2.2.0</FileVersion>
+	<Copyright>Copyright © 2022 Robert Foster</Copyright>
 	<Description>Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
 	  
 For Umbraco 7.15 install version 1.5.5</Description>
@@ -17,7 +15,7 @@ For Umbraco 7.15 install version 1.5.5</Description>
 	<PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
 	<Company>Your IT Group Pty Ltd</Company>
 	<Authors>Robert Foster</Authors>
-	<Version>2.2.0</Version>
+	<Version>2.2.1</Version>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<RepositoryUrl>https://github.com/YourITGroup/umbMemberListView</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
