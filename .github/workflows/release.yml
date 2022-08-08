@@ -33,23 +33,28 @@ jobs:
             echo "::set-output name=prerelease::false"
         }
     
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
 
-    - name: Restore NuGet packages
-      run: msbuild ${{ env.SOLUTION }} -t:restore
-
-    - name: Copy lucene analyser
-      run: |
-        $src = "C:\Users\runneradmin\.nuget\packages\lucene.net\4.8.0-beta00014\analyzers\dotnet\cs"
-        $dest = "C:\Users\runneradmin\.nuget\packages\lucene.net\3.0.3\analyzers\dotnet\cs"
-        if (!(Test-Path -Path $dest)) {
-            New-Item -ItemType directory -Path $dest
-        }
-        Copy-Item -Path $src\*.dll -Destination $dest
-
-    - name: Create Nuget Packages
-      run: msbuild ${{ env.SOLUTION }} -p:Configuration=Release -p:GeneratePackageOnBuild=true -p:PackageOutputPath=${{ env.OUTPUT_PATH }}
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+        
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: MemberListView
+      
+    - name: Build
+      run: dotnet build --configuration Release
+      working-directory: MemberListView
+      
+    - name: Dotnet Pack
+      run: dotnet pack --configuration Release --output ${{ env.OUTPUT_PATH }}
+      working-directory: MemberListView
       
     - name: Publish to NuGet
       run: dotnet nuget push "${{ env.OUTPUT_PATH }}\*.nupkg" --skip-duplicate --api-key "$env:apiKey" -s https://api.nuget.org/v3/index.json
