@@ -91,7 +91,7 @@ For Umbraco 7.15 install version 1.5.5</Description>
 	<ItemGroup>
 
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="All" />
+		<!--<PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="All" />-->
 	</ItemGroup>
 
 	<ItemGroup>
