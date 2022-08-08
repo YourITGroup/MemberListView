@@ -387,3 +387,5 @@ MigrationBackup/
 /WebSample.UmbracoV9/wwwroot/umbraco
 /WebSample.UmbracoV9/umbraco
 /WebSampleV8/App_Plugins/MemberListView
+/WebSample.UmbacoV10/App_Plugins/MemberListView
+/WebSample.UmbacoV10/Views

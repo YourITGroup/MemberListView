@@ -14,6 +14,7 @@ using Umbraco.Cms.Core.Persistence.Repositories;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Services.Implement;
+using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Infrastructure.Examine;
 using Umbraco.Extensions;
 using static Umbraco.Cms.Core.Constants;
@@ -32,6 +33,8 @@ using Umbraco.Core.Scoping;
 using Umbraco.Core.Services;
 using Umbraco.Core.Services.Implement;
 using Umbraco.Examine;
+using Umbraco.Web;
+using Umbraco.Web.Templates;
 using static Umbraco.Core.Constants;
 #endif
 
@@ -43,28 +46,41 @@ namespace MemberListView.Services
         private readonly IMemberGroupService memberGroupService;
         private readonly IMemberRepository memberRepository;
         private readonly IExamineManager examineManager;
-
+        private readonly IUmbracoContextFactory umbracoContextFactory;
 #if NET5_0_OR_GREATER
-        public MemberExtendedService(IScopeProvider provider, ILoggerFactory loggerFactory, IEventMessagesFactory eventMessagesFactory, IMemberGroupService memberGroupService,
-            IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository, IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
-            IExamineManager examineManager)
-            : base(provider, loggerFactory, eventMessagesFactory, memberGroupService, memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
+        public MemberExtendedService(IScopeProvider provider,
+                                 ILoggerFactory loggerFactory,
+                                 IEventMessagesFactory eventMessagesFactory,
+                                 IMemberGroupService memberGroupService,
+                                 IMemberRepository memberRepository,
+                                 IMemberTypeRepository memberTypeRepository,
+                                 IMemberGroupRepository memberGroupRepository,
+                                 IAuditRepository auditRepository,
+                                 IExamineManager examineManager,
+                                 IUmbracoContextFactory umbracoContextFactory)
+        : base(provider, loggerFactory, eventMessagesFactory, memberGroupService, memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
         {
             this.logger = new Logging<MemberExtendedService>(loggerFactory.CreateLogger<MemberExtendedService>());
 #else
-        public MemberExtendedService(IScopeProvider provider, ILogger logger, IEventMessagesFactory eventMessagesFactory,
-        IMemberGroupService memberGroupService, IMediaFileSystem mediaFileSystem,
-                                     IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository,
-                                     IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
-                                     IExamineManager examineManager)
-            : base(provider, logger, eventMessagesFactory, memberGroupService, mediaFileSystem, 
-                  memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
+        public MemberExtendedService(IScopeProvider provider,
+                                     ILogger logger,
+                                     IEventMessagesFactory eventMessagesFactory,
+                                     IMemberGroupService memberGroupService,
+                                     IMediaFileSystem mediaFileSystem,
+                                     IMemberRepository memberRepository,
+                                     IMemberTypeRepository memberTypeRepository,
+                                     IMemberGroupRepository memberGroupRepository,
+                                     IAuditRepository auditRepository,
+                                     IExamineManager examineManager,
+                                     IUmbracoContextFactory umbracoContextFactory)
+            : base(provider, logger, eventMessagesFactory, memberGroupService, mediaFileSystem, memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
         {
             this.logger = new Logging<MemberExtendedService>(logger);
 #endif
             this.memberGroupService = memberGroupService;
             this.memberRepository = memberRepository;
             this.examineManager = examineManager;
+            this.umbracoContextFactory = umbracoContextFactory;
         }
 
         /// <inheritdoc />
@@ -80,9 +96,9 @@ namespace MemberListView.Services
                 // Use the database method unless we have complex search.
                 totalRecords = 0;
 
-                if ((groups?.Any() ?? false) || 
-                    isApproved.HasValue || 
-                    isLockedOut.HasValue || 
+                if ((groups?.Any() ?? false) ||
+                    isApproved.HasValue ||
+                    isLockedOut.HasValue ||
                     (additionalFilters?.Any() ?? false))
                 {
                     return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
@@ -141,8 +157,18 @@ namespace MemberListView.Services
         {
 #if NET5_0_OR_GREATER
             var model = ExportMember(record.Key);
+
+            //Clean up unwanted properties.
+            var properties = model.Properties.ToArray();
+            foreach (var property in properties)
+            {
+                if (!includedColumns.Contains(property.Alias))
+                {
+                    model.Properties.Remove(property);
+                }
+            }
 #else
-            // Hack: using the internal ExportMember method on the MemberService as it auto does auditing etc.
+            // Hack: using the internal ExportMember method on the MemberService as it does auditing etc.
             // We don't actually use this data though.
             var exportMethod = typeof(MemberService).GetMethod("ExportMember", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             _ = exportMethod.Invoke(this, new object[] { record.Key }) as dynamic;
@@ -166,12 +192,12 @@ namespace MemberListView.Services
             {
                 // Try to work out the type
                 object propertyValue;
-                if (record.Properties.Contains(property)) //.IndexOfKey(property) > -1)
+                if (record.Properties.Contains(property))
                 {
                     switch (record.Properties[property].PropertyType.PropertyEditorAlias)
                     {
                         case PropertyEditors.Aliases.Boolean:
-                            propertyValue = record.GetValue<bool>(property);
+                            propertyValue = record.GetValue<bool?>(property);
                             break;
                         case PropertyEditors.Legacy.Aliases.Date:
                             propertyValue = record.GetValue<DateTime?>(property)?.Date;
@@ -188,6 +214,46 @@ namespace MemberListView.Services
             }
 #endif
 
+            // Go through the properties looking for UDIs for conversion to their names / urls...
+            var umbracoContext = umbracoContextFactory.EnsureUmbracoContext()?.UmbracoContext;
+#if NET5_0_OR_GREATER
+            foreach (var property in model.Properties)
+            {
+                if (property.Value is string stringVal && stringVal.Contains("umb"))
+#else
+            foreach (var key in model.Properties.Keys.ToList())
+            {
+                if (model.Properties[key] is string stringVal && stringVal.Contains("umb"))
+#endif
+                {
+                    var udis = MemberDataUdiParser.FindUdis(stringVal).ToList();
+                    foreach (var udi in udis)
+                    {
+                        if (udi.EntityType == UdiEntityType.Document)
+                        {
+                            var node = umbracoContext?.Content.GetById(udi);
+                            if (node != null)
+                            {
+                                stringVal = stringVal.Replace(udi.ToString(), node.Name);
+                            }
+                        }
+                        else if (udi.EntityType == UdiEntityType.Media)
+                        {
+                            var media = umbracoContext?.Media.GetById(udi);
+                            if (media != null)
+                            {
+                                stringVal = stringVal.Replace(udi.ToString(), media.MediaUrl());
+                            }
+                        }
+                    }
+
+#if NET5_0_OR_GREATER
+                    property.Value = stringVal;
+#else
+                    model.Properties[key] = stringVal;
+#endif
+                }
+            }
             return model;
         }
 

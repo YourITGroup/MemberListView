@@ -451,7 +451,6 @@
             view: "/App_Plugins/MemberListView/overlays/action.html",
             actionKey: "memberManager_confirmUnlock",
             submitButtonLabelKey: "memberManager_yesUnlock",
-            //            submitButtonStyle: "danger",
             submit: function (model) {
                 performUnlock()
                 overlayService.close()
