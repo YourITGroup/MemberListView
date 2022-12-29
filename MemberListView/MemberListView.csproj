@@ -20,7 +20,7 @@ easier management of members including approval and unlocking capabilities.
 For Umbraco 7.15 install version 1.5.5
 		</Description>
 		<PackageReleaseNotes>Now multi-targeting Umbraco 8 and 9</PackageReleaseNotes>
-		<PackageTags>Umbraco Membership Member Management</PackageTags>
+		<PackageTags>Umbraco Membership Member Management umbraco-marketplace</PackageTags>
 		<PackageIcon>Membership_logo.png</PackageIcon>
 		<PackageIconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
@@ -32,7 +32,7 @@ For Umbraco 7.15 install version 1.5.5
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageReadmeFile>README.nuget.md</PackageReadmeFile>
-		<Product>$(AssemblyName) for Umbraco 8 &amp; 9</Product>
+		<Product>$(AssemblyName) for Umbraco10+</Product>
 	</PropertyGroup>
 
 
