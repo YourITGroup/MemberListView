@@ -1,211 +1,137 @@
 ﻿using Examine;
 using Examine.Search;
 using MemberListView.Extensions;
-using MemberListView.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Logging;
 using System.Text;
-#if NET5_0_OR_GREATER
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.Membership;
 using Umbraco.Cms.Core.Persistence.Repositories;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Cms.Core.Services.Implement;
 using Umbraco.Cms.Infrastructure.Examine;
 using Umbraco.Extensions;
 using static Umbraco.Cms.Core.Constants;
-using Microsoft.Extensions.Logging;
-using Umbraco.Cms.Core.Models.Membership;
-#else
-using MemberListView.Models;
-using Umbraco.Core;
-using Umbraco.Core.Events;
-using Umbraco.Core.IO;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models;
-using Umbraco.Core.Persistence.DatabaseModelDefinitions;
-using Umbraco.Core.Persistence.Repositories;
-using Umbraco.Core.Scoping;
-using Umbraco.Core.Services;
-using Umbraco.Core.Services.Implement;
-using Umbraco.Examine;
-using static Umbraco.Core.Constants;
-#endif
 
 namespace MemberListView.Services
 {
     public class MemberExtendedService : MemberService, IMemberExtendedService
     {
-        private readonly Logging<MemberExtendedService> logger;
+        private readonly ILogger<MemberExtendedService> logger;
         private readonly IMemberGroupService memberGroupService;
-        private readonly IMemberRepository memberRepository;
         private readonly IExamineManager examineManager;
 
-#if NET5_0_OR_GREATER
-        public MemberExtendedService(IScopeProvider provider, ILoggerFactory loggerFactory, IEventMessagesFactory eventMessagesFactory, IMemberGroupService memberGroupService,
-            IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository, IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
-            IExamineManager examineManager)
-            : base(provider, loggerFactory, eventMessagesFactory, memberGroupService, memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
-        {
-            this.logger = new Logging<MemberExtendedService>(loggerFactory.CreateLogger<MemberExtendedService>());
-#else
-        public MemberExtendedService(IScopeProvider provider, ILogger logger, IEventMessagesFactory eventMessagesFactory,
-        IMemberGroupService memberGroupService, IMediaFileSystem mediaFileSystem,
-                                     IMemberRepository memberRepository, IMemberTypeRepository memberTypeRepository,
-                                     IMemberGroupRepository memberGroupRepository, IAuditRepository auditRepository,
+        public MemberExtendedService(ICoreScopeProvider provider,
+                                     ILoggerFactory loggerFactory,
+                                     IEventMessagesFactory eventMessagesFactory,
+                                     IMemberGroupService memberGroupService,
+                                     IMemberRepository memberRepository,
+                                     IMemberTypeRepository memberTypeRepository,
+                                     IMemberGroupRepository memberGroupRepository,
+                                     IAuditRepository auditRepository,
                                      IExamineManager examineManager)
-            : base(provider, logger, eventMessagesFactory, memberGroupService, mediaFileSystem, 
-                  memberRepository, memberTypeRepository, memberGroupRepository, auditRepository)
+            : base(provider,
+                   loggerFactory,
+                   eventMessagesFactory,
+                   memberGroupService,
+                   memberRepository,
+                   memberTypeRepository,
+                   memberGroupRepository,
+                   auditRepository)
         {
-            this.logger = new Logging<MemberExtendedService>(logger);
-#endif
+            logger = loggerFactory.CreateLogger<MemberExtendedService>();
             this.memberGroupService = memberGroupService;
-            this.memberRepository = memberRepository;
             this.examineManager = examineManager;
         }
 
         /// <inheritdoc />
         public IEnumerable<IMember> GetPage(long pageIndex, int pageSize, out long totalRecords, string orderBy,
-                                            Direction orderDirection, bool orderBySystemField, string memberTypeAlias,
-                                            IEnumerable<int> groups, string filter,
-                                            IDictionary<string, string> additionalFilters = null,
-                                            bool? isApproved = null, bool? isLockedOut = null)
+                                     Direction orderDirection, bool orderBySystemField, string? memberTypeAlias,
+                                     string filter = "", IEnumerable<int>? groups = null,
+                                     IDictionary<string, string>? additionalFilters = null, bool? isApproved = null,
+                                     bool? isLockedOut = null)
         {
-            using (var scope = ScopeProvider.CreateScope(autoComplete: true))
+
+            // Use the database method unless we have complex search.
+            totalRecords = 0;
+
+            if ((groups?.Any() ?? false) ||
+                isApproved.HasValue ||
+                isLockedOut.HasValue ||
+                (additionalFilters?.Any() ?? false))
             {
-                scope.ReadLock(Locks.MemberTree);
-                // Use the database method unless we have complex search.
-                totalRecords = 0;
-
-                if ((groups?.Any() ?? false) || 
-                    isApproved.HasValue || 
-                    isLockedOut.HasValue || 
-                    (additionalFilters?.Any() ?? false))
-                {
-                    return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
-                                                memberTypeAlias, groups, filter, additionalFilters, isApproved,
-                                                isLockedOut)
-                                    .Select(x => GetById(int.Parse(x.Id)));
-                }
-                else
-                {
-                    return PerformRepositorySearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
-                                                   orderBySystemField, memberTypeAlias, filter);
-                }
+                return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
+                                            memberTypeAlias, groups, filter, additionalFilters, isApproved,
+                                            isLockedOut)
+                                .Select(x => GetById(int.Parse(x.Id))).WhereNotNull();
             }
-        }
-
-        private IEnumerable<IMember> PerformRepositorySearch(long pageIndex, int pageSize, out long totalRecords,
-                                                             string orderBy, Direction orderDirection,
-                                                             bool orderBySystemField, string memberTypeAlias,
-                                                             string filter)
-        {
-            var query1 = memberTypeAlias == null ? null : Query<IMember>().Where(x => x.ContentTypeAlias == memberTypeAlias);
-            var query2 = filter == null ? null : Query<IMember>().Where(x => x.Name.Contains(filter) || x.Username.Contains(filter) || x.Email.Contains(filter));
-
-            return memberRepository.GetPage(query1, pageIndex, pageSize, out totalRecords, query2, Ordering.By(orderBy, orderDirection, isCustomField: !orderBySystemField));
+            else
+            {
+                return GetAll(pageIndex, pageSize, out totalRecords, orderBy, orderDirection, orderBySystemField, memberTypeAlias, filter);
+            }
         }
 
         /// <inheritdoc />
-        public IEnumerable<MemberExportModel> GetForExport(string orderBy, Direction orderDirection,
-                                                           bool orderBySystemField, string memberTypeAlias,
-                                                           IEnumerable<int> groups, string filter,
-                                                           IEnumerable<string> includedColumns,
-                                                           IDictionary<string, string> additionalFilters = null,
-                                                           bool? isApproved = null, bool? isLockedOut = null)
+        public IEnumerable<MemberExportModel> GetForExport(string orderBy, Direction orderDirection, bool orderBySystemField,
+                                                    string? memberTypeAlias, string filter = "",
+                                                    IEnumerable<int>? groups = null,
+                                                    IEnumerable<string>? includedColumns = null,
+                                                    IDictionary<string, string>? additionalFilters = null,
+                                                    bool? isApproved = null, bool? isLockedOut = null)
         {
-            using (var scope = ScopeProvider.CreateScope(autoComplete: true))
+            using ICoreScope scope = ScopeProvider.CreateCoreScope(autoComplete: true);
+            scope.ReadLock(Locks.MemberTree);
+
+            const int pageSize = 500;
+            var page = 0;
+            var total = long.MaxValue;
+            while (page * pageSize < total)
             {
+                var items = GetPage(page++, pageSize, out total, orderBy, orderDirection, orderBySystemField,
+                                    memberTypeAlias, filter, groups, additionalFilters, isApproved, isLockedOut);
 
-                const int pageSize = 500;
-                var page = 0;
-                var total = long.MaxValue;
-                while (page * pageSize < total)
+                foreach (var item in items)
                 {
-                    var items = GetPage(page++, pageSize, out total, orderBy, orderDirection, orderBySystemField,
-                                        memberTypeAlias, groups, filter, additionalFilters, isApproved, isLockedOut);
-
-                    foreach (var item in items)
+                    var mapped = MapToExportModel(item, includedColumns);
+                    if (mapped is not null)
                     {
-                        yield return MapToExportModel(item, includedColumns);
+                        yield return mapped;
                     }
                 }
             }
 
         }
 
-        private MemberExportModel MapToExportModel(IMember record, IEnumerable<string> includedColumns)
+        private MemberExportModel? MapToExportModel(IMember record, IEnumerable<string>? includedColumns)
         {
-#if NET5_0_OR_GREATER
             var model = ExportMember(record.Key);
-#else
-            // Hack: using the internal ExportMember method on the MemberService as it auto does auditing etc.
-            // We don't actually use this data though.
-            var exportMethod = typeof(MemberService).GetMethod("ExportMember", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            _ = exportMethod.Invoke(this, new object[] { record.Key }) as dynamic;
+            // TODO: Filter out excluded columns
 
-            var model = new MemberExportModel
-            {
-                Id = record.Id,
-                Key = record.Key,
-                Name = record.Name,
-                Username = record.Username,
-                Email = record.Email,
-                Groups = GetAllRoles(record.Id).ToList(),
-                MemberType = record.ContentTypeAlias,
-                CreateDate = record.CreateDate,
-                UpdateDate = record.UpdateDate,
-                IsApproved = record.IsApproved,
-                IsLockedOut = record.IsLockedOut,
-            };
-
-            foreach (var property in includedColumns)
-            {
-                // Try to work out the type
-                object propertyValue;
-                if (record.Properties.Contains(property)) //.IndexOfKey(property) > -1)
-                {
-                    switch (record.Properties[property].PropertyType.PropertyEditorAlias)
-                    {
-                        case PropertyEditors.Aliases.Boolean:
-                            propertyValue = record.GetValue<bool>(property);
-                            break;
-                        case PropertyEditors.Legacy.Aliases.Date:
-                            propertyValue = record.GetValue<DateTime?>(property)?.Date;
-                            break;
-                        case PropertyEditors.Aliases.DateTime:
-                            propertyValue = record.GetValue<DateTime?>(property);
-                            break;
-                        default:
-                            propertyValue = record.GetValue(property);
-                            break;
-                    }
-                    model.Properties.Add(record.Properties[property].PropertyType.Name, propertyValue);
-                }
-            }
-#endif
 
             return model;
         }
 
-        private IEnumerable<ISearchResult> PerformExamineSearch(long pageIndex, int pageSize, out long totalRecords,
-                                                                string orderBy, Direction orderDirection,
-                                                                string memberTypeAlias, IEnumerable<int> groups,
+        private IEnumerable<ISearchResult> PerformExamineSearch(long pageIndex,
+                                                                int pageSize,
+                                                                out long totalRecords,
+                                                                string orderBy,
+                                                                Direction orderDirection,
+                                                                string? memberTypeAlias,
+                                                                IEnumerable<int>? groups,
                                                                 string filter,
-                                                                IDictionary<string, string> additionalFilters = null,
-                                                                bool? isApproved = null, bool? isLockedOut = null)
+                                                                IDictionary<string, string>? additionalFilters,
+                                                                bool? isApproved,
+                                                                bool? isLockedOut)
         {
-            if (!(InitialiseMemberQuery() is IQuery query))
+            if (InitialiseMemberQuery() is not IQuery query)
             {
                 totalRecords = 0;
                 return Enumerable.Empty<ISearchResult>();
             }
 
-            IBooleanOperation op = null;
-            if (!memberTypeAlias.IsNullOrWhiteSpace())
+            IBooleanOperation? op = null;
+            if (memberTypeAlias is not null && !memberTypeAlias.IsNullOrWhiteSpace())
             {
                 op = query.NodeTypeAlias(memberTypeAlias);
             }
@@ -214,29 +140,29 @@ namespace MemberListView.Services
             {
                 // Get group names from ids.
                 var groupNames = memberGroupService.GetByIds(groups).Select(x => x.Name);
-                if (groupNames.Any())
+                if (groupNames is not null && groupNames.Any())
                 {
                     // Keywords need to be all lowercase for Examine 2.0
-                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.Select(g => new ExamineValue(Examineness.Escaped, g.ToLower())).Cast<IExamineValue>().ToArray());
+                    op = query.And(op).GroupedOr(new[] { Constants.Members.Groups }, groupNames.WhereNotNull().Select(g => new ExamineValue(Examineness.Escaped, g.ToLower())).Cast<IExamineValue>().ToArray());
                 }
             }
 
             if (isApproved.HasValue)
             {
-                op = query.And(op).BooleanField(Conventions.Member.IsApproved, isApproved.Value);
+                op = query.And(op).BooleanField(nameof(Member.IsApproved), isApproved.Value);
             }
 
             if (isLockedOut.HasValue)
             {
-                op = query.And(op).BooleanField(Conventions.Member.IsLockedOut, isLockedOut.Value);
+                op = query.And(op).BooleanField(nameof(IMember.IsLockedOut), isLockedOut.Value);
             }
 
-            var basicFields = new List<string>() { "id", "__NodeId", "__Key", "email", "loginName" };
+            var basicFields = new List<string>() { MemberExamineIndexFieldNames.Id, UmbracoExamineFieldNames.ItemIdFieldName, UmbracoExamineFieldNames.NodeKeyFieldName, MemberExamineIndexFieldNames.Email, MemberExamineIndexFieldNames.LoginName };
 
-            var filterParameters = additionalFilters.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value));
+            var filterParameters = additionalFilters?.Where(q => q.Key.StartsWith("f_") && !string.IsNullOrWhiteSpace(q.Value));
 
             //build a lucene query
-            if (op == null && string.IsNullOrWhiteSpace(filter) && !filterParameters.Any())
+            if (op is null && string.IsNullOrWhiteSpace(filter) && !(filterParameters?.Any() ?? false))
             {
                 // Generic get everything (theoretically we shouldn't even get here)...
                 op = query.NativeQuery("a* b* c* d* e* f* g* h* i* j* k* l* m* n* o* p* q* r* s* t* u* v* w* x* y* z*");
@@ -253,58 +179,56 @@ namespace MemberListView.Services
                         var sb = new StringBuilder();
                         sb.Append("+(");
                         //node name exactly boost x 10
-                        sb.AppendFormat("__nodeName:{0}^10.0 ", filter.ToLower());
+                        sb.Append($"{UmbracoExamineFieldNames.NodeNameFieldName}:{filter.ToLower()}^10.0 ");
 
                         //node name normally with wildcards
-                        sb.AppendFormat(" __nodeName:{0}* ", filter.ToLower());
+                        sb.Append($"{UmbracoExamineFieldNames.NodeNameFieldName}:{filter.ToLower()}* ");
 
                         foreach (var field in basicFields)
                         {
                             //additional fields normally
-                            sb.AppendFormat("{0}:{1} ", field, filter);
+                            sb.Append($"{field}:{filter} ");
                         }
-                        sb.Append(")");
+                        sb.Append(')');
                         op = query.And(op).NativeQuery(sb.ToString());
                     }
                 }
 
 
                 // Now specific field searching. - these should be ANDed and grouped.
-                foreach (var qs in filterParameters)
+                if (filterParameters is not null)
                 {
-                    string alias = qs.Key;
-                    if (alias.StartsWith("f_"))
+                    foreach (var qs in filterParameters)
                     {
-                        alias = qs.Key.Substring(2);
-                    }
+                        string alias = qs.Key;
+                        if (alias.StartsWith("f_"))
+                        {
+                            alias = qs.Key[2..];
+                        }
 
-                    var values = qs.Value.Split(',');
-                    if (values.Length > 0)
-                    {
-                        op = query.And(op).GroupedOr(new[] { alias }, values);
+                        var values = qs.Value.Split(',');
+                        if (values.Length > 0)
+                        {
+                            op = query.And(op).GroupedOr(new[] { alias }, values);
+                        }
                     }
                 }
             }
 
 
             //// Order the results 
-            // Examine Sorting seems too unreliable, particularly on nodeName
             IOrdering ordering;
             if (orderDirection == Direction.Ascending)
             {
-                ordering = op.OrderBy(new SortableField(orderBy.ToLower() == "name" ? "nodeName" : orderBy, SortType.String));
+                ordering = op!.OrderBy(new SortableField(orderBy.ToLower() == "name" ? UmbracoExamineFieldNames.NodeNameFieldName : orderBy, SortType.String));
             }
             else
             {
-                ordering = op.OrderByDescending(new SortableField(orderBy.ToLower() == "name" ? "nodeName" : orderBy, SortType.String));
+                ordering = op!.OrderByDescending(new SortableField(orderBy.ToLower() == "name" ? UmbracoExamineFieldNames.NodeNameFieldName : orderBy, SortType.String));
             }
 
-#if NET5_0_OR_GREATER
             QueryOptions options = new(0, (int)(pageSize * (pageIndex + 1)));
             var results = ordering.Execute(options);
-#else
-            var results = ordering.Execute((int)(pageSize * (pageIndex + 1)));
-#endif
             totalRecords = results.TotalItemCount;
 
 
@@ -322,15 +246,11 @@ namespace MemberListView.Services
             return results;
         }
 
-        private IQuery InitialiseMemberQuery(BooleanOperation operation = BooleanOperation.And, string indexType = UmbracoIndexes.MembersIndexName)
+        private IQuery? InitialiseMemberQuery(BooleanOperation operation = BooleanOperation.And, string indexType = UmbracoIndexes.MembersIndexName)
         {
             if (examineManager.TryGetIndex(indexType, out var index))
             {
-#if NET5_0_OR_GREATER
                 var searcher = index.Searcher;
-#else
-                var searcher = index.GetSearcher();
-#endif
                 return searcher.CreateQuery(IndexTypes.Member, defaultOperation: operation);
             }
             logger.LogWarning("Could not retrieve index {indexType}", indexType);

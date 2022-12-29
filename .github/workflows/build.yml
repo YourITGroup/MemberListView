@@ -1,0 +1,44 @@
+name: MemberListView - CI
+
+on:
+  pull_request:
+
+env:
+  SOLUTION: MemberListView.sln
+  OUTPUT_PATH: ${{ github.workspace }}\.output
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        dotnet-version: ['7.x' ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Fetch all history for all tags and branches
+      run: git fetch --prune --unshallow
+      
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v3
+
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+  
+    - name: Install dependencies
+      run: dotnet restore
+  
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+        
+    - name: Create the package
+      run: dotnet pack --configuration Release -o ${{ env.OUTPUT_PATH }}
+      
+    - name: Upload NuGet artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: nuget
+        path: ${{ env.OUTPUT_PATH }}

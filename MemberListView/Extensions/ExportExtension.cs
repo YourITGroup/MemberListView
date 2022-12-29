@@ -1,20 +1,11 @@
 ﻿using ClosedXML.Excel;
 //using DocumentFormat.OpenXml;
 using MemberListView.Models;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Text;
-#if NET5_0_OR_GREATER
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Membership;
-#else
-using Umbraco.Core;
-using Umbraco.Core.Models;
-#endif
 
 namespace MemberListView.Extensions
 {
@@ -204,18 +195,21 @@ namespace MemberListView.Extensions
                 {
                     var val = prop.GetValue(o);
                     // Flatten any dictionaries or lists.
-                    if (val != null)
+                    if (val is not null)
                     {
                         if (IsDictionary(val.GetType()))
                         {
-                            var dict = (IDictionary)val;
-                            foreach (var key in dict.Keys)
+                            var dict = val as IDictionary;
+                            if (dict is not null)
                             {
-                                // If the item name is not already defined, we don't need to qualify it.
-                                if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
-                                    d.Add($"{prop.Name}_{key}", (TVal)dict[key]);
-                                else
-                                    d.Add(key.ToString(), (TVal)dict[key]);
+                                foreach (var key in dict.Keys)
+                                {
+                                    // If the item name is not already defined, we don't need to qualify it.
+                                    if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
+                                        d.Add($"{prop.Name}_{key}", (TVal)dict[key]);
+                                    else
+                                        d.Add(key.ToString(), (TVal)dict[key]);
+                                }
                             }
                         }
                         else if (!(val is string) && IsEnumerable(val.GetType()))
@@ -223,18 +217,14 @@ namespace MemberListView.Extensions
                             int i = 0;
                             foreach (var item in (IEnumerable)val)
                             {
-#if NET5_0_OR_GREATER
-                                if (item is MemberExportProperty exportProperty)
+                                if (item is MemberExportProperty exportProperty && exportProperty.Value is not null)
                                 {
-                                    d.Add(exportProperty.Name, (TVal)exportProperty.Value);
+                                    d.Add(exportProperty.Name!, (TVal)exportProperty.Value);
                                 }
                                 else
                                 {
                                     d.Add($"{prop.Name}_{i++}", (TVal)item);
                                 }
-#else
-                                d.Add($"{prop.Name}_{i++}", (TVal)item);
-#endif
                             }
                         }
                         else
@@ -289,6 +279,11 @@ namespace MemberListView.Extensions
         {
             foreach (var group in type.PropertyGroups.OrderBy(g => g.SortOrder))
             {
+                if (group.PropertyTypes is null)
+                {
+                    continue;
+                }
+
                 // TODO: Check for sensitive data.
                 foreach (var property in group.PropertyTypes
                                             .Where(p => !excludedColumns.Contains(p.Alias))
