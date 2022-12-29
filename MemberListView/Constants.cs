@@ -2,36 +2,37 @@
 {
     internal static class Constants
     {
-        public const string PluginName = "MemberListView";
+        internal const string PluginName = "MemberListView";
 
         //internal static class Dashboards
         //{
-        //    public const string MemberManager = "memberManager";
+        //    internal const string MemberManager = "memberManager";
         //}
 
         internal static class PropertyEditors
         {
-            public const string MemberListView = "memberListView";
+            internal const string MemberListView = "memberListView";
         }
 
         internal static class Configuration
         {
             internal const string SectionName = "MemberListView";
-            public const string ExportExcludedColumns = "ExportExcludedColumns";
+            internal const string ExportExcludedColumns = "ExportExcludedColumns";
         }
 
         internal static class Members
         {
-            public const string Groups = "memberGroups";
-            public const string MemberType = "memberType";
-            public const string MemberApproved = "umbracoMemberApproved";
-            public const string MemberLockedOut = "umbracoMemberLockedOut";
+            internal const string Ids = "ids";
+            internal const string Groups = "memberGroups";
+            internal const string MemberType = "memberType";
+            internal const string MemberApproved = "umbracoMemberApproved";
+            internal const string MemberLockedOut = "umbracoMemberLockedOut";
         }
 
         internal static class MimeTypes
         {
-            public const string Excel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            public const string CSV = "application/octet-stream";
+            internal const string Excel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            internal const string CSV = "application/octet-stream";
         }
     }
 }

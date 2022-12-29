@@ -25,6 +25,7 @@ namespace MemberListView.Services
         /// <param name="orderBySystemField">Flag to indicate when ordering by system field</param>
         /// <param name="memberTypeAlias"></param>
         /// <param name="filter">Search text filter</param>
+        /// <param name="ids"></param>
         /// <param name="groups"></param>
         /// <param name="additionalFilters">additional filter conditions</param>
         /// <param name="isApproved">Optional filter on IsApproved state</param>
@@ -32,7 +33,8 @@ namespace MemberListView.Services
         /// <returns><see cref="IEnumerable{T}"/></returns>
         IEnumerable<IMember> GetPage(long pageIndex, int pageSize, out long totalRecords, string orderBy,
                                      Direction orderDirection, bool orderBySystemField, string? memberTypeAlias,
-                                     string filter = "", IEnumerable<int>? groups = null,
+                                     string filter = "", IEnumerable<string>? ids = null,
+                                     IEnumerable<int>? groups = null,
                                      IDictionary<string, string>? additionalFilters = null, bool? isApproved = null,
                                      bool? isLockedOut = null);
 
@@ -44,6 +46,7 @@ namespace MemberListView.Services
         /// <param name="orderBySystemField">Flag to indicate when ordering by system field</param>
         /// <param name="memberTypeAlias"></param>
         /// <param name="filter">Search text filter</param>
+        /// <param name="ids"></param>
         /// <param name="groups"></param>
         /// <param name="includedColumns">List of columns to include in the export</param>
         /// <param name="additionalFilters">additional filter conditions</param>
@@ -52,7 +55,7 @@ namespace MemberListView.Services
         /// <returns><see cref="IEnumerable{T}"/></returns>
         IEnumerable<MemberExportModel> GetForExport(string orderBy, Direction orderDirection, bool orderBySystemField,
                                                     string? memberTypeAlias, string filter = "",
-                                                    IEnumerable<int>? groups = null,
+                                                    IEnumerable<string>? ids = null, IEnumerable<int>? groups = null,
                                                     IEnumerable<string>? includedColumns = null,
                                                     IDictionary<string, string>? additionalFilters = null,
                                                     bool? isApproved = null, bool? isLockedOut = null);

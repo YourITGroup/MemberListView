@@ -101,7 +101,8 @@ function memberListViewResource($http, umbRequestHelper) {
                 orderBy: "SortOrder",
                 format: "Excel",
                 orderBySystemField: true,
-                columns: null
+                columns: null,
+                ids: null
             }
             if (options === undefined) {
                 options = {}
@@ -127,6 +128,7 @@ function memberListViewResource($http, umbRequestHelper) {
             params.push({ orderBySystemField: toBool(options.orderBySystemField) })
             params.push({ format: options.format })
             params.push({ columns: options.columns })
+            params.push({ ids: options.ids })
 
             var config = { responseType: 'blob' }
 
@@ -137,34 +139,6 @@ function memberListViewResource($http, umbRequestHelper) {
                     params),
                 config).then(function (response) {
                     _startBlobDownload(response)
-                    //const headers = response.headers()
-                    //try {
-                    //    var filename = headers['x-filename']
-
-                    //    if (!filename) {
-                    //        var result = headers['content-disposition'].split(';')[1].trim().split('=')[1]
-                    //        filename = result.replace(/"/g, '')
-                    //    }
-
-                    //    var contentType = headers['content-type']
-
-                    //    var linkElement = document.createElement('a')
-
-                    //    var blob = new Blob([response.data], { type: contentType })
-                    //    var url = window.URL.createObjectURL(blob)
-
-                    //    linkElement.setAttribute('href', url)
-                    //    linkElement.setAttribute("download", filename)
-
-                    //    var clickEvent = new MouseEvent("click", {
-                    //        "view": window,
-                    //        "bubbles": true,
-                    //        "cancelable": false
-                    //    })
-                    //    linkElement.dispatchEvent(clickEvent)
-                    //} catch (ex) {
-                    //    console.log(ex)
-                    //}
 
                 }, function (data) {
                     console.log(data)
