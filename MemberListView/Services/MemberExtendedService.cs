@@ -1,6 +1,7 @@
 ﻿using Examine;
 using Examine.Search;
 using MemberListView.Extensions;
+using MemberListView.Utility;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using Umbraco.Cms.Core;
@@ -10,6 +11,7 @@ using Umbraco.Cms.Core.Models.Membership;
 using Umbraco.Cms.Core.Persistence.Repositories;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Infrastructure.Examine;
 using Umbraco.Extensions;
 using static Umbraco.Cms.Core.Constants;
@@ -21,6 +23,7 @@ namespace MemberListView.Services
         private readonly ILogger<MemberExtendedService> logger;
         private readonly IMemberGroupService memberGroupService;
         private readonly IExamineManager examineManager;
+        private readonly IUmbracoContextFactory umbracoContextFactory;
 
         public MemberExtendedService(ICoreScopeProvider provider,
                                      ILoggerFactory loggerFactory,
@@ -30,7 +33,8 @@ namespace MemberListView.Services
                                      IMemberTypeRepository memberTypeRepository,
                                      IMemberGroupRepository memberGroupRepository,
                                      IAuditRepository auditRepository,
-                                     IExamineManager examineManager)
+                                     IExamineManager examineManager,
+                                     IUmbracoContextFactory umbracoContextFactory)
             : base(provider,
                    loggerFactory,
                    eventMessagesFactory,
@@ -43,6 +47,7 @@ namespace MemberListView.Services
             logger = loggerFactory.CreateLogger<MemberExtendedService>();
             this.memberGroupService = memberGroupService;
             this.examineManager = examineManager;
+            this.umbracoContextFactory = umbracoContextFactory;
         }
 
         /// <inheritdoc />
@@ -106,9 +111,54 @@ namespace MemberListView.Services
         private MemberExportModel? MapToExportModel(IMember record, IEnumerable<string>? includedColumns)
         {
             var model = ExportMember(record.Key);
-            // TODO: Filter out excluded columns
+            if (model is null)
+            {
+                return null;
+            }
 
+            //Clean up unwanted properties.
+            if (includedColumns is not null)
+            {
+                var properties = model.Properties.ToArray();
+                foreach (var property in properties)
+                {
+                    if (!includedColumns.Contains(property.Alias))
+                    {
+                        model.Properties.Remove(property);
+                    }
+                }
+            }
 
+            // Go through the properties looking for UDIs for conversion to their names / urls...
+            var umbracoContext = umbracoContextFactory.EnsureUmbracoContext()?.UmbracoContext;
+            foreach (var property in model.Properties)
+            {
+                if (property.Value is string stringVal && stringVal.Contains("umb"))
+                {
+                    var udis = MemberDataUdiParser.FindUdis(stringVal).ToList();
+                    foreach (var udi in udis)
+                    {
+                        if (udi.EntityType == UdiEntityType.Document)
+                        {
+                            var node = umbracoContext?.Content?.GetById(udi);
+                            if (node != null)
+                            {
+                                stringVal = stringVal.Replace(udi.ToString(), node.Name);
+                            }
+                        }
+                        else if (udi.EntityType == UdiEntityType.Media)
+                        {
+                            var media = umbracoContext?.Media?.GetById(udi);
+                            if (media != null)
+                            {
+                                stringVal = stringVal.Replace(udi.ToString(), media.MediaUrl());
+                            }
+                        }
+                    }
+
+                    property.Value = stringVal;
+                }
+            }
             return model;
         }
 

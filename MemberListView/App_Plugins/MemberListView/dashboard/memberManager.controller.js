@@ -317,7 +317,10 @@
             },
             close: function () {
                 overlayService.close()
-            }
+            },
+            selection: $scope.selection,
+            numberOfItems: $scope.selection.length,
+            totalItems: $scope.listViewResultSet.totalItems
         }
 
         localizationService.localize("general_delete").then(value => {
@@ -448,7 +451,6 @@
             view: "/App_Plugins/MemberListView/overlays/action.html",
             actionKey: "memberManager_confirmUnlock",
             submitButtonLabelKey: "memberManager_yesUnlock",
-            //            submitButtonStyle: "danger",
             submit: function (model) {
                 performUnlock()
                 overlayService.close()

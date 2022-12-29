@@ -36,11 +36,19 @@ For Umbraco 7.15 install version 1.5.5
 	</PropertyGroup>
 
 
+	<PropertyGroup>
+		<!-- SourceLink: https://github.com/dotnet/sourcelink -->
+		<!-- Embed source files that are not tracked by the source control manager in the PDB -->
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+		<!-- SourceLink: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
-
-
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
@@ -52,6 +60,10 @@ For Umbraco 7.15 install version 1.5.5
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+		<!-- Deterministic Builds: https://github.com/clairernovotny/DeterministicBuilds -->
+		<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+			<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -89,7 +101,13 @@ For Umbraco 7.15 install version 1.5.5
 			<Version>11.0.0</Version>
 		</PackageReference>
 	</ItemGroup>
+		
+		<ItemGroup>
 
+			<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+			<!--<PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="All" />-->
+		</ItemGroup>
+		
 	<ItemGroup>
 		<None Update="compilerconfig.json.defaults">
 			<DependentUpon>compilerconfig.json</DependentUpon>

@@ -10,7 +10,7 @@ namespace MemberListView.Indexing;
 internal class ConfigureMemberIndexOptions : IConfigureNamedOptions<LuceneDirectoryIndexOptions>
 {
 
-    public void Configure(string name, LuceneDirectoryIndexOptions options)
+    public void Configure(string? name, LuceneDirectoryIndexOptions options)
     {
         switch (name)
         {
@@ -26,13 +26,11 @@ internal class ConfigureMemberIndexOptions : IConfigureNamedOptions<LuceneDirect
                 options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.LastPasswordChangeDate), FieldDefinitionTypes.DateTime));
 
                 options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Members.Groups, FieldDefinitionTypes.FullTextSortable));
-                //// Set the "Price" field to map to the 'Double' value type.
-                //options.FieldDefinitions.AddOrUpdate(
-                //    new FieldDefinition("Price", FieldDefinitionTypes.Double));
+
                 break;
         }
     }
 
     public void Configure(LuceneDirectoryIndexOptions options)
-        => Configure(string.Empty, options);
+        => Configure(null, options);
 }
