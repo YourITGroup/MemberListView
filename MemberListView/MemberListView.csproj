@@ -10,14 +10,12 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<ContentTargetFolders>.</ContentTargetFolders>
 
-		<Version>3.0.0</Version>
+		<Version>3.0.1</Version>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Copyright>Copyright © Robert Foster</Copyright>
 		<Description>Adds a MemberListView dashboard to the Members area in Umbraco 10+ to allow 
 easier management of members including approval and unlocking capabilities.
-
-For Umbraco 7.15 install version 1.5.5
 		</Description>
 		<PackageReleaseNotes>Now multi-targeting Umbraco 8 and 9</PackageReleaseNotes>
 		<PackageTags>Umbraco Membership Member Management umbraco-marketplace</PackageTags>

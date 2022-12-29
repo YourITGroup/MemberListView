@@ -61,21 +61,21 @@ namespace MemberListView.Services
             // Use the database method unless we have complex search.
             totalRecords = 0;
 
-            if ((ids?.Any() ?? false) ||
-                (groups?.Any() ?? false) ||
-                isApproved.HasValue ||
-                isLockedOut.HasValue ||
-                (additionalFilters?.Any() ?? false))
-            {
-                return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
-                                            memberTypeAlias, ids, groups, filter, additionalFilters, isApproved,
-                                            isLockedOut)
-                                .Select(x => GetById(int.Parse(x.Id))).WhereNotNull();
-            }
-            else
-            {
-                return GetAll(pageIndex, pageSize, out totalRecords, orderBy, orderDirection, orderBySystemField, memberTypeAlias, filter);
-            }
+            //if ((ids?.Any() ?? false) ||
+            //    (groups?.Any() ?? false) ||
+            //    isApproved.HasValue ||
+            //    isLockedOut.HasValue ||
+            //    (additionalFilters?.Any() ?? false))
+            //{
+            return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
+                                        memberTypeAlias, ids, groups, filter, additionalFilters, isApproved,
+                                        isLockedOut)
+                            .Select(x => GetById(int.Parse(x.Id))).WhereNotNull();
+            //}
+            //else
+            //{
+            //    return GetAll(pageIndex, pageSize, out totalRecords, orderBy, orderDirection, orderBySystemField, memberTypeAlias, filter);
+            //}
         }
 
         /// <inheritdoc />
