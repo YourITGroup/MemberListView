@@ -1,9 +1,9 @@
-# Member List View for Umbraco 8 & 9
+# Member List View for Umbraco 10+
 
 ![Member List View Logo](https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png)
 
-Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
-The MemberListView for Umbraco 8 and 9 provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
+Adds a MemberListView dashboard to the Members area in Umbraco 10+ to allow easier management of members including approval and unlocking capabilities.
+The MemberListView for Umbraco 10+ provides a management dashboard view for Members with convenient filtering and sorting and allows for mass Unlock, Suspension or Activation of members.
 
 Installing the package enables a new Manage Dashboard on the Members section.
 
