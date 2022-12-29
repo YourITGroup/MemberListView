@@ -5,7 +5,7 @@ on:
 
 env:
   SOLUTION: MemberListView.sln
-  OUTPUT_PATH: ${{ github.workspace }}\.output
+  OUTPUT_PATH: ${{ github.workspace }}/.output
   
 jobs:
   build:

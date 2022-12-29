@@ -6,8 +6,8 @@ on:
 
 env:
   SOLUTION: MemberListView.sln
-  PLUGIN_PROJECT: MemberListView\MemberListView.csproj
-  OUTPUT_PATH: ${{ github.workspace }}\.output
+  PLUGIN_PROJECT: MemberListView/MemberListView.csproj
+  OUTPUT_PATH: ${{ github.workspace }}/.output
   
 jobs:
   publish-nuget:
@@ -60,7 +60,7 @@ jobs:
     - run: dotnet build --configuration Release
 
     - name: Create Nuget Packages
-      run: dotnet pack --configuration Release -o  ../build.out/
+      run: dotnet pack --configuration Release -o ${{ env.OUTPUT_PATH }}
       
     - name: Publish to NuGet
       working-directory: ../build.out
