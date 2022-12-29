@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-#if NET5_0_OR_GREATER
+﻿using System.Text.RegularExpressions;
 using Umbraco.Cms.Core;
-#else
-using Umbraco.Core;
-#endif
 namespace MemberListView.Utility
 {
     internal sealed class MemberDataUdiParser
@@ -29,11 +24,7 @@ namespace MemberListView.Utility
 
             foreach (Match match in matches)
             {
-#if NET5_0_OR_GREATER
                 if (match.Groups.Count == 2 && UdiParser.TryParse(match.Groups[1].Value, out var udi))
-#else
-                if (match.Groups.Count == 2 && Udi.TryParse(match.Groups[1].Value, out var udi))
-#endif
                     yield return udi;
             }
         }

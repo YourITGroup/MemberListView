@@ -1,33 +1,40 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<TargetFrameworks>net472;net5.0;net6.0;</TargetFrameworks>
-	<AssemblyName>$(MSBuildProjectName)</AssemblyName>
-	<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-	<Copyright>Copyright © 2022 Robert Foster</Copyright>
-	<Description>Adds a MemberListView dashboard to the Members area in Umbraco 8.6+ to allow easier management of members including approval and unlocking capabilities.
-	  
-For Umbraco 7.15 install version 1.5.5</Description>
-	<PackageReleaseNotes>Now multi-targeting Umbraco 8 and 9</PackageReleaseNotes>
-	<PackageTags>Umbraco Membership Member Management</PackageTags>
-	<PackageIcon>Membership_logo.png</PackageIcon>
-	<PackageIconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</PackageIconUrl>
-	<PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
-	<Company>Your IT Group Pty Ltd</Company>
-	<Authors>Robert Foster</Authors>
-	<Version>2.3.0</Version>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<RepositoryUrl>https://github.com/YourITGroup/umbMemberListView</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-	<PackageReadmeFile>README.nuget.md</PackageReadmeFile>
-	<Product>$(AssemblyName) for Umbraco 8 &amp; 9</Product>
-  </PropertyGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net6.0'">
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<ContentTargetFolders>.</ContentTargetFolders>
+
+		<Version>3.0.0-rc1</Version>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<Copyright>Copyright © Robert Foster</Copyright>
+		<Description>Adds a MemberListView dashboard to the Members area in Umbraco 10+ to allow 
+easier management of members including approval and unlocking capabilities.
+
+For Umbraco 7.15 install version 1.5.5
+		</Description>
+		<PackageReleaseNotes>Now multi-targeting Umbraco 8 and 9</PackageReleaseNotes>
+		<PackageTags>Umbraco Membership Member Management</PackageTags>
+		<PackageIcon>Membership_logo.png</PackageIcon>
+		<PackageIconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</PackageIconUrl>
+		<PackageProjectUrl>https://github.com/YourITGroup/umbMemberListView</PackageProjectUrl>
+		<Company>Your IT Group Pty Ltd</Company>
+		<Authors>Robert Foster</Authors>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/YourITGroup/umbMemberListView</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageReadmeFile>README.nuget.md</PackageReadmeFile>
+		<Product>$(AssemblyName) for Umbraco 8 &amp; 9</Product>
 	</PropertyGroup>
+
 
 	<PropertyGroup>
 		<!-- SourceLink: https://github.com/dotnet/sourcelink -->
@@ -39,11 +46,26 @@ For Umbraco 7.15 install version 1.5.5</Description>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
-	<!-- Deterministic Builds: https://github.com/clairernovotny/DeterministicBuilds -->
-	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
-	
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+		<!-- Deterministic Builds: https://github.com/clairernovotny/DeterministicBuilds -->
+		<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+			<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="..\assets\Membership_logo.png">
 			<Pack>True</Pack>
@@ -54,52 +76,44 @@ For Umbraco 7.15 install version 1.5.5</Description>
 			<PackagePath></PackagePath>
 		</None>
 
-		<Content Include="App_Plugins\MemberListView\**\*.*">
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-
-		<None Include="build\**\*.*">
-			<Pack>True</Pack>
-			<PackagePath>buildTransitive</PackagePath>
-		</None>
-		
-		<None Include="build\**\*.*">
-			<Pack>True</Pack>
-			<PackagePath>build</PackagePath>
-		</None>
+		<Content Include="App_Plugins\MemberListView\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
+		<None Include="build\**" Pack="true" PackagePath="build" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Remove="Indexing\ExtendedMemberValueSetValidator.cs" />
 	</ItemGroup>
-	
-	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-		<PackageReference Include="UmbracoCms.Core" Version="8.6.0" />
-		<PackageReference Include="UmbracoCms.Web" Version="8.6.0" />
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice">
+			<Version>10.0.0</Version>
+		</PackageReference>
+		<PackageReference Include="Umbraco.Cms.Web.Common">
+			<Version>10.0.0</Version>
+		</PackageReference>
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-		<Reference Include="System.Web.ApplicationServices" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice">
+			<Version>11.0.0</Version>
+		</PackageReference>
+		<PackageReference Include="Umbraco.Cms.Web.Common">
+			<Version>11.0.0</Version>
+		</PackageReference>
 	</ItemGroup>
+		
+		<ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.2.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="9.2.0" />
-	</ItemGroup>
-
+			<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+			<!--<PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="All" />-->
+		</ItemGroup>
+		
 	<ItemGroup>
-
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-		<!--<PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="All" />-->
+		<None Update="compilerconfig.json.defaults">
+			<DependentUpon>compilerconfig.json</DependentUpon>
+		</None>
 	</ItemGroup>
-
 	<ItemGroup>
-	<None Update="compilerconfig.json.defaults">
-	  <DependentUpon>compilerconfig.json</DependentUpon>
-	</None>
-  </ItemGroup>
-	<ItemGroup>
-	  <PackageReference Include="ClosedXML" Version="0.95.4" />
+		<PackageReference Include="ClosedXML" Version="0.97.0" />
 	</ItemGroup>
 </Project>

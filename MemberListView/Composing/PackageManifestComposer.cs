@@ -1,6 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-using System.Collections.Generic;
-using Umbraco.Cms.Core.Composing;
+﻿using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Manifest;
 
@@ -20,13 +18,15 @@ namespace MemberListView.Composing
         {
             var version = typeof(MemberListViewManifestFilter).Assembly.GetName().Version?.ToString();
 
-            manifests.Add(new PackageManifest
+            if (version is not null)
             {
-                PackageName = "MemberListView",
-                AllowPackageTelemetry = true,
-                Version = version
-            });
+                manifests.Add(new PackageManifest
+                {
+                    PackageName = "MemberListView",
+                    AllowPackageTelemetry = true,
+                    Version = version
+                });
+            }
         }
     }
 }
-#endif

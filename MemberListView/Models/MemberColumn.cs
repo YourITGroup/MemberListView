@@ -6,12 +6,12 @@ namespace MemberListView.Models
     public class MemberColumn
     {
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [DataMember(Name = "alias")]
-        public string Alias { get; set; }
+        public string? Alias { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

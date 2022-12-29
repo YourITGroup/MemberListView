@@ -6,15 +6,36 @@ on:
 
 env:
   SOLUTION: MemberListView.sln
-  PLUGIN_PROJECT: MemberListView\MemberListView.csproj
-  OUTPUT_PATH: ${{ github.workspace }}\.output
-
+  PLUGIN_PROJECT: MemberListView/MemberListView.csproj
+  OUTPUT_PATH: ${{ github.workspace }}/.output
+  
 jobs:
   publish-nuget:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
+    strategy:
+      matrix:
+        dotnet-version: ['7.x' ]
+
+    steps:
+
+    # - name: Install GitVersion
+    #   uses: gittools/actions/gitversion/setup@v0.9.7
+    #   with:
+    #     versionSpec: '5.x'
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v3
+
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+        
     - name: Get Release Version
       id: package_version
       uses: KageKirin/get-csproj-version@v0.0.1
@@ -25,41 +46,25 @@ jobs:
     - name: Check Version v${{ steps.package_version.outputs.version }} Pre-Release state
       id: check_prerelease
       run: |
-        if ('${{ steps.package_version.outputs.version }}' -match '^[0-9]+\.[0-9]+\.[0-9]+-.+$') {
-            echo "Pre-Release detected"
-            echo "::set-output name=prerelease::true"
-        } else {
-            "echo Pre-Release NOT detected"
-            echo "::set-output name=prerelease::false"
-        }
-    
-    #- name: Setup .NET
-    #  uses: actions/setup-dotnet@v1
-    #  with:
-    #    dotnet-version: '5.0.x'
+        if [[ ${{ steps.package_version.outputs.version }} =~ ^[0-9]+\.[0-9]+\.[0-9]+-.+$ ]]; then
+            echo Pre-Release detected
+            echo ::set-output name=prerelease::true
+        else
+            echo Pre-Release NOT detected
+            echo ::set-output name=prerelease::false
+        fi
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-        
-        
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: MemberListView
-      
-    - name: Build
-      run: dotnet build --configuration Release
-      working-directory: MemberListView
-      
-    - name: Dotnet Pack
-      run: dotnet pack --configuration Release --output ${{ env.OUTPUT_PATH }}
-      working-directory: MemberListView
+
+    - run: dotnet build --configuration Release
+
+    - name: Create Nuget Packages
+      run: dotnet pack --configuration Release -o ${{ env.OUTPUT_PATH }}
       
     - name: Publish to NuGet
-      run: dotnet nuget push "${{ env.OUTPUT_PATH }}\*.nupkg" --skip-duplicate --api-key "$env:apiKey" -s https://api.nuget.org/v3/index.json
-      env:
-        apiKey: ${{ secrets.NUGET_API_KEY }}
+      working-directory: ../build.out
+      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
 
     - uses: avakar/tag-and-release@v1
       name: Create Release Tag v${{ steps.package_version.outputs.version }}
@@ -73,5 +78,5 @@ jobs:
     - name: Release information for v${{ steps.package_version.outputs.version }}
       run: |
         echo Release Id: ${{ steps.release.outputs.id }}
-        echo Upload URL: "${{ steps.release.outputs.upload_url }}"
-        echo Release URL: "${{ steps.release.outputs.html_url }}"
+        echo Upload URL: ${{ steps.release.outputs.upload_url }}
+        echo Release URL: ${{ steps.release.outputs.html_url }}

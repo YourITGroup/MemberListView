@@ -16,7 +16,8 @@
 
         internal static class Configuration
         {
-            public const string ExportExcludedColumns = "memberListView:Export:ExcludedColumns";
+            internal const string SectionName = "MemberListView";
+            public const string ExportExcludedColumns = "ExportExcludedColumns";
         }
 
         internal static class Members

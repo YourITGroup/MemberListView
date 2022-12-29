@@ -1,0 +1,22 @@
+{
+  "columns": [
+    {
+      "alias": "firstName",
+      "header": "First Name",
+      "isSystem": 0,
+      "position":  1
+    },
+    {
+      "alias": "lastName",
+      "header": "Last Name",
+      "isSystem": 0,
+      "position": 2
+    },
+    {
+      "alias": "phoneNumber",
+      "header": "Phone",
+      "isSystem": 0,
+      "position": 3
+    }
+  ]
+}

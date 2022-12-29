@@ -1,26 +1,17 @@
 ﻿using ClosedXML.Excel;
-//using DocumentFormat.OpenXml;
 using MemberListView.Models;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Text;
-#if NET5_0_OR_GREATER
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Membership;
-#else
-using Umbraco.Core;
-using Umbraco.Core.Models;
-#endif
+using Umbraco.Extensions;
 
 namespace MemberListView.Extensions
 {
     public static class ExportExtension
     {
-        public static async System.Threading.Tasks.Task CreateCSVAsync(this IEnumerable<object> list, Stream stream, bool includeHeaders = true, char fieldSeparator = ',', char stringDelimiter = '"')
+        public static async Task CreateCSVAsync(this IEnumerable<object> list, Stream stream, bool includeHeaders = true, char fieldSeparator = ',', char stringDelimiter = '"')
         {
             var rows = new List<Dictionary<string, object>>();
             var fileColumns = new List<string>();
@@ -76,10 +67,10 @@ namespace MemberListView.Extensions
             return $"{value.Value}";
         }
 
-        public static async System.Threading.Tasks.Task CreateExcelAsync(this IEnumerable<object> list, Stream stream, string sheetName, bool includeHeaders = true)
+        public static async Task CreateExcelAsync(this IEnumerable<object> list, Stream stream, string sheetName, bool includeHeaders = true)
         {
             //Creating the workbook
-            var t = System.Threading.Tasks.Task.Run(() =>
+            var t = Task.Run(() =>
             {
                 list.CreateExcel(stream, sheetName, includeHeaders);
             });
@@ -95,7 +86,7 @@ namespace MemberListView.Extensions
             int rowIndex = includeHeaders ? 2 : 1;
             int headerRowIndex = 1;
             var columnPositions = new Dictionary<string, int>();
-            foreach (var line in list.ToDictionaryList<object>())
+            foreach (var line in list.ToDictionaryList<object>().WhereNotNull())
             {
                 foreach (var column in line.Keys)
                 {
@@ -173,7 +164,7 @@ namespace MemberListView.Extensions
             return id;
         }
 
-        private static bool IsNumber(this object value)
+        private static bool IsNumber(this object? value)
         {
             return value is sbyte
                     || value is byte
@@ -195,46 +186,51 @@ namespace MemberListView.Extensions
         /// <returns></returns>
         internal static IDictionary<string, TVal> ToDictionary<TVal>(this object o)
         {
-            if (o != null)
+            var d = new Dictionary<string, TVal>();
+            if (o is not null)
             {
-                var d = new Dictionary<string, TVal>();
 
                 var props = TypeDescriptor.GetProperties(o);
                 foreach (var prop in props.Cast<PropertyDescriptor>())
                 {
                     var val = prop.GetValue(o);
                     // Flatten any dictionaries or lists.
-                    if (val != null)
+                    if (val is not null)
                     {
                         if (IsDictionary(val.GetType()))
                         {
-                            var dict = (IDictionary)val;
-                            foreach (var key in dict.Keys)
+                            var dict = val as IDictionary;
+                            if (dict?.Keys is not null)
                             {
-                                // If the item name is not already defined, we don't need to qualify it.
-                                if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
-                                    d.Add($"{prop.Name}_{key}", (TVal)dict[key]);
-                                else
-                                    d.Add(key.ToString(), (TVal)dict[key]);
+                                foreach (var key in dict.Keys)
+                                {
+                                    if (key is not null && dict[key] is not null)
+                                    {
+                                        // If the item name is already defined, we need to qualify it.
+                                        if (props.Cast<PropertyDescriptor>().Any(p => p.Name == key.ToString()))
+                                            d.Add($"{prop.Name}_{key}", (TVal)dict[key]!);
+                                        else
+                                            d.Add($"{key}", (TVal)dict[key]!);
+                                    }
+                                }
                             }
                         }
-                        else if (!(val is string) && IsEnumerable(val.GetType()))
+                        else if (val is not string && IsEnumerable(val.GetType()))
                         {
                             int i = 0;
                             foreach (var item in (IEnumerable)val)
                             {
-#if NET5_0_OR_GREATER
                                 if (item is MemberExportProperty exportProperty)
                                 {
-                                    d.Add(exportProperty.Name, (TVal)exportProperty.Value);
+                                    if (exportProperty.Value is not null)
+                                    {
+                                        d.Add(exportProperty.Name!, (TVal)exportProperty.Value);
+                                    }
                                 }
                                 else
                                 {
                                     d.Add($"{prop.Name}_{i++}", (TVal)item);
                                 }
-#else
-                                d.Add($"{prop.Name}_{i++}", (TVal)item);
-#endif
                             }
                         }
                         else
@@ -243,9 +239,8 @@ namespace MemberListView.Extensions
                         }
                     }
                 }
-                return d;
             }
-            return new Dictionary<string, TVal>();
+            return d;
         }
 
         internal static bool IsEnumerable(Type type)
@@ -289,6 +284,11 @@ namespace MemberListView.Extensions
         {
             foreach (var group in type.PropertyGroups.OrderBy(g => g.SortOrder))
             {
+                if (group.PropertyTypes is null)
+                {
+                    continue;
+                }
+
                 // TODO: Check for sensitive data.
                 foreach (var property in group.PropertyTypes
                                             .Where(p => !excludedColumns.Contains(p.Alias))

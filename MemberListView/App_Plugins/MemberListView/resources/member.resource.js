@@ -130,41 +130,41 @@ function memberListViewResource($http, umbRequestHelper) {
 
             var config = { responseType: 'blob' }
 
-            // Solution taken from http://jaliyaudagedara.blogspot.com/2016/05/angularjs-download-files-by-sending.html
             $http.get(
                 umbRequestHelper.getApiUrl(
                     "memberListViewBaseUrl",
                     "GetExportedMembers",
                     params),
                 config).then(function (response) {
-                    const headers = response.headers()
-                    try {
-                        var filename = headers['x-filename']
+                    _startBlobDownload(response)
+                    //const headers = response.headers()
+                    //try {
+                    //    var filename = headers['x-filename']
 
-                        if (!filename) {
-                            var result = headers['content-disposition'].split(';')[1].trim().split('=')[1]
-                            filename = result.replace(/"/g, '')
-                        }
+                    //    if (!filename) {
+                    //        var result = headers['content-disposition'].split(';')[1].trim().split('=')[1]
+                    //        filename = result.replace(/"/g, '')
+                    //    }
 
-                        var contentType = headers['content-type']
+                    //    var contentType = headers['content-type']
 
-                        var linkElement = document.createElement('a')
+                    //    var linkElement = document.createElement('a')
 
-                        var blob = new Blob([response.data], { type: contentType })
-                        var url = window.URL.createObjectURL(blob)
+                    //    var blob = new Blob([response.data], { type: contentType })
+                    //    var url = window.URL.createObjectURL(blob)
 
-                        linkElement.setAttribute('href', url)
-                        linkElement.setAttribute("download", filename)
+                    //    linkElement.setAttribute('href', url)
+                    //    linkElement.setAttribute("download", filename)
 
-                        var clickEvent = new MouseEvent("click", {
-                            "view": window,
-                            "bubbles": true,
-                            "cancelable": false
-                        })
-                        linkElement.dispatchEvent(clickEvent)
-                    } catch (ex) {
-                        console.log(ex)
-                    }
+                    //    var clickEvent = new MouseEvent("click", {
+                    //        "view": window,
+                    //        "bubbles": true,
+                    //        "cancelable": false
+                    //    })
+                    //    linkElement.dispatchEvent(clickEvent)
+                    //} catch (ex) {
+                    //    console.log(ex)
+                    //}
 
                 }, function (data) {
                     console.log(data)
@@ -247,6 +247,37 @@ function memberListViewResource($http, umbRequestHelper) {
 
         return dict
 
+    }
+
+    function _startBlobDownload(response) {
+        const headers = response.headers()
+
+        var filename = headers['x-filename']
+
+        if (!filename) {
+            var result = headers['content-disposition'].split(';')[1].trim().split('=')[1]
+            filename = result.replace(/"/g, '')
+        }
+
+        //var contentType = headers['content-type']
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // for IE
+            window.navigator.msSaveOrOpenBlob(response.data, filename);
+        } else {
+            // for Non-IE (chrome, firefox etc.)
+            var urlObject = URL.createObjectURL(response.data);
+
+            var downloadLink = angular.element('<a>Download</a>');
+            downloadLink.css('display', 'none');
+            downloadLink.attr('href', urlObject);
+            downloadLink.attr('download', filename);
+            angular.element(document.body).append(downloadLink);
+            downloadLink[0].click();
+
+            // cleanup
+            downloadLink.remove();
+            URL.revokeObjectURL(urlObject);
+        }
     }
 
     return memberListViewResource

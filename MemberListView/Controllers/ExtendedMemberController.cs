@@ -1,18 +1,11 @@
 ﻿using MemberListView.Extensions;
 using MemberListView.Models;
 using MemberListView.Services;
-using MemberListView.Utility;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-#if NET5_0_OR_GREATER
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Dictionary;
 using Umbraco.Cms.Core.Events;
@@ -25,44 +18,16 @@ using Umbraco.Cms.Core.Security;
 using Umbraco.Cms.Core.Serialization;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
+using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Authorization;
 using Umbraco.Cms.Web.Common.Security;
 using Umbraco.Extensions;
-using Umbraco.Cms.Web.BackOffice.Controllers;
-#else
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web.Http;
-using System.Web.Security;
-using System.Web;
-using System.Web.Hosting;
-using Umbraco.Core.Cache;
-using Umbraco.Core.Configuration;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models;
-using Umbraco.Core.Persistence;
-using Umbraco.Core.Persistence.DatabaseModelDefinitions;
-using Umbraco.Core.PropertyEditors;
-using Umbraco.Core.Services;
-using Umbraco.Core.Security;
-using Umbraco.Web;
-using Umbraco.Web.Editors;
-using Umbraco.Web.Models.ContentEditing;
-using Umbraco.Web.Mvc;
-using Umbraco.Web.WebApi.Filters;
-using static Umbraco.Core.Constants;
-#endif
 
 namespace MemberListView.Controllers
 {
     [PluginController(Constants.PluginName)]
-#if NET5_0_OR_GREATER
     [Authorize(Policy = AuthorizationPolicies.SectionAccessMembers)]
-#else
-    [UmbracoApplicationAuthorize(Applications.Members)]
-#endif
     public class ExtendedMemberController : MemberController
     {
         private readonly PropertyEditorCollection propertyEditors;
@@ -70,10 +35,7 @@ namespace MemberListView.Controllers
         private readonly IDataTypeService dataTypeService;
         private readonly IMemberTypeService memberTypeService;
         private readonly IMemberGroupService memberGroupService;
-        private readonly Settings settings;
-
-
-#if NET5_0_OR_GREATER
+        private readonly IOptions<Config.MemberListView> options;
         private readonly IMemberManager memberManager;
         private readonly IUmbracoMapper umbracoMapper;
         private readonly IBackOfficeSecurityAccessor backOfficeSecurityAccessor;
@@ -93,66 +55,54 @@ namespace MemberListView.Controllers
             IBackOfficeSecurityAccessor backOfficeSecurityAccessor,
             IJsonSerializer jsonSerializer,
             IPasswordChanger<MemberIdentityUser> passwordChanger,
-            IScopeProvider scopeProvider, 
+            ICoreScopeProvider scopeProvider,
             IMemberExtendedService memberExtendedService,
             IMemberGroupService memberGroupService,
-            IConfiguration configuration) :
-            base(cultureDictionary, loggerFactory, shortStringHelper, eventMessages, localizedTextService, 
-                propertyEditors, umbracoMapper, memberService, memberTypeService, 
+            IOptions<Config.MemberListView> options) :
+            base(cultureDictionary, loggerFactory, shortStringHelper, eventMessages, localizedTextService,
+                propertyEditors, umbracoMapper, memberService, memberTypeService,
                 memberManager, dataTypeService, backOfficeSecurityAccessor, jsonSerializer, passwordChanger, scopeProvider)
-#else
-        //private readonly MembershipProvider membershipProvider;
-        public ExtendedMemberController(PropertyEditorCollection propertyEditors, IGlobalSettings globalSettings, IUmbracoContextAccessor umbracoContextAccessor,
-                                   ISqlContext sqlContext, ServiceContext services,
-                                   AppCaches appCaches, IProfilingLogger logger, Umbraco.Core.IRuntimeState runtimeState,
-                                   UmbracoHelper umbracoHelper, IMemberExtendedService memberExtendedService) : 
-            base(propertyEditors, globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
-#endif
         {
             this.propertyEditors = propertyEditors;
             this.memberExtendedService = memberExtendedService;
-#if NET5_0_OR_GREATER
             this.dataTypeService = dataTypeService;
             this.memberTypeService = memberTypeService;
             this.memberGroupService = memberGroupService;
+            this.options = options;
             this.memberManager = memberManager;
             this.umbracoMapper = umbracoMapper;
             this.backOfficeSecurityAccessor = backOfficeSecurityAccessor;
-            settings = new Settings(configuration);
-#else
-            dataTypeService = services.DataTypeService;
-            memberTypeService = services.MemberTypeService;
-            memberGroupService = services.MemberGroupService;
-            //membershipProvider = MembershipProviderExtensions.GetMembersMembershipProvider();
-            settings = new Settings();
-#endif
         }
 
         [HttpGet]
-#if NET5_0_OR_GREATER
         [Authorize(Policy = AuthorizationPolicies.SectionAccessForMemberTree)]
-#else
-        [UmbracoTreeAuthorize(Trees.Members)]
-#endif
-        public ContentPropertyDisplay GetDashboardControl()
+        public ContentPropertyDisplay? GetDashboardControl()
         {
             var dataType = dataTypeService.GetDataType(Constants.PropertyEditors.MemberListView);
 
-            var configuration = dataTypeService.GetDataType(dataType.Id).Configuration;
+            if (dataType is null)
+            {
+                return default;
+            }
+            var configuration = dataTypeService.GetDataType(dataType.Id)?.Configuration;
             var editor = propertyEditors[dataType.EditorAlias];
 
             return new ContentPropertyDisplay()
             {
                 Editor = dataType.EditorAlias,
                 Validation = new PropertyTypeValidation(),
-                View = editor.GetValueEditor().View,
-                Config = editor.GetConfigurationEditor().ToConfigurationEditor(configuration)
+                View = editor?.GetValueEditor().View,
+                //#if NET7_0_OR_GREATER
+                Config = editor?.GetConfigurationEditor().ToConfigurationEditor(configuration)
+                //#else
+                //                Config = editor?.GetConfigurationEditor().ToConfigurationEditor(configuration)
+                //#endif
             };
         }
 
 
         [HttpGet]
-        public IDictionary<int, string> GetMemberGroups()
+        public IDictionary<int, string?> GetMemberGroups()
         {
             return memberGroupService
                             .GetAll()
@@ -180,8 +130,9 @@ namespace MemberListView.Controllers
             var isLockedOut = Request.GetIsLockedOut();
             var isApproved = Request.GetIsApproved();
 
-            var members = memberExtendedService.GetPage(pageNumber - 1, pageSize, out long totalRecords, orderBy, orderDirection,
-                                                        orderBySystemField, typeAlias, groups, filter, filters, isApproved, isLockedOut);
+            var members = memberExtendedService.GetPage(pageNumber - 1, pageSize, out long totalRecords, orderBy,
+                                                        orderDirection, orderBySystemField, typeAlias, filter, groups,
+                                                        filters, isApproved, isLockedOut);
             if (totalRecords == 0)
             {
                 return new PagedResult<MemberListItem>(0, 0, 0);
@@ -189,12 +140,7 @@ namespace MemberListView.Controllers
 
             return new PagedResult<MemberListItem>(totalRecords, pageNumber, pageSize)
             {
-                Items = members
-#if NET5_0_OR_GREATER
-                        .Select(x => umbracoMapper.Map<MemberListItem>(x))
-#else
-                        .Select(x => Mapper.Map<MemberListItem>(x))
-#endif
+                Items = members.Select(x => umbracoMapper.Map<MemberListItem>(x)).WhereNotNull()
             };
         }
 
@@ -205,9 +151,9 @@ namespace MemberListView.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<MemberColumn> GetMemberColumns(string memberType = null)
+        public IEnumerable<MemberColumn> GetMemberColumns(string? memberType = null)
         {
-            var excludedColumns = settings.ExcludedColumns ?? Array.Empty<string>();
+            var excludedColumns = options.Value.ExportExcludedColumns ?? Array.Empty<string>();
             bool foundType = false;
             if (!string.IsNullOrWhiteSpace(memberType))
             {
@@ -229,9 +175,9 @@ namespace MemberListView.Controllers
                 {
                     foreach (var col in type.GetColumns(excludedColumns))
                     {
-                        if (!columns.Contains(col.Alias))
+                        if (!columns.Contains(col.Alias!))
                         {
-                            columns.Add(col.Alias);
+                            columns.Add(col.Alias!);
                             yield return col;
                         }
                     }
@@ -240,11 +186,7 @@ namespace MemberListView.Controllers
         }
 
         [HttpGet]
-#if NET5_0_OR_GREATER
         public async Task<IActionResult> GetExportedMembers(
-#else
-        public async Task<IHttpActionResult> GetExportedMembers(
-#endif
             string orderBy = "email",
             Direction orderDirection = Direction.Ascending,
             bool orderBySystemField = false,
@@ -264,14 +206,13 @@ namespace MemberListView.Controllers
             var isApproved = Request.GetIsApproved();
             var columns = Request.GetColumns();
 
-            var members = memberExtendedService.GetForExport(orderBy, orderDirection, orderBySystemField, typeAlias, groups,
-                                                       filter, columns, filters, isApproved, isLockedOut);
+            var members = memberExtendedService.GetForExport(orderBy, orderDirection, orderBySystemField, typeAlias,
+                                                             filter, groups, columns, filters, isApproved, isLockedOut);
 
             var stream = new MemoryStream();
 
             var name = $"Members - {DateTime.Now:yyyy-MM-dd}";
             string ext = "csv";
-            string mimeType = Constants.MimeTypes.CSV;
             switch (format)
             {
                 case ExportFormat.CSV:
@@ -279,16 +220,14 @@ namespace MemberListView.Controllers
                     break;
                 case ExportFormat.Excel:
                     ext = "xlsx";
-                    mimeType = Constants.MimeTypes.Excel;
                     await members.CreateExcelAsync(stream, name);
                     break;
             }
 
             var filename = $"Members-{DateTime.Now:yyyy-MM-dd}.{ext}";
             stream.Seek(0, SeekOrigin.Begin);
-#if NET5_0_OR_GREATER
             var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(filename, out string contentType))
+            if (!provider.TryGetContentType(filename, out string? contentType))
             {
                 contentType = "application/octet-stream";
             }
@@ -296,23 +235,9 @@ namespace MemberListView.Controllers
             stream.Seek(0, SeekOrigin.Begin);
 
             return File(stream, contentType, filename);
-#else
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StreamContent(stream)
-            };
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = filename
-            };
-
-            return ResponseMessage(response);
-#endif
 
         }
 
-#if NET5_0_OR_GREATER
         public async Task UnlockByKey(Guid key)
         {
             var identityMember = await memberManager.FindByIdAsync(key.ToString());
@@ -331,30 +256,6 @@ namespace MemberListView.Controllers
                 }
             }
         }
-#else
-        public void UnlockByKey(Guid key)
-        {
-            var membershipProvider = MembershipProviderExtensions.GetMembersMembershipProvider();
-            var member = membershipProvider.GetUser(key, false);
-            // if they were locked but now they are trying to be unlocked
-            if (member != null && member.IsLockedOut)
-            {
-                try
-                {
-                    var result = membershipProvider.UnlockUser(member.UserName);
-                    if (result == false)
-                    {
-                        // it wasn't successful - but it won't really tell us why.
-                        ModelState.AddModelError("", "Could not unlock the user");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", ex);
-                }
-            }
-        }
-#endif
 
         public void SuspendByKey(Guid key)
         {
@@ -376,19 +277,14 @@ namespace MemberListView.Controllers
             }
         }
 
-        private IMember GetMember(Guid key)
+        private IMember? GetMember(Guid key)
         {
             return memberExtendedService.GetByKey(key);
         }
 
         private bool HasAccessToSensitiveData()
         {
-#if NET5_0_OR_GREATER
-            return backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.HasAccessToSensitiveData();
-#else
-            return Security.CurrentUser.HasAccessToSensitiveData();
-#endif
-
+            return backOfficeSecurityAccessor?.BackOfficeSecurity?.CurrentUser?.HasAccessToSensitiveData() ?? false;
         }
     }
 }
