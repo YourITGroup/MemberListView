@@ -53,7 +53,7 @@ namespace MemberListView.Services
         /// <inheritdoc />
         public IEnumerable<IMember> GetPage(long pageIndex, int pageSize, out long totalRecords, string orderBy,
                                      Direction orderDirection, bool orderBySystemField, string? memberTypeAlias,
-                                     string filter = "", IEnumerable<int>? groups = null,
+                                     string filter = "", IEnumerable<string>? ids = null, IEnumerable<int>? groups = null,
                                      IDictionary<string, string>? additionalFilters = null, bool? isApproved = null,
                                      bool? isLockedOut = null)
         {
@@ -61,13 +61,14 @@ namespace MemberListView.Services
             // Use the database method unless we have complex search.
             totalRecords = 0;
 
-            if ((groups?.Any() ?? false) ||
+            if ((ids?.Any() ?? false) ||
+                (groups?.Any() ?? false) ||
                 isApproved.HasValue ||
                 isLockedOut.HasValue ||
                 (additionalFilters?.Any() ?? false))
             {
                 return PerformExamineSearch(pageIndex, pageSize, out totalRecords, orderBy, orderDirection,
-                                            memberTypeAlias, groups, filter, additionalFilters, isApproved,
+                                            memberTypeAlias, ids, groups, filter, additionalFilters, isApproved,
                                             isLockedOut)
                                 .Select(x => GetById(int.Parse(x.Id))).WhereNotNull();
             }
@@ -80,6 +81,7 @@ namespace MemberListView.Services
         /// <inheritdoc />
         public IEnumerable<MemberExportModel> GetForExport(string orderBy, Direction orderDirection, bool orderBySystemField,
                                                     string? memberTypeAlias, string filter = "",
+                                                    IEnumerable<string>? ids = null,
                                                     IEnumerable<int>? groups = null,
                                                     IEnumerable<string>? includedColumns = null,
                                                     IDictionary<string, string>? additionalFilters = null,
@@ -94,7 +96,7 @@ namespace MemberListView.Services
             while (page * pageSize < total)
             {
                 var items = GetPage(page++, pageSize, out total, orderBy, orderDirection, orderBySystemField,
-                                    memberTypeAlias, filter, groups, additionalFilters, isApproved, isLockedOut);
+                                    memberTypeAlias, filter, ids, groups, additionalFilters, isApproved, isLockedOut);
 
                 foreach (var item in items)
                 {
@@ -168,6 +170,7 @@ namespace MemberListView.Services
                                                                 string orderBy,
                                                                 Direction orderDirection,
                                                                 string? memberTypeAlias,
+                                                                IEnumerable<string>? ids,
                                                                 IEnumerable<int>? groups,
                                                                 string filter,
                                                                 IDictionary<string, string>? additionalFilters,
@@ -184,6 +187,11 @@ namespace MemberListView.Services
             if (memberTypeAlias is not null && !memberTypeAlias.IsNullOrWhiteSpace())
             {
                 op = query.NodeTypeAlias(memberTypeAlias);
+            }
+
+            if (ids is not null && ids.Any())
+            {
+                op = query.And(op).GroupedOr(new[] { UmbracoExamineFieldNames.NodeKeyFieldName }, ids.ToArray());
             }
 
             if (groups?.Any() ?? false)

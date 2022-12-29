@@ -124,15 +124,15 @@ namespace MemberListView.Controllers
                 throw new NotSupportedException("Both pageNumber and pageSize must be greater than zero");
             }
 
-            var typeAlias = Request.GetMemberTypeFromQuery();
-            var groups = Request.GetGroupsFromQuery();
+            var typeAlias = Request.GetMemberType();
+            var groups = Request.GetGroups();
             var filters = Request.GetFilters();
             var isLockedOut = Request.GetIsLockedOut();
             var isApproved = Request.GetIsApproved();
 
             var members = memberExtendedService.GetPage(pageNumber - 1, pageSize, out long totalRecords, orderBy,
-                                                        orderDirection, orderBySystemField, typeAlias, filter, groups,
-                                                        filters, isApproved, isLockedOut);
+                                                        orderDirection, orderBySystemField, typeAlias, filter, groups: groups,
+                                                        additionalFilters: filters, isApproved: isApproved, isLockedOut: isLockedOut);
             if (totalRecords == 0)
             {
                 return new PagedResult<MemberListItem>(0, 0, 0);
@@ -199,15 +199,16 @@ namespace MemberListView.Controllers
                 return Ok();
             }
 
-            var typeAlias = Request.GetMemberTypeFromQuery();
-            var groups = Request.GetGroupsFromQuery();
+            var typeAlias = Request.GetMemberType();
+            var groups = Request.GetGroups().ToList();
             var filters = Request.GetFilters();
             var isLockedOut = Request.GetIsLockedOut();
             var isApproved = Request.GetIsApproved();
-            var columns = Request.GetColumns();
+            var columns = Request.GetColumns()?.ToList();
+            var memberIds = Request.GetMemberIds().ToList();
 
             var members = memberExtendedService.GetForExport(orderBy, orderDirection, orderBySystemField, typeAlias,
-                                                             filter, groups, columns, filters, isApproved, isLockedOut);
+                                                             filter, memberIds, groups, columns, filters, isApproved, isLockedOut);
 
             var stream = new MemoryStream();
 

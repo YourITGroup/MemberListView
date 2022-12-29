@@ -426,12 +426,18 @@
             filterData: $scope.options.filterData,
             memberTypes: $scope.listViewAllowedTypes,
             memberGroups: $scope.memberGroups,
-            totalItems: $scope.listViewResultSet.totalItems,
+            selectedItems: $scope.selection.length > 0,
+            totalItems: $scope.selection.length > 0 ? $scope.selection.length : $scope.listViewResultSet.totalItems,
             columns: $scope.options.columns,
             format: $scope.options.format,
             submit: function (model) {
                 $scope.options.columns = model.columns
                 $scope.options.format = model.format
+                if ($scope.selection.length > 0) {
+                    $scope.options.ids = $scope.selection.map(m => m.key)
+                } else {
+                    $scope.options.ids = null
+                }
                 memberListViewResource.getExport($scope.options)
                 editorService.close()
             },

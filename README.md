@@ -27,6 +27,7 @@ Member Editing can be done without leaving the MemberListView by clicking on a m
 **Version 3.0.0**
 
 * Now supporting Umbraco 10 and 11 only
+* Exporting now supports exporting only selected members (Github issue #21)
 
 **Version 2.2.0**
 

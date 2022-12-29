@@ -12,7 +12,7 @@ internal static partial class HttpRequestMessageExtensions
     }
 
 
-    internal static string? GetMemberTypeFromQuery(this HttpRequest request)
+    internal static string? GetMemberType(this HttpRequest request)
     {
         return request.Query[Constants.Members.MemberType].FirstOrDefault();
     }
@@ -27,7 +27,7 @@ internal static partial class HttpRequestMessageExtensions
         return int.TryParse(request.Query[Constants.Members.MemberApproved].FirstOrDefault(), out int boolValue) ? boolValue == 1 : null;
     }
 
-    internal static IEnumerable<int> GetGroupsFromQuery(this HttpRequest request)
+    internal static IEnumerable<int> GetGroups(this HttpRequest request)
     {
         var groups = request.Query[Constants.Members.Groups].FirstOrDefault();
         if (groups is null)
@@ -40,6 +40,20 @@ internal static partial class HttpRequestMessageExtensions
             {
                 yield return groupId;
             }
+        }
+    }
+
+    internal static IEnumerable<string> GetMemberIds(this HttpRequest request)
+    {
+
+        var ids = request.Query[Constants.Members.Ids].FirstOrDefault();
+        if (ids is null)
+        {
+            yield break;
+        }
+        foreach (var id in ids.Split(new[] { ',' }))
+        {
+            yield return id;
         }
     }
 
