@@ -1,7 +1,6 @@
 ﻿using Examine;
 using Examine.Lucene;
 using Microsoft.Extensions.Options;
-using Umbraco.Cms.Core.Models;
 using static Umbraco.Cms.Core.Constants;
 
 namespace MemberListView.Indexing;
@@ -15,15 +14,15 @@ internal class ConfigureMemberIndexOptions : IConfigureNamedOptions<LuceneDirect
         switch (name)
         {
             case UmbracoIndexes.MembersIndexName:
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.Comments), FieldDefinitionTypes.FullText));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.Comments, FieldDefinitionTypes.FullText));
 
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.IsLockedOut), FieldDefinitionTypes.FullTextSortable));
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.IsApproved), FieldDefinitionTypes.FullTextSortable));
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.FailedPasswordAttempts), FieldDefinitionTypes.Integer));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.IsLockedOut, FieldDefinitionTypes.FullTextSortable));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.IsApproved, FieldDefinitionTypes.FullTextSortable));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.FailedPasswordAttempts, FieldDefinitionTypes.Integer));
 
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.LastLoginDate), FieldDefinitionTypes.DateTime));
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.LastLockoutDate), FieldDefinitionTypes.DateTime));
-                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(nameof(IMember.LastPasswordChangeDate), FieldDefinitionTypes.DateTime));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.LastLoginDate, FieldDefinitionTypes.DateTime));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.LastLockoutDate, FieldDefinitionTypes.DateTime));
+                options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Indexing.LastPasswordChangeDate, FieldDefinitionTypes.DateTime));
 
                 options.FieldDefinitions.AddOrUpdate(new FieldDefinition(Constants.Members.Groups, FieldDefinitionTypes.FullTextSortable));
 

@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 env:
-  SOLUTION: MemberListView.sln
+  SOLUTION: MemberListView.Release.sln
   PLUGIN_PROJECT: MemberListView/MemberListView.csproj
   OUTPUT_PATH: ${{ github.workspace }}/.output
   
@@ -55,12 +55,13 @@ jobs:
         fi
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore  ${{ env.SOLUTION }} 
 
-    - run: dotnet build --configuration Release
+    - run: dotnet build  ${{ env.SOLUTION }} --no-restore --configuration Release
 
     - name: Create Nuget Packages
-      run: dotnet pack --configuration Release -o ${{ env.OUTPUT_PATH }}
+      run: dotnet pack  ${{ env.SOLUTION }} --no-build --no-restore --configuration Release --property:PackageOutputPath=${{ env.OUTPUT_PATH }}
+      # https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/7.0/solution-level-output-no-longer-valid
       
     - name: Publish to NuGet
       working-directory: ${{ env.OUTPUT_PATH }}

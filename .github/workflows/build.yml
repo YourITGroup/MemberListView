@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  SOLUTION: MemberListView.sln
+  SOLUTION: MemberListView.Release.sln
   OUTPUT_PATH: ${{ github.workspace }}/.output
   
 jobs:
@@ -29,13 +29,14 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
   
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ${{ env.SOLUTION }}
   
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ${{ env.SOLUTION }} --no-restore --configuration Release
         
     - name: Create the package
-      run: dotnet pack --configuration Release -o ${{ env.OUTPUT_PATH }}
+      run: dotnet pack ${{ env.SOLUTION }} --no-build --no-restore --configuration Release --property:PackageOutputPath=${{ env.OUTPUT_PATH }}
+      # https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/7.0/solution-level-output-no-longer-valid
       
     - name: Upload NuGet artifacts
       uses: actions/upload-artifact@v1
