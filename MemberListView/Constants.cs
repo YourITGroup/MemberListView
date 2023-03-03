@@ -13,6 +13,16 @@
         {
             internal const string MemberListView = "memberListView";
         }
+        internal static class Indexing
+        {
+            internal const string Comments = "comments";
+            internal const string FailedPasswordAttempts = "failedPasswordAttempts";
+            internal const string LastLoginDate = "lastLoginDate";
+            internal const string LastLockoutDate = "lastLockoutDate";
+            internal const string LastPasswordChangeDate = "lastPasswordChangeDate";
+            internal const string IsLockedOut = "isLockedOut";
+            internal const string IsApproved = "isApproved";
+        }
 
         internal static class Configuration
         {
