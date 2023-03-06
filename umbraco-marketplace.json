@@ -4,7 +4,7 @@
     "Url": "http://youritteam.com.au",
     "ImageUrl": "https://our.umbraco.com/media/upload/87499f6e-4497-4cb0-a2b6-bf03e222cfc0/220427_ROB_FIONA_0031.jpeg?width=250&height=250&mode=crop"
   },
-  "Category": "CMS Extensions",
+  "Category": "Editor Tools",
   "LicenseType": "Free",
   "PackageType": "Package",
   "PackagesByAuthor": ["OpenOrClosed"],
