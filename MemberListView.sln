@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{3A0701
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSample.V11", "WebSample.V11\WebSample.V11.csproj", "{586F2562-DB23-40BC-9FE4-B78E74EF699F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSample.V11", "WebSample.V11\WebSample.V11.csproj", "{586F2562-DB23-40BC-9FE4-B78E74EF699F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSampleV12", "WebSampleV12\WebSampleV12.csproj", "{FF612072-F763-42FD-B105-71ED59EF48FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{586F2562-DB23-40BC-9FE4-B78E74EF699F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{586F2562-DB23-40BC-9FE4-B78E74EF699F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{586F2562-DB23-40BC-9FE4-B78E74EF699F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF612072-F763-42FD-B105-71ED59EF48FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF612072-F763-42FD-B105-71ED59EF48FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF612072-F763-42FD-B105-71ED59EF48FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF612072-F763-42FD-B105-71ED59EF48FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

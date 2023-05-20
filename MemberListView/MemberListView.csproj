@@ -17,7 +17,7 @@
 		<Description>Adds a MemberListView dashboard to the Members area in Umbraco 10+ to allow 
 easier management of members including approval and unlocking capabilities.
 		</Description>
-		<PackageReleaseNotes>Now multi-targeting Umbraco 8 and 9</PackageReleaseNotes>
+		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageTags>Umbraco Membership Member Management umbraco-marketplace</PackageTags>
 		<PackageIcon>Membership_logo.png</PackageIcon>
 		<PackageIconUrl>https://raw.githubusercontent.com/YourITGroup/umbMemberListView/master/assets/Membership_logo.png</PackageIconUrl>

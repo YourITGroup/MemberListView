@@ -381,3 +381,6 @@ MigrationBackup/
 
 **/._*
 /package
+/WebSampleV12/App_Plugins/MemberListView
+/WebSampleV12/umbraco/Data/TEMP
+/WebSampleV12/Views/Partials

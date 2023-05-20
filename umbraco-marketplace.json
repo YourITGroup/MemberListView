@@ -1,16 +1,18 @@
 {
+  "$schema": "https://raw.githubusercontent.com/umbraco/Umbraco.Deploy.Contrib/master/schema.json",
   "AuthorDetails": {
+    "Name": "Robert Foster",
     "Description": "Robert is the founder of Your IT Team, an Umbraco Gold Partner; and is a seasoned Umbraco Master and MVP.",
     "Url": "http://youritteam.com.au",
     "ImageUrl": "https://our.umbraco.com/media/upload/87499f6e-4497-4cb0-a2b6-bf03e222cfc0/220427_ROB_FIONA_0031.jpeg?width=250&height=250&mode=crop"
   },
-  "Category": "Editor Tools",
-  "LicenseType": "Free",
+  "Title": "Member ListView",
+  "Category": "PIM & DAM",
+  "LicenseTypes": [ "Apache-2.0" ],
   "PackageType": "Package",
-  "PackagesByAuthor": ["OpenOrClosed"],
+  "PackagesByAuthor": [ "OpenOrClosed" ],
   "RelatedPackages": [],
   "Screenshots": [],
-  "Tags": ["Headless", "Membership", "Editor Tools"],
-  "Umbraco8PackageId": "",
+  "Tags": [ "Headless", "Membership" ],
   "VideoUrl": ""
 }
