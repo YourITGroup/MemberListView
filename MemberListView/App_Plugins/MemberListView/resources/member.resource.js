@@ -127,17 +127,22 @@ function memberListViewResource($http, umbRequestHelper) {
             params.push({ orderDirection: options.orderDirection })
             params.push({ orderBySystemField: toBool(options.orderBySystemField) })
             params.push({ format: options.format })
-            params.push({ columns: options.columns })
-            params.push({ ids: options.ids })
+
+            if (options.columns !== null && options.columns !== undefined && options.columns.length > 0) {
+                params.push({ columns: options.columns })
+            }
+
+            if (options.ids !== null && options.ids !== undefined && options.ids.length > 0) {
+                params.push({ ids: options.ids })
+            }
 
             var config = { responseType: 'blob' }
+            const url = umbRequestHelper.getApiUrl(
+                "memberListViewBaseUrl",
+                "GetExportedMembers",
+                params)
 
-            $http.get(
-                umbRequestHelper.getApiUrl(
-                    "memberListViewBaseUrl",
-                    "GetExportedMembers",
-                    params),
-                config).then(function (response) {
+            $http.get(url, config).then(function (response) {
                     _startBlobDownload(response)
 
                 }, function (data) {

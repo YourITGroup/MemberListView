@@ -10,7 +10,7 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<ContentTargetFolders>.</ContentTargetFolders>
 
-		<Version>3.0.2</Version>
+		<Version>3.0.3</Version>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Copyright>Copyright © Robert Foster</Copyright>
