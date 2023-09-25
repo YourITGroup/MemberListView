@@ -107,7 +107,7 @@ namespace MemberListView.Extensions
                     // Attempt to get the type.
                     if (cellValue is DateTime || cellValue is bool || cellValue.IsNumber())
                     {
-                        sheet.Cell(rowIndex, columnPositions[column]).Value = cellValue;
+                        sheet.Cell(rowIndex, columnPositions[column]).Value = XLCellValue.FromObject(cellValue);
                     }
                     else if (DateTime.TryParse(strValue, out DateTime dateValue))
                     {
