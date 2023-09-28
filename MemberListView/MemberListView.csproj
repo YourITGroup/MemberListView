@@ -84,7 +84,7 @@ easier management of members including approval and unlocking capabilities.
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="Umbraco.Cms.Web.BackOffice">
-			<Version>10.0.0</Version>
+			<Version>10.6.1</Version>
 		</PackageReference>
 		<PackageReference Include="Umbraco.Cms.Web.Common">
 			<Version>10.0.0</Version>
@@ -93,7 +93,7 @@ easier management of members including approval and unlocking capabilities.
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
 		<PackageReference Include="Umbraco.Cms.Web.BackOffice">
-			<Version>11.0.0</Version>
+			<Version>10.6.1</Version>
 		</PackageReference>
 		<PackageReference Include="Umbraco.Cms.Web.Common">
 			<Version>11.0.0</Version>
