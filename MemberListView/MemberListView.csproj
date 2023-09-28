@@ -112,6 +112,6 @@ easier management of members including approval and unlocking capabilities.
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="ClosedXML" Version="0.97.0" />
+		<PackageReference Include="ClosedXML" Version="0.102.1" />
 	</ItemGroup>
 </Project>
